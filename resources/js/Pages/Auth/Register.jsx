@@ -12,7 +12,7 @@ export default function Register() {
         password: '',
         password_confirmation: '',
         shop_name: '',
-        business_type: 'retail',
+        business_type: 1,
     });
 
     const submit = (e) => {
@@ -52,12 +52,12 @@ export default function Register() {
                         id="business_type"
                         className="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                         value={data.business_type}
-                        onChange={(e) => setData('business_type', e.target.value)}
+                        onChange={(e) => setData('business_type', parseInt(e.target.value))}
                     >
-                        <option value="retail">Retail Shop</option>
-                        <option value="restaurant">Restaurant / Cafe</option>
-                        <option value="pharmacy">Pharmacy</option>
-                        <option value="wholesale">Wholesale</option>
+                        <option value={1}>Retail Shop</option>
+                        <option value={2}>Restaurant / Cafe</option>
+                        <option value={3}>Pharmacy</option>
+                        <option value={4}>Wholesale</option>
                     </select>
 
                     <InputError message={errors.business_type} className="mt-2" />

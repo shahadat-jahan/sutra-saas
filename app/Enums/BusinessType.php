@@ -7,7 +7,7 @@ namespace App\Enums;
 enum BusinessType: int
 {
     case RETAIL = 1;
-    case PHARMACY = 3;
+    case PHARMACY = 2;
 
     public function label(): string
     {

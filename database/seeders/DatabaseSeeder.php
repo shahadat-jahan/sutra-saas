@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Shop;
 use App\Models\User;
+use App\Enums\BusinessType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,7 +18,7 @@ class DatabaseSeeder extends Seeder
     {
         $shop = Shop::create([
             'name' => 'Demo Shop',
-            'business_type' => 'retail',
+            'business_type' => BusinessType::RETAIL->value,
         ]);
 
         User::factory()->create([

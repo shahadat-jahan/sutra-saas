@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->string('business_type')->default('retail');
+            $table->tinyInteger('business_type')->default(1);
             $table->string('logo_path')->nullable();
             $table->jsonb('enabled_modules')->nullable();
             $table->jsonb('metadata')->nullable();

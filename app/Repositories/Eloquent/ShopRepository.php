@@ -13,7 +13,7 @@ final class ShopRepository implements ShopRepositoryInterface
     {
         return Shop::create([
             'name' => $data['name'],
-            'business_type' => $data['business_type'] ?? 'retail',
+            'business_type' => $data['business_type'] ?? 1,
         ]);
     }
 }

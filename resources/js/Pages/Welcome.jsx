@@ -13,9 +13,7 @@ export default function Welcome({ auth }) {
                 <div className="relative z-10 flex flex-col min-h-screen">
                     <header className="flex items-center justify-between px-6 py-6 w-full max-w-7xl mx-auto">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                                <span className="text-white font-bold text-xl">S</span>
-                            </div>
+                            <img src="/images/logo.png" className="w-12 h-12 rounded-xl shadow-lg shadow-indigo-500/30" alt="Sutra Logo" />
                             <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 tracking-tight">Sutra</span>
                         </div>
                         
@@ -80,6 +78,7 @@ export default function Welcome({ auth }) {
 
                         {/* Glass dashboard preview */}
                         <div className="relative w-full aspect-video max-w-4xl rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-2 sm:p-4 shadow-2xl overflow-hidden group">
+                            <img src="/images/banner.png" className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-700" alt="Dashboard Preview" />
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent z-10"></div>
                             
                             {/* Fake UI Header */}

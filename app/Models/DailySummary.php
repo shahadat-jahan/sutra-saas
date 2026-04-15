@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
-use App\Traits\Multitenant;
+use App\Traits\MultiTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DailySummary extends Model
 {
-    use HasFactory, HasUuid, Multitenant;
+    use HasFactory, HasUuid, MultiTenant;
 
     protected $fillable = [
         'shop_id',

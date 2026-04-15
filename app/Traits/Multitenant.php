@@ -4,9 +4,9 @@ namespace App\Traits;
 
 use App\Models\Scopes\ShopScope;
 
-trait Multitenant
+trait MultiTenant
 {
-    protected static function bootMultitenant(): void
+    protected static function bootMultiTenant(): void
     {
         static::addGlobalScope(new ShopScope);
 

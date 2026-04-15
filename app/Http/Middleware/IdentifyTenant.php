@@ -8,6 +8,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class IdentifyTenant
 {
@@ -39,6 +40,12 @@ class IdentifyTenant
 
             // Register tenant in the manager so other parts of the app can access it
             $this->tenantManager->setTenant($shop);
+
+            // Cross-tenant protection: Ensure logged in user belongs to this shop
+            if (Auth::check() && Auth::user()->shop_id !== $shop->id) {
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'You do not have access to this shop.');
+            }
         }
 
         return $next($request);

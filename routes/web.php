@@ -29,6 +29,10 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
         return Inertia::render('Welcome');
     })->name('welcome');
 
+    Route::get('/admin/dashboard', function () {
+        return Inertia::render('Admin/Dashboard');
+    })->middleware(['auth', 'verified'])->name('admin.dashboard');
+
     require __DIR__.'/auth.php';
 });
 

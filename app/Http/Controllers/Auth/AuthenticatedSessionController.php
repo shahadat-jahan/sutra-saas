@@ -27,13 +27,22 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request): \Symfony\Component\HttpFoundation\Response
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $user = Auth::user();
+
+        // If user has a shop, redirect to shop subdomain
+        if ($user->shop) {
+             $route = route('dashboard', ['subdomain' => $user->shop->slug]);
+             return Inertia::location($route);
+        }
+
+        // If no shop (Super Admin), redirect to admin dashboard on main domain
+        return redirect()->intended(route('admin.dashboard', [], false));
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Scopes\ShopScope;
+use App\Support\TenantManager;
 use Illuminate\Support\Facades\Auth;
 
 trait MultiTenant
@@ -13,9 +14,12 @@ trait MultiTenant
         static::addGlobalScope(new ShopScope);
 
         static::creating(function ($model): void {
-            if (Auth::check() && blank($model->shop_id)) {
-                $user = Auth::user();
-                $model->shop_id = $user->shop_id;
+            if (blank($model->shop_id)) {
+                $tenantId = app(TenantManager::class)->getTenantId() ?? Auth::user()?->shop_id;
+                
+                if ($tenantId) {
+                    $model->shop_id = $tenantId;
+                }
             }
         });
     }

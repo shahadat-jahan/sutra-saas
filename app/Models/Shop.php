@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
-use App\Traits\MultiTenant;
+use App\Enums\ActiveStatus;
+use App\Enums\BusinessType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +12,7 @@ use Illuminate\Support\Str;
 
 class Shop extends Model
 {
-    use HasFactory, HasUuid, MultiTenant;
+    use HasFactory, HasUuid;
 
     protected $fillable = [
         'name',
@@ -26,14 +27,14 @@ class Shop extends Model
     {
         return [
             'enabled_modules' => 'array',
+            'status' => ActiveStatus::class,
+            'business_type' => BusinessType::class,
         ];
     }
 
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-
         static::creating(function ($shop) {
             $slug = Str::slug($shop->name);
 

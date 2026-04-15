@@ -31,6 +31,9 @@ class DailySummary extends Model
             'total_sales' => 'decimal:2',
             'total_expenses' => 'decimal:2',
             'total_profit' => 'decimal:2',
+            'total_tax' => 'decimal:2',
+            'total_vat' => 'decimal:2',
+            'total_discount' => 'decimal:2',
             'metadata' => 'array',
         ];
     }

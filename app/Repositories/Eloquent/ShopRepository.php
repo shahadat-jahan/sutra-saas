@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Repositories\Eloquent;
+
+use App\Models\Shop;
+use App\Repositories\Interfaces\ShopRepositoryInterface;
+
+final class ShopRepository implements ShopRepositoryInterface
+{
+    public function create(array $data): Shop
+    {
+        return Shop::create([
+            'name' => $data['name'],
+            'business_type' => $data['business_type'] ?? 'retail',
+        ]);
+    }
+}

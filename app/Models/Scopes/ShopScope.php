@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
+use App\Support\TenantManager;
 
 final class ShopScope implements Scope
 {
@@ -14,13 +15,15 @@ final class ShopScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (! Auth::hasUser()) {
+        $tenantId = app(TenantManager::class)->getTenantId() ?? Auth::user()?->shop_id;
+
+        if (! $tenantId) {
             return;
         }
 
         $builder->where(
             $model->qualifyColumn('shop_id'),
-            Auth::user()->shop_id,
+            $tenantId,
         );
     }
 }

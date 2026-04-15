@@ -4,18 +4,17 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
+use App\Http\Requests\Auth\TenantRegisterRequest;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Services\TenantRegistrationService;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct(
+        private readonly TenantRegistrationService $tenantRegistrationService
+    ) {}
+
     /**
      * Display the registration view.
      */
@@ -29,24 +28,18 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(TenantRegisterRequest $request): \Symfony\Component\HttpFoundation\Response
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $user = $this->tenantRegistrationService->registerTenant(
+            ['name' => $request->shop_name, 'business_type' => $request->business_type],
+            ['name' => $request->name, 'email' => $request->email, 'password' => $request->password]
+        );
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        // Redirect to new subdomain
+        $appDomain = config('app.domain', 'localhost');
+        $port = $request->getPort() == 8000 ? ':8000' : '';
+        $subdomainUrl = $request->getScheme() . '://' . $user->shop->slug . '.' . $appDomain . $port . route('dashboard', [], false);
 
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        return Inertia::location($subdomainUrl);
     }
 }

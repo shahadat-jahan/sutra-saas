@@ -11,6 +11,8 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        shop_name: '',
+        business_type: 'retail',
     });
 
     const submit = (e) => {
@@ -26,6 +28,43 @@ export default function Register() {
             <Head title="Register" />
 
             <form onSubmit={submit}>
+                <div className="mb-4">
+                    <InputLabel htmlFor="shop_name" value="Shop Name" />
+
+                    <TextInput
+                        id="shop_name"
+                        name="shop_name"
+                        value={data.shop_name}
+                        className="mt-1 block w-full"
+                        autoComplete="organization"
+                        isFocused={true}
+                        onChange={(e) => setData('shop_name', e.target.value)}
+                        required
+                    />
+
+                    <InputError message={errors.shop_name} className="mt-2" />
+                </div>
+
+                <div className="mb-4">
+                    <InputLabel htmlFor="business_type" value="Business Type" />
+                    
+                    <select
+                        id="business_type"
+                        className="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        value={data.business_type}
+                        onChange={(e) => setData('business_type', e.target.value)}
+                    >
+                        <option value="retail">Retail Shop</option>
+                        <option value="restaurant">Restaurant / Cafe</option>
+                        <option value="pharmacy">Pharmacy</option>
+                        <option value="wholesale">Wholesale</option>
+                    </select>
+
+                    <InputError message={errors.business_type} className="mt-2" />
+                </div>
+                
+                <hr className="my-6 border-gray-200" />
+                
                 <div>
                     <InputLabel htmlFor="name" value="Name" />
 
@@ -35,7 +74,6 @@ export default function Register() {
                         value={data.name}
                         className="mt-1 block w-full"
                         autoComplete="name"
-                        isFocused={true}
                         onChange={(e) => setData('name', e.target.value)}
                         required
                     />

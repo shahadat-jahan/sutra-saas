@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('payment_method');
             $table->string('reference_id')->nullable();
             $table->text('note')->nullable();
+            $table->jsonb('metadata')->nullable();
             $table->timestamps();
 
             $table->index(['shop_id', 'type']);

@@ -3,16 +3,19 @@
 namespace App\Traits;
 
 use App\Models\Scopes\ShopScope;
+use Illuminate\Support\Facades\Auth;
 
 trait MultiTenant
 {
+    /** @var \App\Models\User $user */
     protected static function bootMultiTenant(): void
     {
         static::addGlobalScope(new ShopScope);
 
         static::creating(function ($model): void {
-            if (auth()->check() && blank($model->shop_id)) {
-                $model->shop_id = auth()->user()->shop_id;
+            if (Auth::check() && blank($model->shop_id)) {
+                $user = Auth::user();
+                $model->shop_id = $user->shop_id;
             }
         });
     }

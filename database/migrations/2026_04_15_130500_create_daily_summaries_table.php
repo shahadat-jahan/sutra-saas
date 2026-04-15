@@ -19,6 +19,9 @@ return new class extends Migration
             $table->decimal('total_sales', 12, 2)->default(0);
             $table->decimal('total_expenses', 12, 2)->default(0);
             $table->decimal('total_profit', 12, 2)->default(0);
+            $table->decimal('total_tax', 12, 2)->default(0);
+            $table->decimal('total_vat', 12, 2)->default(0);
+            $table->decimal('total_discount', 12, 2)->default(0);
             $table->jsonb('metadata')->nullable();
             $table->timestamps();
 

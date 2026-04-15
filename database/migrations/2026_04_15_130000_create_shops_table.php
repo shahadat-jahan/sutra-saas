@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->string('name');
+            $table->string('slug')->unique();
             $table->string('business_type')->default('retail');
             $table->string('logo_path')->nullable();
             $table->jsonb('enabled_modules')->nullable();
-            $table->string('status')->default('active');
+            $table->jsonb('metadata')->nullable();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

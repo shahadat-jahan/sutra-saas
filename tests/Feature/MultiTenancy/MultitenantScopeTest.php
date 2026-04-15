@@ -26,6 +26,7 @@ class MultiTenantScopeTest extends TestCase
             'status' => 'active',
         ]);
 
+        /** @var \App\Models\User $user */
         $user = User::factory()->create([
             'shop_id' => $shopA->id,
         ]);
@@ -63,6 +64,7 @@ class MultiTenantScopeTest extends TestCase
             'status' => 'active',
         ]);
 
+        /** @var \App\Models\User $user */
         $user = User::factory()->create([
             'shop_id' => $shop->id,
         ]);

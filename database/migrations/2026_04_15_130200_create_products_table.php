@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('sale_price', 12, 2)->default(0);
             $table->decimal('stock_quantity', 12, 3)->default(0);
             $table->jsonb('metadata')->nullable();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
 
             $table->unique(['shop_id', 'sku']);

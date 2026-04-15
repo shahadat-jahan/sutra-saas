@@ -18,6 +18,9 @@ class DailySummary extends Model
         'total_sales',
         'total_expenses',
         'total_profit',
+        'total_tax',
+        'total_vat',
+        'total_discount',
         'metadata',
     ];
 

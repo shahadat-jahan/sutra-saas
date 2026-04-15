@@ -7,6 +7,7 @@ use App\Traits\MultiTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Shop extends Model
 {
@@ -14,6 +15,7 @@ class Shop extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'business_type',
         'logo_path',
         'enabled_modules',
@@ -25,6 +27,22 @@ class Shop extends Model
         return [
             'enabled_modules' => 'array',
         ];
+    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($shop) {
+            $slug = Str::slug($shop->name);
+
+            $count = static::where('slug', 'LIKE', "{$slug}%")->count();
+            $shop->slug = $count ? "{$slug}-" . ($count + 1) : $slug;
+            if (empty($shop->enabled_modules)) {
+                $shop->enabled_modules = ['pos'];
+            }
+        });
     }
 
     public function products(): HasMany

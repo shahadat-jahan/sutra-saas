@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('quantity', 12, 3);
             $table->string('type');
             $table->text('note')->nullable();
+            $table->jsonb('metadata')->nullable();
             $table->timestamps();
 
             $table->index(['shop_id', 'product_id']);

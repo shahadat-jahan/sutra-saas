@@ -44,6 +44,10 @@ class HandleInertiaRequests extends Middleware
                     ] : null,
                 ] : null,
             ],
+            'business_types' => array_map(fn($type) => [
+                'value' => $type->value,
+                'label' => $type->label(),
+            ], \App\Enums\BusinessType::cases()),
         ];
     }
 }

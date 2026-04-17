@@ -32,7 +32,10 @@ final class TenantRegistrationService
             $userData['shop_id'] = $shop->id;
             $user = $this->userRepository->create($userData);
             
-            // Assign Shop Owner Role
+            // Set Team Context for Spatie Permissions
+            app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
+            
+            // Assign Shop Owner Role for this specific shop
             $user->assignRole('shop-owner');
             
             return $user;

@@ -41,6 +41,9 @@ class UserController extends Controller
             'shop_id' => $shop->id,
         ]);
 
+        // Set Team Context for Spatie Permissions
+        app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
+
         $user->assignRole($request->role);
 
         return back()->with('success', 'User created successfully.');

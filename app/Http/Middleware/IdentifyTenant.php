@@ -41,6 +41,9 @@ class IdentifyTenant
             // Register tenant in the manager so other parts of the app can access it
             $this->tenantManager->setTenant($shop);
 
+            // Set Team Context for Spatie Permissions
+            app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
+
             // Cross-tenant protection: Ensure logged in user belongs to this shop
             if (Auth::check() && Auth::user()->shop_id !== $shop->id) {
                 Auth::logout();

@@ -81,14 +81,14 @@ export default function Index({ users }) {
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
                                     {users.map((user) => (
-                                        <tr key={user.id} className="hover:bg-slate-50/30 transition-colors">
+                                        <tr key={user.id} className="group hover:bg-slate-50/50 transition-all duration-300">
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center text-slate-500 font-bold border border-white">
-                                                        {user.name.charAt(0)}
+                                                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-50 to-slate-100 flex items-center justify-center text-indigo-600 font-black border border-white shadow-sm group-hover:scale-110 transition-transform duration-300">
+                                                        {user.name.charAt(0).toUpperCase()}
                                                     </div>
                                                     <div>
-                                                        <div className="font-bold text-slate-900">{user.name}</div>
+                                                        <div className="font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{user.name}</div>
                                                         <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
                                                             <Mail className="w-3 h-3" />
                                                             {user.email}
@@ -97,20 +97,29 @@ export default function Index({ users }) {
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6">
-                                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-100 uppercase tracking-wider">
-                                                    <ShieldCheck className="w-3.5 h-3.5" />
-                                                    {user.id === 1 ? 'Owner' : 'Staff'}
-                                                </div>
+                                                {user.roles && user.roles.length > 0 ? (
+                                                    user.roles.map(role => (
+                                                        <div key={role.id} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white text-indigo-700 text-[10px] font-black border border-slate-200 uppercase tracking-tighter shadow-sm">
+                                                            <ShieldCheck className="w-3 h-3" />
+                                                            {role.name.replace('-', ' ')}
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 text-slate-400 text-[10px] font-black border border-slate-200 uppercase tracking-tighter shadow-sm">
+                                                        No Role
+                                                    </div>
+                                                )}
                                             </td>
                                             <td className="px-8 py-6 text-right">
-                                                <div className="flex items-center justify-end gap-3">
+                                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                                     <button 
                                                         onClick={() => handleDelete(user.id)}
-                                                        className="p-2.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
+                                                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all active:scale-90"
+                                                        title="Delete User"
                                                     >
                                                         <Trash2 className="w-5 h-5" />
                                                     </button>
-                                                    <button className="p-2.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all">
+                                                    <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all active:scale-90">
                                                         <MoreVertical className="w-5 h-5" />
                                                     </button>
                                                 </div>

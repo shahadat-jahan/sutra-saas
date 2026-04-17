@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Spatie\Permission\PermissionRegistrar;
 
 class UserController extends Controller
 {
@@ -19,7 +20,7 @@ class UserController extends Controller
         $shop = auth()->user()->shop;
         
         return Inertia::render('Tenant/Users/Index', [
-            'users' => $shop->users()->latest()->get(),
+            'users' => $shop->users()->with('roles')->latest()->get(),
         ]);
     }
 
@@ -29,7 +30,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', Rules\Password::defaults()],
-            'role' => 'required|string|in:shop_owner,staff',
+            'role' => 'required|string|in:shop-owner,staff',
         ]);
 
         $shop = auth()->user()->shop;
@@ -42,7 +43,7 @@ class UserController extends Controller
         ]);
 
         // Set Team Context for Spatie Permissions
-        app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
+        app(PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
 
         $user->assignRole($request->role);
 

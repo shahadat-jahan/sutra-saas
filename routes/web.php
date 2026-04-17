@@ -29,7 +29,7 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
         return Inertia::render('Welcome');
     })->name('welcome');
 
-    Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['auth', 'verified', 'role:super-admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
         Route::get('/shops', [\App\Http\Controllers\Admin\ShopController::class, 'index'])->name('shops.index');
         Route::patch('/shops/{shop}', [\App\Http\Controllers\Admin\ShopController::class, 'update'])->name('shops.update');

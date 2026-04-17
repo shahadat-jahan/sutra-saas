@@ -1,23 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Shop;
-use App\Models\User;
+use App\Services\DashboardService;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class DashboardController extends Controller
 {
+    public function __construct(
+        private readonly DashboardService $dashboardService
+    ) {}
+
+    /**
+     * Display the admin dashboard.
+     */
     public function index(): Response
     {
         return Inertia::render('Admin/Dashboard', [
-            'stats' => [
-                'total_shops' => Shop::count(),
-                'total_users' => User::count(),
-                'active_shops' => Shop::where('status', 1)->count(),
-            ]
+            'stats' => $this->dashboardService->getAdminStats(),
         ]);
     }
 }

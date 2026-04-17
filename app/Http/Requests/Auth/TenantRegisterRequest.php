@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Auth;
 
-use App\Models\User;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules;
-use Illuminate\Validation\Rule;
 use App\Enums\BusinessType;
 use App\Enums\Plan;
+use App\Models\User;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules;
 
 class TenantRegisterRequest extends FormRequest
 {
@@ -30,7 +30,14 @@ class TenantRegisterRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:' . User::class,
+            ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'shop_name' => ['required', 'string', 'max:255'],
             'business_type' => ['required', Rule::enum(BusinessType::class)],

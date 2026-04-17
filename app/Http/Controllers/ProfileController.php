@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileDestroyRequest;
@@ -17,6 +19,7 @@ class ProfileController extends Controller
     public function __construct(
         private readonly UserService $userService
     ) {}
+
     /**
      * Display the user's profile form.
      */

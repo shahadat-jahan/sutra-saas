@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -27,7 +29,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): \Symfony\Component\HttpFoundation\Response
+    public function store(LoginRequest $request): Response
     {
         $request->authenticate();
 
@@ -37,8 +39,9 @@ class AuthenticatedSessionController extends Controller
 
         // If user has a shop, redirect to shop subdomain
         if ($user->shop) {
-             $route = route('dashboard', ['subdomain' => $user->shop->slug]);
-             return Inertia::location($route);
+            $route = route('dashboard', ['subdomain' => $user->shop->slug]);
+
+            return Inertia::location($route);
         }
 
         // If no shop (Super Admin), redirect to admin dashboard on main domain

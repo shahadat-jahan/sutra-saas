@@ -41,7 +41,7 @@ final class UserService
     public function deleteAccount(User $user): void
     {
         Auth::logout();
-        
+
         $this->userRepository->delete($user);
     }
 }

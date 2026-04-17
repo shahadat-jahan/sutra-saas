@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Hash;
 
 final class UserRepository implements UserRepositoryInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function create(array $data): User
     {
         return User::create([
@@ -20,11 +23,17 @@ final class UserRepository implements UserRepositoryInterface
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function update(User $user, array $data): bool
     {
         return $user->update($data);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete(User $user): ?bool
     {
         return $user->delete();

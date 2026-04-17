@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Http\Requests\Auth\TenantRegisterRequest;
+use App\Services\TenantRegistrationService;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Services\TenantRegistrationService;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class RegisteredUserController extends Controller
 {
@@ -26,21 +28,31 @@ class RegisteredUserController extends Controller
     /**
      * Handle an incoming registration request.
      */
-    public function store(TenantRegisterRequest $request): \Symfony\Component\HttpFoundation\Response
+    public function store(TenantRegisterRequest $request): SymfonyResponse
     {
         $user = $this->tenantRegistrationService->registerTenant(
             [
-                'name' => $request->shop_name, 
+                'name' => $request->shop_name,
                 'business_type' => $request->business_type,
-                'plan' => $request->plan
+                'plan' => $request->plan,
             ],
-            ['name' => $request->name, 'email' => $request->email, 'password' => $request->password]
+            [
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
+            ]
         );
 
         // Redirect to new subdomain
         $appDomain = config('app.domain', 'localhost');
         $port = $request->getPort() == 8000 ? ':8000' : '';
-        $subdomainUrl = $request->getScheme() . '://' . $user->shop->slug . '.' . $appDomain . $port . route('dashboard', [], false);
+        $subdomainUrl = $request->getScheme()
+            . '://'
+            . $user->shop->slug
+            . '.'
+            . $appDomain
+            . $port
+            . route('dashboard', [], false);
 
         return Inertia::location($subdomainUrl);
     }

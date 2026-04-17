@@ -5,64 +5,55 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tenant\StoreUserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Services\TenantUserService;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Spatie\Permission\PermissionRegistrar;
 
 class UserController extends Controller
 {
+    public function __construct(
+        private readonly TenantUserService $userService
+    ) {}
+
+    /**
+     * Display a listing of users for the shop.
+     */
     public function index(): Response
     {
         $shop = auth()->user()->shop;
-        
+
         return Inertia::render('Tenant/Users/Index', [
-            'users' => $shop->users()->with('roles')->latest()->get(),
+            'users' => $this->userService->getUsersByShop($shop->id),
         ]);
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created user in storage.
+     */
+    public function store(StoreUserRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', Rules\Password::defaults()],
-            'role' => 'required|string|in:shop-owner,staff',
-        ]);
-
         $shop = auth()->user()->shop;
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'shop_id' => $shop->id,
-        ]);
-
-        // Set Team Context for Spatie Permissions
-        app(PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
-
-        $user->assignRole($request->role);
+        $this->userService->createUser($shop->id, $request->validated());
 
         return back()->with('success', 'User created successfully.');
     }
 
-    public function destroy(User $user)
+    /**
+     * Delete a user.
+     */
+    public function destroy(User $user): RedirectResponse
     {
-        // Ensure user belongs to the same shop
-        if ($user->shop_id !== auth()->user()->shop_id) {
-            abort(403);
-        }
+        $shop = auth()->user()->shop;
+        $shopId = $shop->id;
 
-        // Prevent self-deletion
-        if ($user->id === auth()->id()) {
+        if (!$this->userService->deleteUser($user, $shopId)) {
             return back()->with('error', 'You cannot delete yourself.');
         }
 
-        $user->delete();
 
         return back()->with('success', 'User deleted successfully.');
     }

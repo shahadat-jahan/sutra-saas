@@ -24,12 +24,26 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    href={route('dashboard', { subdomain: user.shop?.slug })}
-                                    active={route().current('dashboard')}
-                                >
-                                    Dashboard
-                                </NavLink>
+                                {user.roles?.some(role => role.name === 'super-admin') ? (
+                                    <>
+                                        <NavLink href={route('admin.dashboard')} active={route().current('admin.dashboard')}>
+                                            System Dashboard
+                                        </NavLink>
+                                        <NavLink href={route('admin.shops.index')} active={route().current('admin.shops.index')}>
+                                            Manage Shops
+                                        </NavLink>
+                                        <NavLink href={route('admin.users.index')} active={route().current('admin.users.index')}>
+                                            Platform Users
+                                        </NavLink>
+                                    </>
+                                ) : (
+                                    <NavLink
+                                        href={route('dashboard', { subdomain: user.shop?.slug })}
+                                        active={route().current('dashboard')}
+                                    >
+                                        Shop Dashboard
+                                    </NavLink>
+                                )}
                             </div>
                         </div>
 

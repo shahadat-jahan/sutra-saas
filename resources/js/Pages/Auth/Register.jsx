@@ -7,6 +7,9 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react';
 
 export default function Register() {
     const { business_types } = usePage().props;
+    const queryParams = new URLSearchParams(window.location.search);
+    const initialPlan = parseInt(queryParams.get('plan') || '1'); // Default to 1 (Basic)
+
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -14,6 +17,7 @@ export default function Register() {
         password_confirmation: '',
         shop_name: '',
         business_type: 1,
+        plan: initialPlan,
     });
 
     const submit = (e) => {
@@ -28,7 +32,13 @@ export default function Register() {
         <GuestLayout>
             <div className="mb-8 text-center">
                 <h1 className="text-3xl font-black text-white mb-2">Create Your Shop</h1>
-                <p className="text-slate-400">Start your <span className="text-indigo-400 font-bold">14-day free trial</span> today.</p>
+                {data.plan === 1 ? (
+                    <p className="text-slate-400">Start your <span className="text-indigo-400 font-bold">14-day free trial</span> today.</p>
+                ) : (
+                    <p className="text-slate-400">Join Sutra as a <span className="text-indigo-400 font-bold capitalize">
+                        {usePage().props.plans.find(p => p.value === data.plan)?.label || 'Partner'}
+                    </span>.</p>
+                )}
             </div>
 
             <form onSubmit={submit} className="space-y-5">

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 
 export default function Index({ shops }) {
+    const { business_types } = usePage().props;
     const { patch } = useForm();
 
     const handleStatusToggle = (shop) => {

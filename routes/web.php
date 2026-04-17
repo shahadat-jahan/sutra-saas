@@ -52,8 +52,17 @@ Route::domain('{subdomain}.' . config('app.domain', 'localhost'))->group(functio
         return redirect()->route('dashboard', ['subdomain' => request()->route('subdomain')]);
     });
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/dashboard', function () {
+            return Inertia::render('Dashboard');
+        })->name('dashboard');
+
+        // User Management for Shop Owners
+        Route::prefix('settings')->name('tenant.')->group(function () {
+            Route::get('/users', [\App\Http\Controllers\Tenant\UserController::class, 'index'])->name('users.index');
+            Route::post('/users', [\App\Http\Controllers\Tenant\UserController::class, 'store'])->name('users.store');
+            Route::delete('/users/{user}', [\App\Http\Controllers\Tenant\UserController::class, 'destroy'])->name('users.destroy');
+        });
+    });
 });
 

@@ -15,15 +15,18 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create Permissions
-        Permission::create(['name' => 'manage shops']);
-        Permission::create(['name' => 'manage users']);
-        Permission::create(['name' => 'view analytics']);
+        Permission::firstOrCreate(['name' => 'manage shops']);
+        Permission::firstOrCreate(['name' => 'manage users']);
+        Permission::firstOrCreate(['name' => 'view analytics']);
 
         // Create Roles and assign permissions
-        $role = Role::create(['name' => 'super-admin']);
+        $role = Role::firstOrCreate(['name' => 'super-admin']);
         $role->givePermissionTo(Permission::all());
 
-        $role = Role::create(['name' => 'shop-owner']);
+        $role = Role::firstOrCreate(['name' => 'shop-owner']);
+        $role->givePermissionTo(['view analytics', 'manage users']);
+
+        $role = Role::firstOrCreate(['name' => 'staff']);
         $role->givePermissionTo(['view analytics']);
     }
 }

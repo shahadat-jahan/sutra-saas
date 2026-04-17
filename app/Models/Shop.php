@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasUuid;
 use App\Enums\ActiveStatus;
 use App\Enums\BusinessType;
+use App\Enums\Plan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,6 +19,7 @@ class Shop extends Model
         'name',
         'slug',
         'business_type',
+        'plan',
         'logo_path',
         'enabled_modules',
         'status',
@@ -29,6 +31,7 @@ class Shop extends Model
             'enabled_modules' => 'array',
             'status' => ActiveStatus::class,
             'business_type' => BusinessType::class,
+            'plan' => Plan::class,
         ];
     }
 

@@ -30,7 +30,12 @@ final class TenantRegistrationService
             $shop = $this->shopRepository->create($shopData);
             
             $userData['shop_id'] = $shop->id;
-            return $this->userRepository->create($userData);
+            $user = $this->userRepository->create($userData);
+            
+            // Assign Shop Owner Role
+            $user->assignRole('shop-owner');
+            
+            return $user;
         });
 
         event(new \Illuminate\Auth\Events\Registered($user));

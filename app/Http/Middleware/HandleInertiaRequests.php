@@ -48,6 +48,27 @@ class HandleInertiaRequests extends Middleware
                 'value' => $type->value,
                 'label' => $type->label(),
             ], \App\Enums\BusinessType::cases()),
+            'currency' => $this->getCurrency($request),
+            'plans' => array_map(fn($plan) => [
+                'value' => $plan->value,
+                'label' => $plan->label(),
+                'price' => $plan->price($this->getCurrency($request)),
+                'modules' => $plan->modules(),
+            ], \App\Enums\Plan::cases()),
         ];
+    }
+
+    private function getCurrency(Request $request): string
+    {
+        // Simple detection based on locale or query param
+        if ($request->has('currency')) {
+            return strtoupper($request->query('currency'));
+        }
+
+        // Mock BD detection for now - in production you'd use a GeoIP service
+        $isBD = str_contains($request->header('Accept-Language', ''), 'bn') || 
+                str_contains($request->header('User-Agent', ''), 'Dhaka');
+        
+        return $isBD ? 'BDT' : 'USD';
     }
 }

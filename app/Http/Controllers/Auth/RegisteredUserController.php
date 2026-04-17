@@ -29,7 +29,11 @@ class RegisteredUserController extends Controller
     public function store(TenantRegisterRequest $request): \Symfony\Component\HttpFoundation\Response
     {
         $user = $this->tenantRegistrationService->registerTenant(
-            ['name' => $request->shop_name, 'business_type' => $request->business_type],
+            [
+                'name' => $request->shop_name, 
+                'business_type' => $request->business_type,
+                'plan' => $request->plan
+            ],
             ['name' => $request->name, 'email' => $request->email, 'password' => $request->password]
         );
 

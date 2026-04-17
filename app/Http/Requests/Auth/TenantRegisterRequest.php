@@ -9,6 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 use App\Enums\BusinessType;
+use App\Enums\Plan;
 
 class TenantRegisterRequest extends FormRequest
 {
@@ -33,6 +34,7 @@ class TenantRegisterRequest extends FormRequest
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'shop_name' => ['required', 'string', 'max:255'],
             'business_type' => ['required', Rule::enum(BusinessType::class)],
+            'plan' => ['required', Rule::enum(Plan::class)],
         ];
     }
 }

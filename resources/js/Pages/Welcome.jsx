@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { Check, Shield, Zap, Building2, Globe, BarChart3, Users, LayoutDashboard, Clock } from 'lucide-react';
 
 export default function Welcome({ auth }) {
@@ -85,106 +85,52 @@ export default function Welcome({ auth }) {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
-                                {/* Starter Plan */}
-                                <div className="p-8 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm flex flex-col hover:bg-white/10 transition-all duration-300 group">
-                                    <div className="mb-6">
-                                        <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 mb-4">
-                                            <Zap className="w-6 h-6" />
+                                {usePage().props.plans.map((plan) => (
+                                    <div key={plan.value} className={`p-8 rounded-3xl border flex flex-col transition-all duration-300 group shadow-2xl ${
+                                        plan.value === 2 
+                                        ? 'border-indigo-500/50 bg-indigo-500/5 backdrop-blur-md relative transform scale-105' 
+                                        : 'border-white/5 bg-white/5 backdrop-blur-sm'
+                                    }`}>
+                                        {plan.value === 2 && (
+                                            <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-500 text-white text-xs font-bold rounded-full uppercase tracking-widest shadow-lg shadow-indigo-500/50">
+                                                Most Popular
+                                            </div>
+                                        )}
+                                        <div className="mb-6">
+                                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${
+                                                plan.value === 2 ? 'bg-indigo-500 text-white shadow-lg' : 'bg-white/10 text-slate-300'
+                                            }`}>
+                                                {plan.value === 1 ? <Zap className="w-6 h-6" /> : (plan.value === 2 ? <Shield className="w-6 h-6" /> : <Building2 className="w-6 h-6" />)}
+                                            </div>
+                                            <h3 className="text-2xl font-bold text-white mb-2">{plan.label}</h3>
+                                            <div className="flex items-baseline gap-1 mb-2">
+                                                <span className="text-4xl font-black text-white">{plan.price}</span>
+                                                {plan.value !== 3 && <span className="text-slate-500">/{plan.value === 1 ? 'forever' : 'month'}</span>}
+                                            </div>
+                                            <p className="text-slate-400 text-sm">
+                                                {plan.value === 1 ? 'Perfect for small shops.' : (plan.value === 2 ? 'Scale your growing business.' : 'Tailored enterprise solutions.')}
+                                            </p>
                                         </div>
-                                        <h3 className="text-2xl font-bold text-white mb-2">Starter</h3>
-                                        <div className="flex items-baseline gap-1 mb-2">
-                                            <span className="text-4xl font-black text-white">$0</span>
-                                            <span className="text-slate-500">/ forever</span>
-                                        </div>
-                                        <p className="text-slate-400 text-sm">Perfect for individuals and small startups.</p>
+                                        <ul className="space-y-4 mb-10 flex-1">
+                                            {plan.modules.map((module) => (
+                                                <li key={module} className="flex items-center gap-3 text-slate-300 text-sm">
+                                                    <Check className={`w-4 h-4 ${plan.value === 2 ? 'text-indigo-400' : 'text-slate-500'}`} /> 
+                                                    <span className="capitalize">{module.replace('_', ' ')}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <Link 
+                                            href={route('register', { plan: plan.value })} 
+                                            className={`w-full py-3 px-6 rounded-xl font-bold text-center transition-all ${
+                                                plan.value === 2 
+                                                ? 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-lg shadow-indigo-500/25' 
+                                                : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                                            }`}
+                                        >
+                                            {plan.value === 1 ? 'Start 14-Day Free Trial' : (plan.value === 3 ? 'Contact Sales' : 'Get Started')}
+                                        </Link>
                                     </div>
-                                    <ul className="space-y-4 mb-10 flex-1">
-                                        <li className="flex items-center gap-3 text-slate-300 text-sm">
-                                            <Check className="w-4 h-4 text-indigo-400" /> 1 Active Shop
-                                        </li>
-                                        <li className="flex items-center gap-3 text-slate-300 text-sm">
-                                            <Check className="w-4 h-4 text-indigo-400" /> Basic Inventory
-                                        </li>
-                                        <li className="flex items-center gap-3 text-slate-300 text-sm">
-                                            <Check className="w-4 h-4 text-indigo-400" /> Standard Support
-                                        </li>
-                                        <li className="flex items-center gap-3 text-slate-300 text-sm">
-                                            <Check className="w-4 h-4 text-indigo-400" /> Mobile Access
-                                        </li>
-                                    </ul>
-                                    <Link href={route('register')} className="w-full py-3 px-6 rounded-xl border border-white/10 bg-white/5 text-white font-bold text-center hover:bg-white/10 transition-colors">
-                                        Get Started
-                                    </Link>
-                                </div>
-
-                                {/* Pro Plan */}
-                                <div className="p-8 rounded-3xl border-2 border-indigo-500/50 bg-indigo-500/5 backdrop-blur-md flex flex-col relative transform hover:scale-105 transition-all duration-300">
-                                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-500 text-white text-xs font-bold rounded-full uppercase tracking-widest shadow-lg shadow-indigo-500/50">
-                                        Most Popular
-                                    </div>
-                                    <div className="mb-6">
-                                        <div className="w-12 h-12 rounded-2xl bg-indigo-500 flex items-center justify-center text-white mb-4 shadow-lg shadow-indigo-500/40">
-                                            <Shield className="w-6 h-6" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-white mb-2">Professional</h3>
-                                        <div className="flex items-baseline gap-1 mb-2">
-                                            <span className="text-4xl font-black text-white">$29</span>
-                                            <span className="text-slate-500">/ month</span>
-                                        </div>
-                                        <p className="text-slate-400 text-sm">Everything you need to scale your business.</p>
-                                    </div>
-                                    <ul className="space-y-4 mb-10 flex-1">
-                                        <li className="flex items-center gap-3 text-white text-sm">
-                                            <Check className="w-4 h-4 text-indigo-400" /> Unlimited Shops
-                                        </li>
-                                        <li className="flex items-center gap-3 text-white text-sm">
-                                            <Check className="w-4 h-4 text-indigo-400" /> Advanced Analytics
-                                        </li>
-                                        <li className="flex items-center gap-3 text-white text-sm">
-                                            <Check className="w-4 h-4 text-indigo-400" /> Custom Subdomain
-                                        </li>
-                                        <li className="flex items-center gap-3 text-white text-sm">
-                                            <Check className="w-4 h-4 text-indigo-400" /> Priority Support
-                                        </li>
-                                        <li className="flex items-center gap-3 text-white text-sm">
-                                            <Check className="w-4 h-4 text-indigo-400" /> Team Management
-                                        </li>
-                                    </ul>
-                                    <Link href={route('register')} className="w-full py-3 px-6 rounded-xl bg-indigo-500 text-white font-bold text-center hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/25">
-                                        Start 14-Day Free Trial
-                                    </Link>
-                                </div>
-
-                                {/* Enterprise Plan */}
-                                <div className="p-8 rounded-3xl border border-white/5 bg-white/5 backdrop-blur-sm flex flex-col hover:bg-white/10 transition-all duration-300">
-                                    <div className="mb-6">
-                                        <div className="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center text-purple-400 mb-4">
-                                            <Building2 className="w-6 h-6" />
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-white mb-2">Enterprise</h3>
-                                        <div className="flex items-baseline gap-1 mb-2">
-                                            <span className="text-4xl font-black text-white">Custom</span>
-                                        </div>
-                                        <p className="text-slate-400 text-sm">Tailored solutions for large franchises.</p>
-                                    </div>
-                                    <ul className="space-y-4 mb-10 flex-1">
-                                        <li className="flex items-center gap-3 text-slate-300 text-sm">
-                                            <Check className="w-4 h-4 text-purple-400" /> Custom SLA
-                                        </li>
-                                        <li className="flex items-center gap-3 text-slate-300 text-sm">
-                                            <Check className="w-4 h-4 text-purple-400" /> API Access
-                                        </li>
-                                        <li className="flex items-center gap-3 text-slate-300 text-sm">
-                                            <Check className="w-4 h-4 text-purple-400" /> Dedicated Account Manager
-                                        </li>
-                                        <li className="flex items-center gap-3 text-slate-300 text-sm">
-                                            <Check className="w-4 h-4 text-purple-400" /> Multi-country Cluster
-                                        </li>
-                                    </ul>
-                                    <a href="mailto:sales@sutra.com" className="w-full py-3 px-6 rounded-xl border border-white/10 bg-white/5 text-white font-bold text-center hover:bg-white/10 transition-colors">
-                                        Contact Sales
-                                    </a>
-                                </div>
+                                ))}
                             </div>
                         </section>
 

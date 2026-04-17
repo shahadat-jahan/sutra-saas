@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->tinyInteger('business_type')->default(1);
+            $table->tinyInteger('plan')->default(1);
             $table->string('logo_path')->nullable();
             $table->jsonb('enabled_modules')->nullable();
             $table->jsonb('metadata')->nullable();

@@ -22,8 +22,8 @@ enum Plan: int
     public function price(string $currency = 'BDT'): string
     {
         return match ($this) {
-            self::BASIC => $currency === 'BDT' ? '৳৮৫০' : '$8',
-            self::PROFESSIONAL => $currency === 'BDT' ? '৳১,৫০০' : '$15',
+            self::BASIC => $currency === 'BDT' ? '৳৫০০' : '$8',
+            self::PROFESSIONAL => $currency === 'BDT' ? '৳১,০০০' : '$15',
             self::ENTERPRISE => 'Custom',
         };
     }

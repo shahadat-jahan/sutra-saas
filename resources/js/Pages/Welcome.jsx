@@ -17,7 +17,7 @@ export default function Welcome({ auth }) {
                             <img src="/images/logo.png" className="w-12 h-12 rounded-xl shadow-lg shadow-indigo-500/30" alt="Sutra Logo" />
                             <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 tracking-tight">Sutra</span>
                         </div>
-                        
+
                         <nav className="hidden md:flex gap-8 text-sm font-medium z-20">
                             <a href="#features" className="hover:text-white transition cursor-pointer">Features</a>
                             <a href="#solutions" className="hover:text-white transition cursor-pointer">Solutions</a>
@@ -56,15 +56,15 @@ export default function Welcome({ auth }) {
                             <span className="flex h-2 w-2 rounded-full bg-indigo-400 animate-ping"></span>
                             Sutra v1.0 POS Architecture is now live
                         </div>
-                        
+
                         <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter leading-tight mb-8">
                             Manage your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">entire business</span><br className="hidden md:block"/> from one dashboard.
                         </h1>
-                        
+
                         <p className="text-lg md:text-xl text-slate-400 max-w-2xl mb-12 leading-relaxed font-light">
-                            The ultimate all-in-one Point of Sale, Inventory, and Analytics platform designed exclusively to scale with your retail store, pharmacy, and enterprise.
+                            The ultimate all-in-one Point of Sale, Inventory, and Analytics platform designed exclusively to scale with your business.
                         </p>
-                        
+
                         <div className="flex flex-col sm:flex-row gap-5 mb-20 w-full sm:w-auto">
                             <Link href={route('register')} className="px-8 py-4 text-base font-bold text-slate-900 bg-white rounded-full shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all transform hover:scale-105 flex items-center justify-center gap-2">
                                 Open Your Shop Now
@@ -87,8 +87,8 @@ export default function Welcome({ auth }) {
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
                                 {usePage().props.plans.map((plan) => (
                                     <div key={plan.value} className={`p-8 rounded-3xl border flex flex-col transition-all duration-300 group shadow-2xl ${
-                                        plan.value === 2 
-                                        ? 'border-indigo-500/50 bg-indigo-500/5 backdrop-blur-md relative transform scale-105' 
+                                        plan.value === 2
+                                        ? 'border-indigo-500/50 bg-indigo-500/5 backdrop-blur-md relative transform scale-105'
                                         : 'border-white/5 bg-white/5 backdrop-blur-sm'
                                     }`}>
                                         {plan.value === 2 && (
@@ -114,16 +114,16 @@ export default function Welcome({ auth }) {
                                         <ul className="space-y-4 mb-10 flex-1">
                                             {plan.modules.map((module) => (
                                                 <li key={module} className="flex items-center gap-3 text-slate-300 text-sm">
-                                                    <Check className={`w-4 h-4 ${plan.value === 2 ? 'text-indigo-400' : 'text-slate-500'}`} /> 
+                                                    <Check className={`w-4 h-4 ${plan.value === 2 ? 'text-indigo-400' : 'text-slate-500'}`} />
                                                     <span className="capitalize">{module.replace('_', ' ')}</span>
                                                 </li>
                                             ))}
                                         </ul>
-                                        <Link 
-                                            href={route('register', { plan: plan.value })} 
+                                        <Link
+                                            href={route('register', { plan: plan.value })}
                                             className={`w-full py-3 px-6 rounded-xl font-bold text-center transition-all ${
-                                                plan.value === 2 
-                                                ? 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-lg shadow-indigo-500/25' 
+                                                plan.value === 2
+                                                ? 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-lg shadow-indigo-500/25'
                                                 : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
                                             }`}
                                         >
@@ -139,7 +139,7 @@ export default function Welcome({ auth }) {
                             <div className="relative p-12 rounded-[40px] overflow-hidden border border-white/10 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 backdrop-blur-xl group">
                                 <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-indigo-500/20 rounded-full blur-[80px] group-hover:bg-indigo-500/30 transition-colors duration-700"></div>
                                 <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-purple-500/20 rounded-full blur-[80px] group-hover:bg-purple-500/30 transition-colors duration-700"></div>
-                                
+
                                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
                                     <div className="flex-1 text-left">
                                         <h2 className="text-3xl md:text-5xl font-black text-white mb-6 leading-tight">Ready to transform your business?</h2>
@@ -170,7 +170,7 @@ export default function Welcome({ auth }) {
                     </main>
 
                     <footer className="text-center py-8 border-t border-white/5 text-slate-500 text-sm z-10 w-full max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center px-6">
-                        <p>&copy; {new Date().getFullYear()} Sutra SaaS. Multi-tenant Architecture.</p>
+                        <p>&copy; {new Date().getFullYear()} Sutra.</p>
                         <div className="flex gap-4 mt-4 sm:mt-0">
                             <a href="#" className="hover:text-white transition">Privacy</a>
                             <a href="#" className="hover:text-white transition">Terms</a>

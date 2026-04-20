@@ -52,7 +52,7 @@ class RegisteredUserController extends Controller
             . '.'
             . $appDomain
             . $port
-            . route('dashboard', [], false);
+            . '/dashboard';
 
         return Inertia::location($subdomainUrl);
     }

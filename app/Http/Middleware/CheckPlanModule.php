@@ -13,8 +13,11 @@ class CheckPlanModule
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  string  $module
+     * @param Request                      $request
+     * @param Closure(Request): (Response) $next
+     * @param string                       $module
+     *
+     * @return Response
      */
     public function handle(Request $request, Closure $next, string $module): Response
     {

@@ -1,3 +1,4 @@
+```mermaid
 graph TD
     SA[Super Admin] -->|Toggle Modules| S[Shop Settings]
     SA -->|Manage Subscriptions| B[Billing Engine]

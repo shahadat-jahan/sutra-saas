@@ -31,18 +31,23 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): \Symfony\Component\HttpFoundation\Response
     {
+        \Illuminate\Support\Facades\Log::info('Login attempt started', ['email' => $request->email]);
+
         $request->authenticate();
 
         $request->session()->regenerate();
 
         $user = Auth::user();
+        \Illuminate\Support\Facades\Log::info('Login successful', ['user_id' => $user->id, 'shop_id' => $user->shop_id]);
 
         // If user has a shop, redirect to shop subdomain
         if ($user->shop) {
+            \Illuminate\Support\Facades\Log::info('Redirecting to shop subdomain', ['subdomain' => $user->shop->slug]);
             return Inertia::location(route('dashboard', ['subdomain' => $user->shop->slug]));
         }
 
         // If no shop (Super Admin), redirect to admin dashboard on main domain
+        \Illuminate\Support\Facades\Log::info('Redirecting to admin dashboard');
         return Inertia::location(route('admin.dashboard'));
     }
 

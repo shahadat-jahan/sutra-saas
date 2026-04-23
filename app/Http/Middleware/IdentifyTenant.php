@@ -25,8 +25,14 @@ class IdentifyTenant
     {
         $host = $request->getHost();
         $appDomain = config('app.domain', 'localhost');
-
         $hostWithoutPort = preg_replace('/:\d+$/', '', $host);
+
+        \Illuminate\Support\Facades\Log::info('IdentifyTenant check', [
+            'host' => $host,
+            'hostWithoutPort' => $hostWithoutPort,
+            'appDomain' => $appDomain,
+            'is_subdomain' => ($hostWithoutPort !== $appDomain && \Illuminate\Support\Str::endsWith($hostWithoutPort, '.' . $appDomain))
+        ]);
 
         if ($hostWithoutPort !== $appDomain && Str::endsWith($hostWithoutPort, '.' . $appDomain)) {
             // It's a subdomain 
@@ -46,6 +52,12 @@ class IdentifyTenant
 
             // Cross-tenant protection: Ensure logged in user belongs to this shop
             if (Auth::check() && Auth::user()->shop_id !== $shop->id) {
+                \Illuminate\Support\Facades\Log::warning('Cross-tenant protection triggered: Logging out user', [
+                    'user_id' => Auth::id(),
+                    'user_shop_id' => Auth::user()->shop_id,
+                    'request_shop_id' => $shop->id,
+                    'host' => $host
+                ]);
                 Auth::logout();
                 return redirect()->route('login')->with('error', 'You do not have access to this shop.');
             }

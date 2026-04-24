@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
     SHOPS ||--o{ USERS : owns
     SHOPS ||--o{ PRODUCTS : manages

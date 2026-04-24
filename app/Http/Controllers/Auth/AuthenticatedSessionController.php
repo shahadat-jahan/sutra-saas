@@ -38,7 +38,10 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $user = Auth::user();
-        \Illuminate\Support\Facades\Log::info('Login successful', ['user_id' => $user->id, 'shop_id' => $user->shop_id]);
+        \Illuminate\Support\Facades\Log::info('Login successful', [
+            'user_id' => $user->id,
+            'session_id' => $request->session()->getId()
+        ]);
 
         // If user has a shop, redirect to shop subdomain
         if ($user->shop) {
@@ -48,7 +51,7 @@ class AuthenticatedSessionController extends Controller
 
         // If no shop (Super Admin), redirect to admin dashboard on main domain
         \Illuminate\Support\Facades\Log::info('Redirecting to admin dashboard');
-        return Inertia::location(route('admin.dashboard'));
+        return redirect('/admin/dashboard');
     }
 
     /**

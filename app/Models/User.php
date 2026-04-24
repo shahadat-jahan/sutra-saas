@@ -4,7 +4,6 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Traits\HasUuid;
-use App\Traits\MultiTenant;
 use App\Enums\ActiveStatus;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasUuid, MultiTenant, Notifiable, HasRoles;
+    use HasFactory, HasUuid, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.

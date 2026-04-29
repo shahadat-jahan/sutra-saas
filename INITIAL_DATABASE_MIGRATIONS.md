@@ -1,41 +1,30 @@
 # 🛠️ Initial Database Migrations (Sutra SaaS)
-
-এই ফাইলটিতে আমাদের প্রজেক্টের কোর ডাটাবেজ স্ট্রাকচার দেওয়া হলো। প্রতিটি টেবিলে **UUID** ব্যবহার করা হয়েছে অফলাইন-রেডি ফাউন্ডেশনের জন্য।
-
+This file contains the core database structure for our project. Every table uses **UUID** for an offline-ready foundation.
 ---
-
 ### 1. Shops Table
-দোকানের বেসিক তথ্য এবং মডিউল কনফিগারেশন।
+Basic shop information and module configuration.
 - **Table Name:** `shops`
 - **Primary:** `id` (Auto-increment) + `uuid` (Unique)
-
 ### 2. Products Table
-পণ্যের মূল তথ্য এবং ইনভেন্টরি ব্যালেন্স।
+Core product information and inventory balance.
 - **Table Name:** `products`
 - **Key Fields:** `sku`, `purchase_price`, `sale_price`, `stock_quantity`.
-- **Flexible Data:** `metadata` (JSONB) ব্যবহার করা হয়েছে বিভিন্ন ইন্ডাস্ট্রির অতিরিক্ত তথ্যের জন্য।
-
+- **Flexible Data:** `metadata` (JSONB) is used for storing extra information for different industries.
 ### 3. Inventory Logs Table (Stock Time Machine)
-পণ্যের প্রতিটি মুভমেন্ট (In/Out) ট্র্যাক করার জন্য। এটি সরাসরি মেইন স্টকের সাথে ইন্টারনাল ইভেন্টের মাধ্যমে আপডেট হবে।
+For tracking every product movement (In/Out). It will update the main stock directly through internal events.
 - **Table Name:** `inventory_logs`
 - **Fields:** `quantity`, `type` (in/out/adj/return).
-
 ### 4. Transaction Logs Table (Finance Time Machine)
-টাকার প্রতিটি লেনদেন (Cash flow) ট্র্যাক করার জন্য।
+For tracking every financial transaction (Cash flow).
 - **Table Name:** `transaction_logs`
 - **Fields:** `amount`, `type` (credit/debit), `payment_method`.
-
 ### 5. Daily Report Summaries
-রিপোর্ট জেনারেট করার স্পিড বাড়াতে এই টেবিলটি ব্যবহার করা হবে।
+This table will be used to speed up report generation.
 - **Table Name:** `daily_summaries`
-- **Logic:** `shop_id` + `report_date` মিলে ইউনিক ইনডেক্স।
-
+- **Logic:** `shop_id` + `report_date` together form a unique index.
 ---
-
 ## 💻 Laravel Migration Code Snippets
-
-আপনি `php artisan make:migration` দিয়ে ফাইলগুলো তৈরি করে নিচের কোডগুলো ব্যবহার করতে পারেন:
-
+You can create the files using `php artisan make:migration` and use the code below:
 #### ✅ Shops Schema
 ```php
 Schema::create('shops', function (Blueprint $table) {
@@ -48,3 +37,4 @@ Schema::create('shops', function (Blueprint $table) {
     $table->string('status')->default('active');
     $table->timestamps();
 });
+```

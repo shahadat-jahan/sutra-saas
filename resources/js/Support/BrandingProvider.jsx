@@ -17,9 +17,9 @@ export function useShopBranding() {
         // Fallback to page props if context not available
         const { props } = usePage();
         return {
-            logo: '/images/shop-default-logo.png',
-            banner: '/images/shop-default-banner.png',
-            watermark: '/images/shop-default-watermark.png',
+            logo: '/images/logo.png',
+            banner: '/images/banner.png',
+            watermark: '/images/watermark.png',
             ...props.shopBranding,
         };
     }
@@ -76,4 +76,3 @@ export function ShopWatermark({ children, className = '' }) {
         </div>
     );
 }
-

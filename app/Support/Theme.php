@@ -113,10 +113,9 @@ class Theme
     public static function getShopDefaults(): array
     {
         return [
-            'logo' => '/images/shop-default-logo.png',
-            'banner' => '/images/shop-default-banner.png',
-            'watermark' => '/images/shop-default-watermark.png',
+            'logo' => '/images/logo.png',
+            'banner' => '/images/banner.png',
+            'watermark' => '/images/watermark.png',
         ];
     }
 }
-

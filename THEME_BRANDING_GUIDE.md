@@ -288,9 +288,7 @@ public/images/
 ├── logo.png                   # Admin logo
 ├── banner.png                 # Admin banner
 ├── watermark.png              # Admin watermark
-├── shop-default-logo.png      # Shop default logo
-├── shop-default-banner.png    # Shop default banner
-└── shop-default-watermark.png # Shop default watermark
+└── (optional) shop-default-*.png  # If you want separate shop defaults, add these and update Theme::getShopDefaults()
 ```
 
 ---
@@ -372,4 +370,3 @@ export default function PosHeader() {
 - [ ] Store theme preference in database (per user/shop)
 - [ ] Color accessibility checker
 - [ ] Theme import/export functionality
-

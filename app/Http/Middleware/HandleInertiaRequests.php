@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Enums\BusinessType;
 use App\Enums\Plan;
+use App\Support\Theme;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -31,8 +32,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $themeMode = (string) $request->session()->get('theme_mode', 'dark');
+
         return [
             ...parent::share($request),
+            'themeMode' => $themeMode,
+            'themePalette' => Theme::getPalette($themeMode),
+            'adminBranding' => Theme::getAdminBranding(),
+            'shopDefaults' => Theme::getShopDefaults(),
             'auth' => [
                 'user' => $request->user() ? [
                     'id' => $request->user()->id,

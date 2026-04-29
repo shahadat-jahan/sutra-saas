@@ -4,6 +4,7 @@ import {
     LayoutDashboard, 
     Store, 
     Users, 
+    Megaphone,
     Settings, 
     LogOut, 
     Menu, 
@@ -20,6 +21,7 @@ export default function AdminLayout({ children, header }) {
 
     const navigation = [
         { name: 'Dashboard', href: route('admin.dashboard'), icon: LayoutDashboard, current: route().current('admin.dashboard') },
+        { name: 'Announcements', href: route('admin.announcements.index'), icon: Megaphone, current: route().current('admin.announcements.*') },
         { name: 'Shops', href: route('admin.shops.index'), icon: Store, current: route().current('admin.shops.*') },
         { name: 'Users', href: route('admin.users.index'), icon: Users, current: route().current('admin.users.*') },
         { name: 'Settings', href: route('admin.settings.index'), icon: Settings, current: route().current('admin.settings.*') },

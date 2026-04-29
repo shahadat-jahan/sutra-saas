@@ -1,5 +1,5 @@
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { 
     Users, 
     Store, 
@@ -8,6 +8,7 @@ import {
     ArrowUpRight,
     ArrowDownRight
 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { 
     BarChart, 
     Bar, 
@@ -20,23 +21,19 @@ import {
     Area
 } from 'recharts';
 
-const data = [
-    { name: 'Jan', value: 400 },
-    { name: 'Feb', value: 300 },
-    { name: 'Mar', value: 600 },
-    { name: 'Apr', value: 800 },
-    { name: 'May', value: 500 },
-    { name: 'Jun', value: 900 },
-];
+export default function Dashboard({ stats, charts, announcements }) {
+    const [activityRange, setActivityRange] = useState('6m');
+    const activityData = useMemo(() => (
+        activityRange === '12m' ? charts.activity_12m : charts.activity_6m
+    ), [activityRange, charts]);
 
-export default function Dashboard({ stats }) {
     const statCards = [
         { 
             name: 'Total Users', 
             value: stats.total_users, 
             icon: Users, 
-            change: '+12%', 
-            trend: 'up',
+            change: `${stats.users_change_pct_30d >= 0 ? '+' : ''}${stats.users_change_pct_30d}%`,
+            trend: stats.users_change_pct_30d >= 0 ? 'up' : 'down',
             color: 'text-blue-600',
             bg: 'bg-blue-50'
         },
@@ -44,8 +41,8 @@ export default function Dashboard({ stats }) {
             name: 'Total Shops', 
             value: stats.total_shops, 
             icon: Store, 
-            change: '+5%', 
-            trend: 'up',
+            change: `${stats.shops_change_pct_30d >= 0 ? '+' : ''}${stats.shops_change_pct_30d}%`,
+            trend: stats.shops_change_pct_30d >= 0 ? 'up' : 'down',
             color: 'text-indigo-600',
             bg: 'bg-indigo-50'
         },
@@ -53,16 +50,16 @@ export default function Dashboard({ stats }) {
             name: 'Active Shops', 
             value: stats.active_shops, 
             icon: Activity, 
-            change: '-2%', 
-            trend: 'down',
+            change: `${stats.active_shops} active`,
+            trend: 'up',
             color: 'text-emerald-600',
             bg: 'bg-emerald-50'
         },
         { 
             name: 'Platform Growth', 
-            value: '24%', 
+            value: `${Math.max(stats.users_change_pct_30d, stats.shops_change_pct_30d)}%`,
             icon: TrendingUp, 
-            change: '+18%', 
+            change: `${stats.new_users_30d} users / ${stats.new_shops_30d} shops (30d)`,
             trend: 'up',
             color: 'text-violet-600',
             bg: 'bg-violet-50'
@@ -100,14 +97,18 @@ export default function Dashboard({ stats }) {
                             <h3 className="text-lg font-bold text-slate-900">Platform Activity</h3>
                             <p className="text-slate-500 text-sm">Overview of registrations over time</p>
                         </div>
-                        <select className="bg-slate-50 border-slate-200 rounded-lg text-sm font-medium focus:ring-indigo-500 text-slate-600">
-                            <option>Last 6 Months</option>
-                            <option>Last Year</option>
+                        <select
+                            value={activityRange}
+                            onChange={(e) => setActivityRange(e.target.value)}
+                            className="bg-slate-50 border-slate-200 rounded-lg text-sm font-medium focus:ring-indigo-500 text-slate-600"
+                        >
+                            <option value="6m">Last 6 Months</option>
+                            <option value="12m">Last Year</option>
                         </select>
                     </div>
                     <div className="h-80 w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={data}>
+                            <AreaChart data={activityData}>
                                 <defs>
                                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                                         <stop offset="5%" stopColor="#6366f1" stopOpacity={0.1}/>
@@ -132,11 +133,16 @@ export default function Dashboard({ stats }) {
                             <h3 className="text-lg font-bold text-slate-900">Shop Performance</h3>
                             <p className="text-slate-500 text-sm">Top performing sectors</p>
                         </div>
-                        <button className="text-indigo-600 font-bold text-sm hover:underline">View All</button>
+                        <Link
+                            href={route('admin.shops.index')}
+                            className="text-indigo-600 font-bold text-sm hover:underline"
+                        >
+                            View All
+                        </Link>
                     </div>
                     <div className="h-80 w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={data}>
+                            <BarChart data={charts.sectors}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
                                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
@@ -155,18 +161,44 @@ export default function Dashboard({ stats }) {
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-slate-100 flex items-center justify-between">
                     <h3 className="font-bold text-slate-900 text-lg">Platform Announcements</h3>
-                    <button className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-colors">
+                    <Link
+                        href={route('admin.announcements.create')}
+                        className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-colors"
+                    >
                         New Post
-                    </button>
+                    </Link>
                 </div>
                 <div className="p-8">
-                    <div className="flex flex-col items-center justify-center text-center py-12">
-                        <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                            <Activity className="w-8 h-8 text-slate-300" />
+                    {announcements?.length ? (
+                        <div className="space-y-4">
+                            {announcements.map((a) => (
+                                <div key={a.uuid} className="p-4 rounded-2xl border border-slate-200 bg-white hover:bg-slate-50/50 transition-colors">
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div>
+                                            <p className="font-bold text-slate-900">{a.title}</p>
+                                            <p className="text-xs text-slate-500 mt-1">
+                                                Published: {a.published_at ? new Date(a.published_at).toLocaleString() : '—'}
+                                            </p>
+                                        </div>
+                                        <Link
+                                            href={route('admin.announcements.index')}
+                                            className="text-indigo-600 font-bold text-sm hover:underline whitespace-nowrap"
+                                        >
+                                            View all
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <h4 className="font-bold text-slate-900">No recent announcements</h4>
-                        <p className="text-slate-500 text-sm max-w-xs mt-1">Keep your users informed about platform updates and maintenance.</p>
-                    </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center text-center py-12">
+                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                                <Activity className="w-8 h-8 text-slate-300" />
+                            </div>
+                            <h4 className="font-bold text-slate-900">No recent announcements</h4>
+                            <p className="text-slate-500 text-sm max-w-xs mt-1">Keep your users informed about platform updates and maintenance.</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </AdminLayout>

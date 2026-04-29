@@ -1,5 +1,5 @@
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { 
     Search, 
     Filter, 
@@ -10,16 +10,36 @@ import {
     Clock,
     Store
 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 export default function Index({ shops }) {
     const { business_types } = usePage().props;
-    const { patch } = useForm();
+    const { appDomain } = usePage().props;
+    const [query, setQuery] = useState('');
 
     const handleStatusToggle = (shop) => {
         const newStatus = shop.status === 1 ? 0 : 1;
-        patch(route('admin.shops.update', shop.id), {
-            status: newStatus
+        router.patch(route('admin.shops.update', shop.uuid), {
+            status: newStatus,
+        }, {
+            preserveScroll: true,
         });
+    };
+
+    const filteredShops = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        if (!q) return shops;
+        return shops.filter((shop) => (
+            shop.name?.toLowerCase().includes(q) ||
+            shop.slug?.toLowerCase().includes(q) ||
+            String(shop.id).includes(q)
+        ));
+    }, [shops, query]);
+
+    const getTenantUrl = (shop) => {
+        const domain = appDomain || window.location.hostname;
+        const port = window.location.port ? `:${window.location.port}` : '';
+        return `${window.location.protocol}//${shop.slug}.${domain}${port}`;
     };
 
     return (
@@ -38,10 +58,17 @@ export default function Index({ shops }) {
                         <input 
                             type="text" 
                             placeholder="Search shops..." 
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
                             className="pl-10 pr-4 py-2 border-slate-200 rounded-xl text-sm focus:ring-indigo-500 focus:border-indigo-500 w-full sm:w-64"
                         />
                     </div>
-                    <button className="p-2 border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-500">
+                    <button
+                        type="button"
+                        disabled
+                        title="Coming soon"
+                        className="p-2 border border-slate-200 rounded-xl text-slate-400 cursor-not-allowed"
+                    >
                         <Filter className="w-5 h-5" />
                     </button>
                 </div>
@@ -61,7 +88,7 @@ export default function Index({ shops }) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {shops.length > 0 ? shops.map((shop) => (
+                            {filteredShops.length > 0 ? filteredShops.map((shop) => (
                                 <tr key={shop.id} className="hover:bg-slate-50/50 transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
@@ -76,11 +103,12 @@ export default function Index({ shops }) {
                                     </td>
                                     <td className="px-6 py-4">
                                         <a 
-                                            href={`http://${shop.slug}.localhost:8000`} 
+                                            href={getTenantUrl(shop)}
                                             target="_blank" 
+                                            rel="noreferrer"
                                             className="inline-flex items-center gap-1.5 text-sm text-indigo-600 font-medium hover:underline"
                                         >
-                                            {shop.slug}.sutra.com
+                                            {shop.slug}.{appDomain || window.location.hostname}
                                             <ExternalLink className="w-3.5 h-3.5" />
                                         </a>
                                     </td>
@@ -137,7 +165,7 @@ export default function Index({ shops }) {
                 </div>
                 {/* Pagination Placeholder */}
                 <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-sm text-slate-500">Showing {shops.length} results</span>
+                    <span className="text-sm text-slate-500">Showing {filteredShops.length} results</span>
                     <div className="flex items-center gap-2">
                         <button className="px-4 py-2 text-sm font-bold text-slate-400 bg-white border border-slate-200 rounded-xl cursor-not-allowed">Previous</button>
                         <button className="px-4 py-2 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50">Next</button>

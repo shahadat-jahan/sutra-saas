@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ShopController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Tenant\UserController as TenantUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThemeController;
@@ -48,6 +49,12 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
                 '/dashboard',
                 [DashboardController::class, 'index']
             )->name('dashboard');
+            Route::get('/announcements', [AnnouncementController::class, 'index'])
+                ->name('announcements.index');
+            Route::get('/announcements/create', [AnnouncementController::class, 'create'])
+                ->name('announcements.create');
+            Route::post('/announcements', [AnnouncementController::class, 'store'])
+                ->name('announcements.store');
             Route::get(
                 '/shops',
                 [ShopController::class, 'index']

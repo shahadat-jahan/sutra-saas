@@ -24,7 +24,18 @@ class ShopController extends Controller
     public function index(): Response
     {
         return Inertia::render('Admin/Shops/Index', [
-            'shops' => Shop::latest()->get(),
+            'shops' => Shop::query()
+                ->latest()
+                ->get()
+                ->map(fn (Shop $shop) => [
+                    'id' => $shop->id,
+                    'uuid' => $shop->uuid,
+                    'name' => $shop->name,
+                    'slug' => $shop->slug,
+                    'business_type' => $shop->business_type?->value ?? $shop->getAttribute('business_type'),
+                    'status' => $shop->status?->value ?? $shop->getAttribute('status'),
+                    'created_at' => $shop->created_at?->toDateTimeString(),
+                ]),
         ]);
     }
 

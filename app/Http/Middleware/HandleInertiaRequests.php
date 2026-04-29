@@ -36,6 +36,7 @@ class HandleInertiaRequests extends Middleware
 
         return [
             ...parent::share($request),
+            'appDomain' => (string) config('app.domain', parse_url((string) config('app.url'), PHP_URL_HOST) ?: 'localhost'),
             'themeMode' => $themeMode,
             'themePalette' => Theme::getPalette($themeMode),
             'adminBranding' => Theme::getAdminBranding(),

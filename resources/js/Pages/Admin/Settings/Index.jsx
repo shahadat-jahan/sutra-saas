@@ -72,8 +72,13 @@ export default function Index() {
                             </div>
 
                             <div className="pt-4 border-t border-slate-100 mt-8 flex items-center justify-between">
-                                <p className="text-xs text-slate-400 font-medium italic">Last updated: Today at 2:00 PM</p>
-                                <button className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all">
+                                <p className="text-xs text-slate-400 font-medium italic">Settings persistence is coming soon.</p>
+                                <button
+                                    type="button"
+                                    disabled
+                                    title="Coming soon"
+                                    className="flex items-center gap-2 bg-indigo-600/60 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-xl shadow-indigo-100 cursor-not-allowed"
+                                >
                                     <Save className="w-4 h-4" />
                                     Save Changes
                                 </button>

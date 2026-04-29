@@ -10,8 +10,21 @@ import {
     User as UserIcon,
     Store
 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 export default function Index({ users }) {
+    const [query, setQuery] = useState('');
+
+    const filteredUsers = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        if (!q) return users;
+        return users.filter((user) => (
+            user.name?.toLowerCase().includes(q) ||
+            user.email?.toLowerCase().includes(q) ||
+            String(user.id).includes(q)
+        ));
+    }, [users, query]);
+
     return (
         <AdminLayout header="User Management">
             <Head title="Manage Users" />
@@ -21,7 +34,12 @@ export default function Index({ users }) {
                     <h1 className="text-2xl font-bold text-slate-900">Platform Users</h1>
                     <p className="text-slate-500 text-sm mt-1">Supervise all registered accounts across the platform.</p>
                 </div>
-                <button className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all active:scale-95">
+                <button
+                    type="button"
+                    disabled
+                    title="Coming soon"
+                    className="flex items-center gap-2 bg-indigo-600/60 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-indigo-100 cursor-not-allowed"
+                >
                     <UserPlus className="w-4 h-4" />
                     Add New User
                 </button>
@@ -34,6 +52,8 @@ export default function Index({ users }) {
                         <input 
                             type="text" 
                             placeholder="Find users by name, email or ID..." 
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
                             className="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
@@ -51,7 +71,7 @@ export default function Index({ users }) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
-                            {users.map((user) => (
+                            {filteredUsers.map((user) => (
                                 <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
@@ -102,7 +122,7 @@ export default function Index({ users }) {
                 </div>
                 
                 <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between text-sm">
-                    <p className="text-slate-500">Showing {users.length} users</p>
+                    <p className="text-slate-500">Showing {filteredUsers.length} users</p>
                     <div className="flex gap-2">
                         <button className="text-slate-600 font-bold hover:text-indigo-600">Previous</button>
                         <button className="text-slate-600 font-bold hover:text-indigo-600">Next</button>

@@ -3,6 +3,7 @@
 namespace App\Modules\Finance\Application\Services;
 
 use App\Models\Customer;
+use App\Repositories\Interfaces\CustomerRepositoryInterface;
 
 /**
  * Service to handle Bakir Khata (Credit) logic.
@@ -10,6 +11,9 @@ use App\Models\Customer;
  */
 class BakirKhataService
 {
+    public function __construct(
+        protected CustomerRepositoryInterface $customerRepository
+    ) {}
     /**
      * Validate if the customer can afford the sale based on their credit limit.
      * 
@@ -31,8 +35,8 @@ class BakirKhataService
      */
     public function recordCreditSale(Customer $customer, float $amount): void
     {
-        // Update customer balance (current_balance increases with debt)
-        $customer->increment('current_balance', $amount);
+        // Update customer balance via repository
+        $this->customerRepository->incrementBalance($customer, $amount);
 
         // Optionally: Create a TransactionLog entry here if needed
     }

@@ -18,6 +18,13 @@ interface ProductRepositoryInterface
     public function getByShop(string $shopId): Collection;
 
     /**
+     * Get optimized products for POS display.
+     * 
+     * @return Collection
+     */
+    public function getPosProducts(): Collection;
+
+    /**
      * Find a product by ID.
      *
      * @param string $id

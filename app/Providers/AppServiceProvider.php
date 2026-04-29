@@ -39,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TransactionLogRepositoryInterface::class, TransactionLogRepository::class);
         $this->app->bind(InventoryLogRepositoryInterface::class, InventoryLogRepository::class);
         $this->app->bind(DailySummaryRepositoryInterface::class, DailySummaryRepository::class);
+        $this->app->bind(\App\Repositories\Interfaces\CustomerRepositoryInterface::class, \App\Repositories\Eloquent\CustomerRepository::class);
+        $this->app->bind(\App\Repositories\Interfaces\SaleRepositoryInterface::class, \App\Repositories\Eloquent\SaleRepository::class);
     }
 
     /**

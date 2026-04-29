@@ -18,6 +18,14 @@ final class ProductRepository implements ProductRepositoryInterface
         return Product::where('shop_id', $shopId)->get();
     }
 
+    public function getPosProducts(): Collection
+    {
+        return Product::query()
+            ->select(['id', 'name', 'sale_price', 'attributes', 'stock_quantity'])
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
     /**
      * {@inheritdoc}
      */

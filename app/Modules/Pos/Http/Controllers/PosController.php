@@ -3,8 +3,8 @@
 namespace App\Modules\Pos\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\Customer;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Interfaces\CustomerRepositoryInterface;
 use App\Modules\Pos\Application\Services\SaleService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Auth;
 class PosController extends Controller
 {
     public function __construct(
-        protected SaleService $saleService
+        protected SaleService $saleService,
+        protected ProductRepositoryInterface $productRepository,
+        protected CustomerRepositoryInterface $customerRepository
     ) {}
 
     /**
@@ -24,8 +26,8 @@ class PosController extends Controller
     public function index(): Response
     {
         return Inertia::render('Pos/Index', [
-            'products' => Product::query()->orderByDesc('created_at')->get(),
-            'customers' => Customer::active()->orderByDesc('created_at')->get(),
+            'products' => $this->productRepository->getPosProducts(),
+            'customers' => $this->customerRepository->getActiveCustomers(),
         ]);
     }
 

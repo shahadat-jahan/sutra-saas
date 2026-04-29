@@ -3,7 +3,7 @@
 namespace App\Modules\Pos\Application\Services;
 
 use App\Models\Sale;
-use App\Models\Customer;
+use App\Repositories\Interfaces\SaleRepositoryInterface;
 use App\Modules\Finance\Application\Services\BakirKhataService;
 use App\Enums\PaymentMethod;
 use App\Enums\SaleStatus;
@@ -16,7 +16,8 @@ class SaleService
 {
     public function __construct(
         protected CustomerService $customerService,
-        protected BakirKhataService $bakirKhataService
+        protected BakirKhataService $bakirKhataService,
+        protected SaleRepositoryInterface $saleRepository
     ) {}
 
     /**
@@ -53,7 +54,7 @@ class SaleService
 
         // 3. Create the Sale record
         // Requirement: Fast Sale Logic - If 'Cash', customer_id must be null.
-        $sale = Sale::create([
+        $sale = $this->saleRepository->create([
             'shop_id' => $data['shop_id'],
             'user_id' => $data['user_id'],
             'customer_id' => ($paymentMethod === PaymentMethod::CASH) ? null : $customer?->id,

@@ -1,4 +1,4 @@
-# Sutra - Modular Multi-tenant SaaS ERP/POS
+# Sutra - Modular Multi-tenant SaaS
 
 Sutra is a modern, scalable, and modular SaaS platform designed for Bangladeshi retail and pharmacy businesses. Built with a **Modular Monolith** architecture, it supports multi-tenancy via subdomains and provides a seamless POS experience.
 

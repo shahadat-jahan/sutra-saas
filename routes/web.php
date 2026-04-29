@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ShopController;
+use App\Http\Controllers\Admin\ShopUserController;
+use App\Http\Controllers\Admin\ShopRoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Tenant\UserController as TenantUserController;
+use App\Http\Controllers\Tenant\RoleController as TenantRoleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
@@ -59,10 +62,36 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
                 '/shops',
                 [ShopController::class, 'index']
             )->name('shops.index');
+            Route::post(
+                '/shops',
+                [ShopController::class, 'store']
+            )->name('shops.store');
             Route::patch(
                 '/shops/{shop}',
                 [ShopController::class, 'update']
             )->name('shops.update');
+            Route::delete(
+                '/shops/{shop}',
+                [ShopController::class, 'destroy']
+            )->name('shops.destroy');
+
+            Route::get('/shops/{shop}/users', [ShopUserController::class, 'index'])
+                ->name('shops.users.index');
+            Route::post('/shops/{shop}/users', [ShopUserController::class, 'store'])
+                ->name('shops.users.store');
+            Route::patch('/shops/{shop}/users/{user}', [ShopUserController::class, 'update'])
+                ->name('shops.users.update');
+            Route::delete('/shops/{shop}/users/{user}', [ShopUserController::class, 'destroy'])
+                ->name('shops.users.destroy');
+
+            Route::get('/shops/{shop}/roles', [ShopRoleController::class, 'index'])
+                ->name('shops.roles.index');
+            Route::post('/shops/{shop}/roles', [ShopRoleController::class, 'store'])
+                ->name('shops.roles.store');
+            Route::patch('/shops/{shop}/roles/{role}', [ShopRoleController::class, 'update'])
+                ->name('shops.roles.update');
+            Route::delete('/shops/{shop}/roles/{role}', [ShopRoleController::class, 'destroy'])
+                ->name('shops.roles.destroy');
             Route::get(
                 '/users',
                 [UserController::class, 'index']
@@ -95,6 +124,7 @@ Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
 
             // User Management for Shop Owners
             Route::prefix('settings')
+                ->middleware(['role:shop-owner'])
                 ->name('tenant.')
                 ->group(function () {
                     Route::get(
@@ -105,10 +135,23 @@ Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
                         '/users',
                         [TenantUserController::class, 'store']
                     )->name('users.store');
+                    Route::patch(
+                        '/users/{user}',
+                        [TenantUserController::class, 'update']
+                    )->name('users.update');
                     Route::delete(
                         '/users/{user}',
                         [TenantUserController::class, 'destroy']
                     )->name('users.destroy');
+
+                    Route::get('/roles', [TenantRoleController::class, 'index'])
+                        ->name('roles.index');
+                    Route::post('/roles', [TenantRoleController::class, 'store'])
+                        ->name('roles.store');
+                    Route::patch('/roles/{role}', [TenantRoleController::class, 'update'])
+                        ->name('roles.update');
+                    Route::delete('/roles/{role}', [TenantRoleController::class, 'destroy'])
+                        ->name('roles.destroy');
                 });
         });
     });

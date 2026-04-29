@@ -2,40 +2,36 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Tenant;
+namespace App\Http\Requests\Admin;
 
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rules\Password;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
-class StoreUserRequest extends FormRequest
+class StoreShopUserRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        $shopId = (string) $this->user()->shop_id;
+        $shop = $this->route('shop');
+        $shopId = is_object($shop) ? (string) $shop->id : (string) $shop;
         $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
 
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', Rules\Password::defaults()],
+            'password' => ['nullable', Password::defaults()],
             'role' => [
                 'required',
                 'string',
@@ -44,3 +40,4 @@ class StoreUserRequest extends FormRequest
         ];
     }
 }
+

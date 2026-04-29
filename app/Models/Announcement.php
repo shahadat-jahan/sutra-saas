@@ -21,12 +21,14 @@ class Announcement extends Model
         'user_id',
         'title',
         'body',
+        'metadata',
         'published_at',
     ];
 
     protected function casts(): array
     {
         return [
+            'metadata' => 'array',
             'published_at' => 'datetime',
         ];
     }

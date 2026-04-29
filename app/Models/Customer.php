@@ -33,7 +33,16 @@ class Customer extends Model
             'credit_limit' => 'decimal:2',
             'current_balance' => 'decimal:2',
             'profile_data' => 'array',
+            'status' => \App\Enums\ActiveStatus::class,
         ];
+    }
+
+    /**
+     * Scope for active customers.
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('status', \App\Enums\ActiveStatus::ACTIVE);
     }
 
     /**

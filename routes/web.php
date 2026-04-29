@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ShopController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Tenant\UserController as TenantUserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -22,8 +27,8 @@ Route::middleware('auth')->group(function () {
 | Theme Routes
 |--------------------------------------------------------------------------
 */
-Route::post('/theme/toggle', [\App\Http\Controllers\ThemeController::class, 'toggle'])->name('theme.toggle');
-Route::post('/theme/set', [\App\Http\Controllers\ThemeController::class, 'set'])->name('theme.set');
+Route::post('/theme/toggle', [ThemeController::class, 'toggle'])->name('theme.toggle');
+Route::post('/theme/set', [ThemeController::class, 'set'])->name('theme.set');
 
 /*
 |--------------------------------------------------------------------------
@@ -41,19 +46,19 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
         ->group(function () {
             Route::get(
                 '/dashboard',
-                [\App\Http\Controllers\Admin\DashboardController::class, 'index']
+                [DashboardController::class, 'index']
             )->name('dashboard');
             Route::get(
                 '/shops',
-                [\App\Http\Controllers\Admin\ShopController::class, 'index']
+                [ShopController::class, 'index']
             )->name('shops.index');
             Route::patch(
                 '/shops/{shop}',
-                [\App\Http\Controllers\Admin\ShopController::class, 'update']
+                [ShopController::class, 'update']
             )->name('shops.update');
             Route::get(
                 '/users',
-                [\App\Http\Controllers\Admin\UserController::class, 'index']
+                [UserController::class, 'index']
             )->name('users.index');
             Route::get('/settings', function () {
                 return Inertia::render('Admin/Settings/Index');
@@ -87,15 +92,15 @@ Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
                 ->group(function () {
                     Route::get(
                         '/users',
-                        [\App\Http\Controllers\Tenant\UserController::class, 'index']
+                        [TenantUserController::class, 'index']
                     )->name('users.index');
                     Route::post(
                         '/users',
-                        [\App\Http\Controllers\Tenant\UserController::class, 'store']
+                        [TenantUserController::class, 'store']
                     )->name('users.store');
                     Route::delete(
                         '/users/{user}',
-                        [\App\Http\Controllers\Tenant\UserController::class, 'destroy']
+                        [TenantUserController::class, 'destroy']
                     )->name('users.destroy');
                 });
         });

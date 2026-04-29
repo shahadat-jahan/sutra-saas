@@ -5,6 +5,7 @@ namespace App\Modules\Pos\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Interfaces\CustomerRepositoryInterface;
+use App\Http\Requests\Pos\StoreSaleRequest;
 use App\Modules\Pos\Application\Services\SaleService;
 use App\Support\TenantManager;
 use Illuminate\Http\Request;
@@ -37,17 +38,9 @@ class PosController extends Controller
     /**
      * Handle the sale submission.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreSaleRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'items' => 'required|array',
-            'customer_id' => 'nullable',
-            'payment_method' => 'required|string',
-            'total_amount' => 'required|numeric',
-            'paid_amount' => 'nullable|numeric',
-            'customer' => 'nullable|array', // For new customer creation
-        ]);
-
+        $data = $request->validated();
         $data['shop_id'] = Auth::user()->shop_id;
         $data['user_id'] = Auth::id();
 

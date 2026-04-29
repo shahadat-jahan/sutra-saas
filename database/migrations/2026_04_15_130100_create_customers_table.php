@@ -11,22 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->string('sku');
-            $table->decimal('purchase_price', 12, 2)->default(0);
-            $table->decimal('sale_price', 12, 2)->default(0);
-            $table->decimal('stock_quantity', 12, 3)->default(0);
-            $table->jsonb('metadata')->nullable();
-            $table->jsonb('attributes')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->text('address')->nullable();
+            $table->string('nid')->nullable();
+            $table->decimal('credit_limit', 15, 2)->default(0);
+            $table->decimal('current_balance', 15, 2)->default(0);
+            $table->jsonb('profile_data')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
 
-            $table->unique(['shop_id', 'sku']);
-            $table->index(['shop_id', 'name']);
+            $table->index(['shop_id', 'phone']);
         });
     }
 
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('customers');
     }
 };

@@ -10,44 +10,53 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Product extends Model
+class Customer extends Model
 {
     use HasFactory, HasUuid, MultiTenant, HasDynamicAttributes;
 
     protected $fillable = [
         'shop_id',
         'name',
-        'sku',
-        'purchase_price',
-        'sale_price',
-        'stock_quantity',
-        'metadata',
-        'attributes',
+        'phone',
+        'email',
+        'address',
+        'nid',
+        'credit_limit',
+        'current_balance',
+        'profile_data',
+        'status',
     ];
 
     protected function casts(): array
     {
         return [
-            'purchase_price' => 'decimal:2',
-            'sale_price' => 'decimal:2',
-            'stock_quantity' => 'decimal:3',
-            'metadata' => 'array',
-            'attributes' => 'array',
+            'credit_limit' => 'decimal:2',
+            'current_balance' => 'decimal:2',
+            'profile_data' => 'array',
         ];
     }
 
+    /**
+     * Define the JSONB column that stores dynamic attributes.
+     */
     protected function getDynamicAttributesColumn(): string
     {
-        return 'attributes';
+        return 'profile_data';
     }
 
+    /**
+     * Relationship with the Shop (Tenant).
+     */
     public function shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class);
     }
 
-    public function inventoryLogs(): HasMany
+    /**
+     * Relationship with Transaction Logs.
+     */
+    public function transactionLogs(): HasMany
     {
-        return $this->hasMany(InventoryLog::class);
+        return $this->hasMany(TransactionLog::class);
     }
 }

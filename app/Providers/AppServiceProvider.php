@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Repositories\Eloquent\CustomerRepository;
 use App\Repositories\Eloquent\DailySummaryRepository;
 use App\Repositories\Eloquent\InventoryLogRepository;
 use App\Repositories\Eloquent\ProductRepository;
+use App\Repositories\Eloquent\SaleRepository;
 use App\Repositories\Eloquent\ShopRepository;
 use App\Repositories\Eloquent\TransactionLogRepository;
 use App\Repositories\Eloquent\UserRepository;
+use App\Repositories\Interfaces\CustomerRepositoryInterface;
 use App\Repositories\Interfaces\DailySummaryRepositoryInterface;
 use App\Repositories\Interfaces\InventoryLogRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Interfaces\SaleRepositoryInterface;
 use App\Repositories\Interfaces\ShopRepositoryInterface;
 use App\Repositories\Interfaces\TransactionLogRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -39,8 +43,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TransactionLogRepositoryInterface::class, TransactionLogRepository::class);
         $this->app->bind(InventoryLogRepositoryInterface::class, InventoryLogRepository::class);
         $this->app->bind(DailySummaryRepositoryInterface::class, DailySummaryRepository::class);
-        $this->app->bind(\App\Repositories\Interfaces\CustomerRepositoryInterface::class, \App\Repositories\Eloquent\CustomerRepository::class);
-        $this->app->bind(\App\Repositories\Interfaces\SaleRepositoryInterface::class, \App\Repositories\Eloquent\SaleRepository::class);
+        $this->app->bind(CustomerRepositoryInterface::class, CustomerRepository::class);
+        $this->app->bind(SaleRepositoryInterface::class, SaleRepository::class);
     }
 
     /**

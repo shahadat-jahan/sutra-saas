@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->text('address')->nullable();
-            $table->string('nid')->nullable();
+            $table->string('nid', 255)->nullable();
             $table->decimal('credit_limit', 15, 2)->default(0);
             $table->decimal('current_balance', 15, 2)->default(0);
             $table->jsonb('profile_data')->nullable();

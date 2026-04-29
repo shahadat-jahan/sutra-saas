@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
+use App\Enums\SaleStatus;
 use App\Traits\HasUuid;
 use App\Traits\MultiTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,8 +43,8 @@ class Sale extends Model
             'paid_amount' => 'decimal:2',
             'due_amount' => 'decimal:2',
             'metadata' => 'array',
-            'payment_method' => \App\Enums\PaymentMethod::class,
-            'status' => \App\Enums\SaleStatus::class,
+            'payment_method' => PaymentMethod::class,
+            'status' => SaleStatus::class,
         ];
     }
 

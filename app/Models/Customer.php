@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use App\Traits\HasUuid;
 use App\Traits\MultiTenant;
 use App\Traits\HasDynamicAttributes;
@@ -33,7 +34,7 @@ class Customer extends Model
             'credit_limit' => 'decimal:2',
             'current_balance' => 'decimal:2',
             'profile_data' => 'array',
-            'status' => \App\Enums\ActiveStatus::class,
+            'status' => ActiveStatus::class,
         ];
     }
 
@@ -42,7 +43,7 @@ class Customer extends Model
      */
     public function scopeActive($query)
     {
-        return $query->where('status', \App\Enums\ActiveStatus::ACTIVE);
+        return $query->where('status', ActiveStatus::ACTIVE);
     }
 
     /**

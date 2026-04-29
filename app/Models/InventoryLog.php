@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\InventoryLogType;
 use App\Traits\HasUuid;
 use App\Traits\MultiTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,7 +25,7 @@ class InventoryLog extends Model
     {
         return [
             'quantity' => 'decimal:3',
-            'type' => \App\Enums\InventoryLogType::class,
+            'type' => InventoryLogType::class,
         ];
     }
 

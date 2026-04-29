@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->string('sku');
+            $table->string('name', 255);
+            $table->string('sku', 255);
             $table->decimal('purchase_price', 12, 2)->default(0);
             $table->decimal('sale_price', 12, 2)->default(0);
             $table->decimal('stock_quantity', 12, 3)->default(0);

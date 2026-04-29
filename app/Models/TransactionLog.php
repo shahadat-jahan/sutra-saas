@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
+use App\Enums\TransactionLogType;
 use App\Traits\HasUuid;
 use App\Traits\MultiTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,8 +28,8 @@ class TransactionLog extends Model
     {
         return [
             'amount' => 'decimal:2',
-            'type' => \App\Enums\TransactionLogType::class,
-            'payment_method' => \App\Enums\PaymentMethod::class,
+            'type' => TransactionLogType::class,
+            'payment_method' => PaymentMethod::class,
         ];
     }
 

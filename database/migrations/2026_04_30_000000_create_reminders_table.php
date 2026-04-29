@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('sale_id')->index(); // Link to sales table (once created)
+            $table->foreignId('sale_id')->index(); // Link to sales table
+            $table->tinyInteger('status')->default(1); // 1: Pending, 2: Sent, 3: Failed
             $table->jsonb('meta')->nullable();
             $table->timestamps();
 

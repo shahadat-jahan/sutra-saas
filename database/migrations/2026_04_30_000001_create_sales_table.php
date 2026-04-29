@@ -11,22 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaction_logs', function (Blueprint $table) {
+        Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->decimal('amount', 12, 2);
-            $table->tinyInteger('type')->default(1); // 1: Income, 2: Expense
+            $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->decimal('total_amount', 15, 2);
+            $table->decimal('paid_amount', 15, 2)->default(0);
+            $table->decimal('due_amount', 15, 2)->default(0);
             $table->tinyInteger('payment_method')->default(1); // 1: Cash, 2: Card, 3: Mobile, 4: Credit
-            $table->string('reference_id')->nullable();
-            $table->text('note')->nullable();
+            $table->tinyInteger('status')->default(1); // 1: Paid, 2: Partial, 3: Credit
             $table->jsonb('metadata')->nullable();
             $table->timestamps();
 
-            $table->index(['shop_id', 'type']);
-            $table->index('payment_method');
-            $table->index('reference_id');
+            $table->index(['shop_id', 'status']);
         });
     }
 
@@ -35,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaction_logs');
+        Schema::dropIfExists('sales');
     }
 };

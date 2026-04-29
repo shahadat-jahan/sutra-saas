@@ -7,24 +7,24 @@ use App\Traits\MultiTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\ReminderStatus;
 
-class InventoryLog extends Model
+class Reminder extends Model
 {
     use HasFactory, HasUuid, MultiTenant;
 
     protected $fillable = [
         'shop_id',
-        'product_id',
-        'quantity',
-        'type',
-        'note',
+        'sale_id',
+        'status',
+        'meta',
     ];
 
     protected function casts(): array
     {
         return [
-            'quantity' => 'decimal:3',
-            'type' => \App\Enums\InventoryLogType::class,
+            'status' => ReminderStatus::class,
+            'meta' => 'array',
         ];
     }
 
@@ -33,8 +33,8 @@ class InventoryLog extends Model
         return $this->belongsTo(Shop::class);
     }
 
-    public function product(): BelongsTo
+    public function sale(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Sale::class);
     }
 }

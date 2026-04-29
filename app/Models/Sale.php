@@ -7,33 +7,53 @@ use App\Traits\MultiTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Events\SaleProcessed;
 
-class TransactionLog extends Model
+class Sale extends Model
 {
     use HasFactory, HasUuid, MultiTenant;
 
     protected $fillable = [
         'shop_id',
+        'customer_id',
         'user_id',
-        'amount',
-        'type',
+        'total_amount',
+        'paid_amount',
+        'due_amount',
         'payment_method',
-        'reference_id',
-        'note',
+        'status',
+        'metadata',
+    ];
+
+    /**
+     * The event map for the model.
+     *
+     * @var array<string, string>
+     */
+    protected $dispatchesEvents = [
+        'saved' => SaleProcessed::class,
     ];
 
     protected function casts(): array
     {
         return [
-            'amount' => 'decimal:2',
-            'type' => \App\Enums\TransactionLogType::class,
+            'total_amount' => 'decimal:2',
+            'paid_amount' => 'decimal:2',
+            'due_amount' => 'decimal:2',
+            'metadata' => 'array',
             'payment_method' => \App\Enums\PaymentMethod::class,
+            'status' => \App\Enums\SaleStatus::class,
         ];
     }
 
     public function shop(): BelongsTo
     {
         return $this->belongsTo(Shop::class);
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     public function user(): BelongsTo

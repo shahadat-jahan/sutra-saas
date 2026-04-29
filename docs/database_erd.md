@@ -1,8 +1,20 @@
 ```mermaid
 erDiagram
-    SHOPS ||--o{ USERS : owns
-    SHOPS ||--o{ PRODUCTS : manages
-    SHOPS ||--o{ SALES : records
-    PRODUCTS ||--o{ SALE_ITEMS : included_in
-    SALES ||--|{ SALE_ITEMS : has
-    SALES ||--o{ TRANSACTION_LOGS : generates
+    SHOPS ||--o{ CUSTOMERS : "manages credit"
+    CUSTOMERS {
+        string name
+        decimal credit_limit
+        decimal due_amount
+    }
+    SHOPS ||--o{ PRODUCTS : "manages"
+    PRODUCTS {
+        string name
+        string generic_name
+        string dgda_code
+    }
+    SHOPS ||--o{ SALES : "records"
+    SALES ||--o{ REMINDERS : "triggers"
+    REMINDERS {
+        string status
+        datetime scheduled_at
+    }

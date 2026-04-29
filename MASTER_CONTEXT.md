@@ -1,13 +1,13 @@
 # 🚀 Project Sutra (সূত্র) - Master Context
 
 ## 1. Vision & Overview
-Sutra একটি **Multi-Tenant, Modular Monolith** বিজনেস অপারেটিং সিস্টেম। এটি একটি Single Codebase থেকে বিভিন্ন ধরণের ব্যবসা হ্যান্ডেল করার জন্য তৈরি। এর মূল লক্ষ্য হলো ছোট ও মাঝারি ব্যবসাগুলোকে (SMEs) একটি সমন্বিত প্ল্যাটফর্মের মাধ্যমে তাদের দৈনন্দিন কার্যক্রম পরিচালনা করতে সহায়তা করা।
+Sutra is a **Multi-Tenant, Modular Monolith** Business Operating System. It is built to handle different types of businesses from a Single Codebase. Its core goal is to help Small and Medium Enterprises (SMEs) manage their day-to-day operations through a unified platform.
 
 ## 2. Core Architecture Philosophy
-- **Modular Monolith:** মডিউলগুলো (Inventory, POS, Finance) ডিকাপল্ড থাকবে।
-- **Event-Driven:** ব্যাকগ্রাউন্ডে কাজ করার জন্য Laravel Events & Queues ব্যবহার করা হবে।
-- **Hybrid Data Model:** Relational Tables + JSONB Metadata।
-- **Offline-Ready:** প্রতিটি ট্রানজেকশনে UUID ব্যবহার করা হয়েছে যাতে ভবিষ্যতে অফলাইন সিঙ্কিং করা যায়।
+- **Modular Monolith:** Modules (Inventory, POS, Finance) will remain decoupled.
+- **Event-Driven:** Laravel Events & Queues will be used for background processing.
+- **Hybrid Data Model:** Relational Tables + JSONB Metadata.
+- **Offline-Ready:** UUID is used in every transaction to allow offline syncing in the future.
 - **Future Expansion:** Ready for B2C E-commerce storefront integration via API.
 
 ## 3. Technical Stack & Packages
@@ -23,13 +23,13 @@ Sutra একটি **Multi-Tenant, Modular Monolith** বিজনেস অপ�
 - **UI:** `lucide-react`, `recharts`, `shadcn/ui`
 
 ## 4. Database Strategy
-- **Inventory Logs:** পণ্যের প্রতিটি মুভমেন্ট ট্র্যাক করে।
-- **Transaction Logs:** টাকার প্রতিটি লেনদেন ট্র্যাক করে।
-- **UUID Identity:** প্রতিটি মেইন টেবিলে Primary ID-র পাশাপাশি একটি ইউনিক `uuid` থাকবে।
+- **Inventory Logs:** Tracks every product movement.
+- **Transaction Logs:** Tracks every financial transaction.
+- **UUID Identity:** Every main table will have a unique `uuid` alongside the Primary ID.
 
 ## 5. Performance Strategy
-- **Queues:** Redis ব্যবহার করে ইনভেন্টরি এবং ফিন্যান্স আপডেট ব্যাকগ্রাউন্ডে প্রসেস করা হবে।
-- **Caching:** রিপোর্টিং ডাটার জন্য Redis ব্যবহার করা হবে।
+- **Queues:** Inventory and finance updates will be processed in the background using Redis.
+- **Caching:** Redis will be used for reporting data.
 
 ## 6. Roadmap
 - **Phase 1:** Retail & Pharmacy MVP (Current Focus).
@@ -38,7 +38,7 @@ Sutra একটি **Multi-Tenant, Modular Monolith** বিজনেস অপ�
 - **Phase 4:** Offline-First Sync Implementation (IndexedDB + Service Workers).
 
 ## 7. Modular Monolith Folder Structure
-প্রজেক্টটি Single Codebase হবে, কিন্তু business capability অনুযায়ী module-এ ভাগ করা থাকবে। প্রতিটি module self-contained হবে, যাতে future-এ maintain, test এবং extend করা সহজ হয়।
+The project will be a Single Codebase, but divided into modules by business capability. Each module will be self-contained to make it easy to maintain, test, and extend in the future.
 
 ```text
 app/
@@ -104,40 +104,40 @@ resources/
 ```
 
 ## 8. Module Layer Responsibilities
-প্রতিটি module-এর ভেতরে layer-এর responsibility পরিষ্কারভাবে আলাদা থাকবে।
+The responsibility of each layer inside every module will be clearly separated.
 
-- **Application:** Use case orchestration, actions, DTOs, workflow services।
-- **Domain:** Business rules, entities/models, enums, events, validation rules।
-- **Infrastructure:** Repositories, query handlers, external integration, persistence details।
-- **Http:** Controllers, Form Requests, API Resources, route-facing classes।
-- **Database:** Module-specific migrations, seeders, factories।
-- **Providers:** Module bootstrapping, bindings, listeners registration।
-- **Policies:** Authorization rules related to the module।
-- **Tests:** Module-based unit and feature tests।
+- **Application:** Use case orchestration, actions, DTOs, workflow services.
+- **Domain:** Business rules, entities/models, enums, events, validation rules.
+- **Infrastructure:** Repositories, query handlers, external integration, persistence details.
+- **Http:** Controllers, Form Requests, API Resources, route-facing classes.
+- **Database:** Module-specific migrations, seeders, factories.
+- **Providers:** Module bootstrapping, bindings, listeners registration.
+- **Policies:** Authorization rules related to the module.
+- **Tests:** Module-based unit and feature tests.
 
 ## 9. Shared vs Module-Specific Code
-- `app/Modules/Shared` এ থাকবে cross-module reusable code।
-- `app/Traits` এ global reusable trait রাখা যাবে, যেমন `HasUuid`।
-- Module-specific trait, enum, helper বা service সেই module-এর ভিতরেই রাখতে হবে।
-- Shared code কখনো specific business rule carry করবে না।
-- Inventory-এর logic POS বা Finance-এর folder-এ লেখা যাবে না।
+- Cross-module reusable code will live in `app/Modules/Shared`.
+- Global reusable traits such as `HasUuid` can be placed in `app/Traits`.
+- Module-specific traits, enums, helpers, or services must stay inside that module.
+- Shared code must never carry specific business rules.
+- Inventory logic must not be written inside POS or Finance folders.
 
 ## 10. Routing Strategy
-- Main application shell routes থাকবে global `routes/` folder-এ।
-- Business module routes থাকবে `app/Modules/<ModuleName>/Routes/` folder-এ।
-- Web route এবং API route আলাদা ফাইলে রাখা হবে।
-- Module route naming হবে prefix-based।
+- Main application shell routes will stay in the global `routes/` folder.
+- Business module routes will stay in `app/Modules/<ModuleName>/Routes/`.
+- Web routes and API routes will be kept in separate files.
+- Module route naming will be prefix-based.
 - Example: `inventory.products.index`, `pos.sales.store`, `finance.expenses.index`
 
 ## 11. Frontend Module Strategy
-- Shared UI components থাকবে `resources/js/Components`
-- Global layouts থাকবে `resources/js/Layouts`
-- Module-specific pages/components থাকবে `resources/js/Modules/<ModuleName>`
-- Breeze/Auth/Profile এর মতো application-level pages global `resources/js/Pages` এ থাকতে পারে
-- যদি কোনো module-এর UI বড় হয়, তাহলে তার page, partials, form, widgets module folder-এর ভেতরে রাখতে হবে
+- Shared UI components will live in `resources/js/Components`.
+- Global layouts will live in `resources/js/Layouts`.
+- Module-specific pages/components will live in `resources/js/Modules/<ModuleName>`.
+- Application-level pages like Breeze/Auth/Profile can stay in global `resources/js/Pages`.
+- If a module's UI grows large, its pages, partials, forms, and widgets must be kept inside that module's folder.
 
 ## 12. Naming Conventions
-- Module name হবে singular business capability না, readable domain name: `Inventory`, `Pos`, `Finance`
+- Module names will be readable domain names, not singular business capabilities: `Inventory`, `Pos`, `Finance`
 - Controller names: `ProductController`, `SaleController`, `ExpenseController`
 - Action names: `CreateProductAction`, `RecordSaleAction`, `PostExpenseAction`
 - DTO names: `CreateProductData`, `SaleData`
@@ -145,11 +145,11 @@ resources/
 - Trait names: `HasUuid`, `HasTenant`, `LogsActivity`
 
 ## 13. Module Boundary Rules
-- এক module আরেক module-এর internal class direct use করবে না, যদি shared contract বা event-based communication দিয়ে কাজ করা যায়।
-- Cross-module communication prefer করা হবে Events, Actions, Interfaces, বা Shared Services দিয়ে।
-- Finance module সরাসরি Inventory stock mutate করবে না।
-- POS sale complete হলে event dispatch হবে, Inventory এবং Finance সেই event consume করবে।
-- Reporting module read-heavy হবে, write logic নয়।
+- One module must not directly use another module's internal classes if the work can be done via shared contracts or event-based communication.
+- Cross-module communication is preferred via Events, Actions, Interfaces, or Shared Services.
+- The Finance module must not directly mutate Inventory stock.
+- When a POS sale is completed, an event will be dispatched; Inventory and Finance will consume that event.
+- The Reporting module will be read-heavy, not write logic.
 
 ## 14. Initial Core Modules
 - **Inventory:** Product, stock movement, batch, purchase stock intake
@@ -159,8 +159,8 @@ resources/
 - **Shared:** UUID trait, tenant context, common enums, shared support services
 
 ## 15. Implementation Guideline
-- প্রতিটি নতুন business feature প্রথমে module identify করে তারপর folder create করতে হবে।
-- Eloquent model module-এর `Domain/Models` এ রাখাই preferred।
-- Complex business logic controller-এ লেখা যাবে না, Action/Service layer-এ নিতে হবে।
-- Reusable UUID behavior trait আকারে রাখা হবে এবং যেসব model-এ `uuid` column থাকবে সেগুলোতে use করা হবে।
-- শুরু থেকেই module-aware test structure বজায় রাখতে হবে।
+- For every new business feature, first identify the module, then create the folder.
+- Eloquent models are preferred to be kept in the module's `Domain/Models`.
+- Complex business logic must not be written in controllers; it must be moved to the Action/Service layer.
+- Reusable UUID behavior will be kept as a trait and used in all models that have a `uuid` column.
+- A module-aware test structure must be maintained from the start.

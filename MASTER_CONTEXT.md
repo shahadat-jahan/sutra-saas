@@ -32,7 +32,9 @@ Sutra is a **Multi-Tenant, Modular Monolith** Business Operating System. It is b
 - **Caching:** Redis will be used for reporting data.
 
 ## 6. Roadmap
-- **Phase 1:** Retail & Pharmacy MVP (Current Focus).
+- **Phase 1: Retail & Pharmacy MVP.**
+  - Integration of **DGDA Medicine Database** for automated inventory setup.
+  - Implementation of **Bakir Khata** (Credit Management) with automated WhatsApp payment reminders.
 - **Phase 2:** Restaurant (with Recipe Management).
 - **Phase 3:** Assembly Line / Production (e.g., Easy-bike factory).
 - **Phase 4:** Offline-First Sync Implementation (IndexedDB + Service Workers).
@@ -152,9 +154,9 @@ The responsibility of each layer inside every module will be clearly separated.
 - The Reporting module will be read-heavy, not write logic.
 
 ## 14. Initial Core Modules
-- **Inventory:** Product, stock movement, batch, purchase stock intake
-- **POS:** Cart, sale, invoice, return, discount
-- **Finance:** Cashbook, transaction log, expense, payment tracking
+- **Inventory:** Product, stock movement, batch/expiry tracking, purchase stock intake, and **DGDA Pharma Sync** (auto-fetching medicine data via API/Library).
+- **POS:** Cart, discount, Sales, invoicing, and **Bakir Khata Engine** (handling credit sales limit & history).
+- **Finance:** Cashbook,  transaction log, expense, payment tracking, and **Debt Collection Automation** (scheduled WhatsApp/SMS reminders).
 - **Reporting:** Daily summary, profit/loss, stock report, sales analytics
 - **Shared:** UUID trait, tenant context, common enums, shared support services
 
@@ -164,3 +166,4 @@ The responsibility of each layer inside every module will be clearly separated.
 - Complex business logic must not be written in controllers; it must be moved to the Action/Service layer.
 - Reusable UUID behavior will be kept as a trait and used in all models that have a `uuid` column.
 - A module-aware test structure must be maintained from the start.
+- **Third-party Integrations:** External APIs (WhatsApp Gateway, SMS Gateway, DGDA Data) must be abstracted into `Shared/Services` to keep business logic decoupled.

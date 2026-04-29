@@ -9,16 +9,16 @@ import { ShoppingCart, User, Plus, Search, Trash2, Pill, CheckCircle2, UserPlus 
 
 /**
  * POS Component
- * 
+ *
  * Features:
  * - Default: Walk-in (null customer) and Paid status.
  * - One-Click Pay: Work without customer selection for cash sales.
  * - Baki Toggle: Mandatory customer search/add when Credit is selected.
  * - Pharma UI: Medicine-specific attributes (Generic Name) visible in product list.
  */
-export default function Index({ products = [], customers = [] }) {
+export default function Index({ products = [], customers = [], enabledModules = [] }) {
     const { auth } = usePage().props;
-    const isPharma = Number(auth.shop?.business_type) === 2;
+    const isPharmaEnabled = enabledModules.includes('pharma');
 
     const [searchTerm, setSearchTerm] = useState('');
     const [isCreditSale, setIsCreditSale] = useState(false);
@@ -34,7 +34,7 @@ export default function Index({ products = [], customers = [] }) {
 
     // Filtered products based on search
     const filteredProducts = useMemo(() => {
-        return products.filter(p => 
+        return products.filter(p =>
             p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (p.attributes?.generic_name?.toLowerCase().includes(searchTerm.toLowerCase()))
         );
@@ -46,15 +46,15 @@ export default function Index({ products = [], customers = [] }) {
         if (existing) {
             newItems = data.items.map(i => i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i);
         } else {
-            newItems = [...data.items, { 
-                id: product.id, 
-                name: product.name, 
-                price: product.price, 
+            newItems = [...data.items, {
+                id: product.id,
+                name: product.name,
+                price: product.price,
                 quantity: 1,
-                generic_name: product.attributes?.generic_name 
+                generic_name: product.attributes?.generic_name
             }];
         }
-        
+
         const total = newItems.reduce((acc, i) => acc + (i.price * i.quantity), 0);
         setData(d => ({ ...d, items: newItems, total_amount: total }));
     };
@@ -73,7 +73,7 @@ export default function Index({ products = [], customers = [] }) {
             <div className="py-6 h-[calc(100vh-120px)] overflow-hidden">
                 <div className="max-w-[1600px] mx-auto sm:px-6 lg:px-8 h-full">
                     <div className="flex gap-6 h-full">
-                        
+
                         {/* 1. Product Grid Section */}
                         <div className="flex-1 bg-white rounded-2xl shadow-sm border border-gray-200 flex flex-col">
                             <div className="p-4 border-b border-gray-100 flex items-center gap-4">
@@ -95,20 +95,20 @@ export default function Index({ products = [], customers = [] }) {
 
                             <div className="flex-1 overflow-y-auto p-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 bg-gray-50/50">
                                 {filteredProducts.map(product => (
-                                    <div 
+                                    <div
                                         key={product.id}
                                         onClick={() => addToCart(product)}
                                         className="bg-white p-4 rounded-xl border border-gray-200 hover:border-indigo-500 hover:shadow-md cursor-pointer transition-all group"
                                     >
                                         <div className="flex justify-between items-start mb-2">
                                             <h4 className="font-bold text-gray-800 line-clamp-1">{product.name}</h4>
-                                            {isPharma && (
+                                            {isPharmaEnabled && (
                                                 <Pill className="h-4 w-4 text-blue-500 opacity-50 group-hover:opacity-100" />
                                             )}
                                         </div>
-                                        
+
                                         {/* Requirement: Pharma UI (Medicine Specific Fields) */}
-                                        {isPharma && product.attributes?.generic_name && (
+                                        {isPharmaEnabled && product.attributes?.generic_name && (
                                             <p className="text-[10px] text-blue-600 font-medium uppercase tracking-tight bg-blue-50 px-2 py-0.5 rounded-full inline-block mb-2">
                                                 {product.attributes.generic_name}
                                             </p>
@@ -138,18 +138,20 @@ export default function Index({ products = [], customers = [] }) {
 
                                 {/* Requirement: Default Paid Status & Baki Toggle */}
                                 <div className="flex p-1 bg-gray-200 rounded-xl mb-4">
-                                    <button 
+                                    <button
                                         onClick={() => { setIsCreditSale(false); setData('payment_method', 'Cash'); }}
                                         className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${!isCreditSale ? 'bg-white shadow-sm text-gray-800' : 'text-gray-500'}`}
                                     >
                                         Cash (Paid)
                                     </button>
-                                    <button 
-                                        onClick={() => { setIsCreditSale(true); setData('payment_method', 'Credit'); }}
-                                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${isCreditSale ? 'bg-red-500 text-white shadow-sm' : 'text-gray-500'}`}
-                                    >
-                                        Baki (Credit)
-                                    </button>
+                                    {isPharmaEnabled && (
+                                        <button
+                                            onClick={() => { setIsCreditSale(true); setData('payment_method', 'Credit'); }}
+                                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${isCreditSale ? 'bg-red-500 text-white shadow-sm' : 'text-gray-500'}`}
+                                        >
+                                            Baki (Credit)
+                                        </button>
+                                    )}
                                 </div>
 
                                 {/* Requirement: Mandatory Customer field for Baki */}
@@ -160,7 +162,7 @@ export default function Index({ products = [], customers = [] }) {
                                             <UserPlus className="h-3 w-3" /> Quick Add
                                         </button>
                                     </div>
-                                    <select 
+                                    <select
                                         className="w-full rounded-xl border-gray-200 text-sm focus:ring-indigo-500"
                                         value={data.customer_id || ''}
                                         onChange={(e) => setData('customer_id', e.target.value || null)}
@@ -215,7 +217,7 @@ export default function Index({ products = [], customers = [] }) {
                                 </div>
 
                                 {/* Requirement: One-Click Sale Button */}
-                                <PrimaryButton 
+                                <PrimaryButton
                                     className={`w-full py-4 rounded-xl flex items-center justify-center gap-2 text-lg font-black transition-all ${isCreditSale ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'}`}
                                     onClick={handleCheckout}
                                     disabled={processing || (isCreditSale && !data.customer_id) || data.items.length === 0}

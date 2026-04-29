@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\Interfaces\CustomerRepositoryInterface;
 use App\Modules\Pos\Application\Services\SaleService;
+use App\Support\TenantManager;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,7 +18,8 @@ class PosController extends Controller
     public function __construct(
         protected SaleService $saleService,
         protected ProductRepositoryInterface $productRepository,
-        protected CustomerRepositoryInterface $customerRepository
+        protected CustomerRepositoryInterface $customerRepository,
+        protected TenantManager $tenantManager
     ) {}
 
     /**
@@ -28,6 +30,7 @@ class PosController extends Controller
         return Inertia::render('Pos/Index', [
             'products' => $this->productRepository->getPosProducts(),
             'customers' => $this->customerRepository->getActiveCustomers(),
+            'enabledModules' => $this->tenantManager->getTenant()?->enabled_modules ?? [],
         ]);
     }
 

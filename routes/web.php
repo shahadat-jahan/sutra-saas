@@ -76,7 +76,7 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
 Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
     ->group(function () {
         Route::get('/', function () {
-            return redirect()->route('tenant.dashboard', [
+            return redirect()->route('dashboard', [
                 'subdomain' => request()->route('subdomain'),
             ]);
         });
@@ -84,7 +84,7 @@ Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
         Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/dashboard', function () {
                 return Inertia::render('Dashboard');
-            })->name('tenant.dashboard');
+            })->name('dashboard');
 
             // User Management for Shop Owners
             Route::prefix('settings')

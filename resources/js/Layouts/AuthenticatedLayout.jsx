@@ -142,12 +142,35 @@ export default function AuthenticatedLayout({ header, children }) {
                     }
                 >
                     <div className="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            href={route('dashboard', { subdomain: user.shop?.slug })}
-                            active={route().current('dashboard')}
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
+                        {user.roles?.some(role => role.name === 'super-admin') ? (
+                            <>
+                                <ResponsiveNavLink
+                                    href={route('admin.dashboard')}
+                                    active={route().current('admin.dashboard')}
+                                >
+                                    System Dashboard
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    href={route('admin.shops.index')}
+                                    active={route().current('admin.shops.index')}
+                                >
+                                    Manage Shops
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    href={route('admin.users.index')}
+                                    active={route().current('admin.users.index')}
+                                >
+                                    Platform Users
+                                </ResponsiveNavLink>
+                            </>
+                        ) : (
+                            <ResponsiveNavLink
+                                href={route('dashboard', { subdomain: user.shop?.slug })}
+                                active={route().current('dashboard')}
+                            >
+                                Dashboard
+                            </ResponsiveNavLink>
+                        )}
                     </div>
 
                     <div className="border-t border-gray-200 pb-1 pt-4">

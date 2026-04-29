@@ -1,6 +1,11 @@
 ```mermaid
 graph TD
-    SA[Super Admin] -->|Toggle Modules| S[Shop Settings]
-    SA -->|Manage Subscriptions| B[Billing Engine]
-    S -->|Enable/Disable| M{Modules: POS, Pharmacy, E-com}
-    B -->|Update Plan| P[Basic / Pro / Enterprise]
+    SA["Super Admin"] -->|Toggle Features| S["Shop Configuration"]
+    
+    subgraph "Subscription Features"
+        S --> M1["Bakir Khata (WhatsApp/SMS)"]
+        S --> M2["DGDA Pharma Database"]
+        S --> M3["Multi-user Support"]
+    end
+    
+    M1 & M2 & M3 --> P["Pricing Plan: Basic / Pro / Enterprise"]

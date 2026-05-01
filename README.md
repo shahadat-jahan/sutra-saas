@@ -1,4 +1,4 @@
-# Sutra - Modular Multi-tenant SaaS ERP/POS
+# Sutra - Modular Multi-tenant SaaS (Work on going)
 
 Sutra is a modern, scalable, and modular SaaS platform designed for Bangladeshi retail and pharmacy businesses. Built with a **Modular Monolith** architecture, it supports multi-tenancy via subdomains and provides a seamless POS experience.
 
@@ -16,6 +16,9 @@ Sutra is a modern, scalable, and modular SaaS platform designed for Bangladeshi 
 - **Dynamic Module Control:** Enable/disable features (POS, Pharmacy, E-commerce) per shop.
 - **Financial Tracking:** Full transaction logging for credit/debit management.
 - **Subdomain Routing:** Each tenant gets a unique URL (e.g., `shop-name.sutra.com`).
+- **Automated "Bakir Khata" (WhatsApp/SMS):** Built-in credit management with automated payment reminders via WhatsApp and SMS for local customers.
+- **DGDA-Integrated Pharma Sync:** Pre-loaded medicine database from DGDA for pharmacy tenants, including generic names and drug interaction warnings.
+- **Offline-Ready Foundations:** Built using UUIDs for seamless data synchronization even when the internet is unstable.
 - **Offline-Ready Foundations:** Built using UUIDs for seamless data synchronization.
 
 ## 📁 Architecture Overview

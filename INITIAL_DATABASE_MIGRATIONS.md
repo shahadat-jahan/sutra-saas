@@ -1,40 +1,49 @@
 # 🛠️ Initial Database Migrations (Sutra SaaS)
 
-এই ফাইলটিতে আমাদের প্রজেক্টের কোর ডাটাবেজ স্ট্রাকচার দেওয়া হলো। প্রতিটি টেবিলে **UUID** ব্যবহার করা হয়েছে অফলাইন-রেডি ফাউন্ডেশনের জন্য।
+This file contains the core database structure for our project. Every table uses **UUID** for an offline-ready foundation and follows a **Multi-tenant** logic where every record is tied to a specific shop.
 
 ---
 
 ### 1. Shops Table
-দোকানের বেসিক তথ্য এবং মডিউল কনফিগারেশন।
+Basic shop information, subdomain configuration, and module toggles.
 - **Table Name:** `shops`
 - **Primary:** `id` (Auto-increment) + `uuid` (Unique)
+- **Key Fields:** `slug` (for subdomains), `enabled_modules` (JSONB for toggling Pharma/Bakir Khata).
 
-### 2. Products Table
-পণ্যের মূল তথ্য এবং ইনভেন্টরি ব্যালেন্স।
+### 2. Customers Table (Bakir Khata / CRM)
+Used for tracking individual customer credit, payment history, and NID info.
+- **Table Name:** `customers`
+- **Key Fields:** `credit_limit`, `current_balance` (Negative for debt/baki).
+
+### 3. Products Table (Inventory & Pharma)
+Core product information and inventory balance. Supports both general retail and pharmacy items.
 - **Table Name:** `products`
-- **Key Fields:** `sku`, `purchase_price`, `sale_price`, `stock_quantity`.
-- **Flexible Data:** `metadata` (JSONB) ব্যবহার করা হয়েছে বিভিন্ন ইন্ডাস্ট্রির অতিরিক্ত তথ্যের জন্য।
+- **Key Fields:** `generic_name`, `dgda_code`, `sku`, `purchase_price`, `sale_price`, `stock_quantity`.
+- **Flexible Data:** `metadata` (JSONB) is used for industry-specific data.
 
-### 3. Inventory Logs Table (Stock Time Machine)
-পণ্যের প্রতিটি মুভমেন্ট (In/Out) ট্র্যাক করার জন্য। এটি সরাসরি মেইন স্টকের সাথে ইন্টারনাল ইভেন্টের মাধ্যমে আপডেট হবে।
+### 4. Inventory Logs Table (Stock Time Machine)
+For tracking every product movement (In/Out/Adjustment).
 - **Table Name:** `inventory_logs`
 - **Fields:** `quantity`, `type` (in/out/adj/return).
 
-### 4. Transaction Logs Table (Finance Time Machine)
-টাকার প্রতিটি লেনদেন (Cash flow) ট্র্যাক করার জন্য।
+### 5. Transaction Logs Table (Finance Time Machine)
+For tracking every financial transaction (Cash flow and Ledger entries).
 - **Table Name:** `transaction_logs`
-- **Fields:** `amount`, `type` (credit/debit), `payment_method`.
+- **Fields:** `amount`, `type` (income/expense), `reference_id` (Link to Sale/Purchase).
 
-### 5. Daily Report Summaries
-রিপোর্ট জেনারেট করার স্পিড বাড়াতে এই টেবিলটি ব্যবহার করা হবে।
+### 6. Reminders Table (Automation)
+Schedules and logs automated notifications (WhatsApp/SMS) for credit recovery.
+- **Table Name:** `reminders`
+- **Fields:** `sale_id`, `type` (whatsapp/sms), `status` (pending/sent), `scheduled_at`.
+
+### 7. Daily Report Summaries
+Speed up report generation by pre-calculating daily stats.
 - **Table Name:** `daily_summaries`
-- **Logic:** `shop_id` + `report_date` মিলে ইউনিক ইনডেক্স।
+- **Logic:** `shop_id` + `report_date` form a unique index.
 
 ---
 
 ## 💻 Laravel Migration Code Snippets
-
-আপনি `php artisan make:migration` দিয়ে ফাইলগুলো তৈরি করে নিচের কোডগুলো ব্যবহার করতে পারেন:
 
 #### ✅ Shops Schema
 ```php
@@ -42,9 +51,9 @@ Schema::create('shops', function (Blueprint $table) {
     $table->id();
     $table->uuid('uuid')->unique();
     $table->string('name');
+    $table->string('slug')->unique(); // For subdomain routing
     $table->string('business_type')->default('retail'); 
-    $table->string('logo_path')->nullable();
-    $table->jsonb('enabled_modules')->nullable(); 
+    $table->jsonb('enabled_modules')->nullable(); // e.g., {"pharma": true, "bakir_khata": true}
     $table->string('status')->default('active');
     $table->timestamps();
 });

@@ -1,14 +1,13 @@
 ```mermaid
 graph LR
-    A[POS Checkout] --> B(Order Created)
-    B --> C{Dispatch SaleCompleted Event}
+    A["POS Sale (Credit/Baki)"] --> B["Order Created"]
+    B --> C["Dispatch SaleCompleted Event"]
     
     subgraph "Background Processing (Laravel Queue)"
-        C --> D[Update Inventory Stock]
-        C --> E[Create Financial Transaction Log]
-        C --> F[Sync Daily Analytics]
+        C --> D["Update Stock"]
+        C --> E["Finance Ledger Entry"]
+        C --> F["WhatsApp/SMS Reminder (Bakir Khata)"]
     end
     
-    D --> G[(Database)]
-    E --> G
-    F --> G
+    F --> G["External Gateway (WhatsApp/SMS API)"]
+    D & E --> H[("Database")]

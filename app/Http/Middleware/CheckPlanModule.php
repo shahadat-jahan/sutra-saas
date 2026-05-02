@@ -13,23 +13,19 @@ class CheckPlanModule
     /**
      * Handle an incoming request.
      *
-     * @param Request                      $request
-     * @param Closure(Request): (Response) $next
-     * @param string                       $module
-     *
-     * @return Response
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next, string $module): Response
     {
         $user = $request->user();
 
         // If not logged in or doesn't have a shop, let them pass (auth middleware should handle this)
-        if (!$user || !$user->shop) {
+        if (! $user || ! $user->shop) {
             return $next($request);
         }
 
         // Check if the plan associated with the shop has the required module
-        if (!$user->shop->plan->hasModule($module)) {
+        if (! $user->shop->plan->hasModule($module)) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'message' => "Your current plan does not include the '{$module}' module. Please upgrade to access this feature.",

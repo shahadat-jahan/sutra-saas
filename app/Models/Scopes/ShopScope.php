@@ -2,11 +2,11 @@
 
 namespace App\Models\Scopes;
 
+use App\Support\TenantManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
-use App\Support\TenantManager;
 
 final class ShopScope implements Scope
 {

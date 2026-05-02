@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\HasUuid;
 use App\Enums\ActiveStatus;
 use App\Enums\BusinessType;
 use App\Enums\Plan;
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -35,14 +35,13 @@ class Shop extends Model
         ];
     }
 
-
     protected static function booted()
     {
         static::creating(function ($shop) {
             $slug = Str::slug($shop->name);
 
             $count = static::query()->where('slug', 'LIKE', "{$slug}%", 'and')->count();
-            $shop->slug = $count ? "{$slug}-" . ($count + 1) : $slug;
+            $shop->slug = $count ? "{$slug}-".($count + 1) : $slug;
             if (empty($shop->enabled_modules)) {
                 $shop->enabled_modules = ['pos'];
             }

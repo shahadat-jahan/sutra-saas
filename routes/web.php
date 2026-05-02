@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ShopController;
-use App\Http\Controllers\Admin\ShopUserController;
 use App\Http\Controllers\Admin\ShopRoleController;
+use App\Http\Controllers\Admin\ShopUserController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\AnnouncementController;
-use App\Http\Controllers\Tenant\UserController as TenantUserController;
-use App\Http\Controllers\Tenant\RoleController as TenantRoleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Tenant\RoleController as TenantRoleController;
+use App\Http\Controllers\Tenant\UserController as TenantUserController;
 use App\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -101,7 +101,7 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
             })->name('settings.index');
         });
 
-    require __DIR__ . '/auth.php';
+    require __DIR__.'/auth.php';
 });
 
 /*
@@ -109,7 +109,7 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
 | Tenant Subdomain Routes (*.sutra-saas.test)
 |--------------------------------------------------------------------------
 */
-Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
+Route::domain('{subdomain}.'.config('app.domain', 'localhost'))
     ->group(function () {
         Route::get('/', function () {
             return redirect()->route('dashboard', [
@@ -155,5 +155,5 @@ Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
                 });
         });
 
-        require __DIR__ . '/auth.php';
+        require __DIR__.'/auth.php';
     });

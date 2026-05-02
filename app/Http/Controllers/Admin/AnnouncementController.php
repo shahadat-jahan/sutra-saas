@@ -45,7 +45,7 @@ class AnnouncementController extends Controller
             'user_id' => $request->user()?->id,
             'title' => $data['title'],
             'body' => $data['body'],
-            'published_at' => !empty($data['publish_now']) ? now() : null,
+            'published_at' => ! empty($data['publish_now']) ? now() : null,
         ]);
 
         return redirect()

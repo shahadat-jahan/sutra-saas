@@ -20,7 +20,7 @@ class CheckCustomerCredit
     public function handle(SaleProcessed $event): void
     {
         $sale = $event->sale;
-        
+
         // Only validate if there is a customer (not a walk-in sale)
         if ($sale->customer) {
             $this->bakirKhataService->canExtendCredit(

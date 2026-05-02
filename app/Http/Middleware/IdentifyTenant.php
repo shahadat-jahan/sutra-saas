@@ -6,20 +6,20 @@ use App\Models\Shop;
 use App\Support\TenantManager;
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Spatie\Permission\PermissionRegistrar;
+use Symfony\Component\HttpFoundation\Response;
 
 class IdentifyTenant
 {
-    public function __construct(protected TenantManager $tenantManager)
-    {
-    }
+    public function __construct(protected TenantManager $tenantManager) {}
 
     /**
      * Handle an incoming request.
      *
-     * @param Closure(Request): (Response) $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -27,9 +27,9 @@ class IdentifyTenant
         $appDomain = config('app.domain', 'localhost');
         $hostWithoutPort = preg_replace('/:\d+$/', '', $host);
 
-        if ($hostWithoutPort !== $appDomain && Str::endsWith($hostWithoutPort, '.' . $appDomain)) {
+        if ($hostWithoutPort !== $appDomain && Str::endsWith($hostWithoutPort, '.'.$appDomain)) {
             // It's a subdomain
-            $subdomain = Str::before($hostWithoutPort, '.' . $appDomain);
+            $subdomain = Str::before($hostWithoutPort, '.'.$appDomain);
 
             $shop = Shop::where('slug', $subdomain)->where('status', 1)->first();
 
@@ -41,21 +41,21 @@ class IdentifyTenant
             $this->tenantManager->setTenant($shop);
 
             // Set Team Context for Spatie Permissions
-            app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
+            app(PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
 
             // Cross-tenant protection: Ensure logged-in user belongs to this shop
             // We allow Super Admins (shop_id === null) to access any shop
             if (Auth::check() && Auth::user()->shop_id !== null && Auth::user()->shop_id !== $shop->id) {
-                \Illuminate\Support\Facades\Log::warning('Cross-tenant protection triggered: Logging out user', [
+                Log::warning('Cross-tenant protection triggered: Logging out user', [
                     'user_id' => Auth::id(),
                     'user_shop_id' => Auth::user()->shop_id,
                     'request_shop_id' => $shop->id,
-                    'host' => $host
+                    'host' => $host,
                 ]);
 
                 Auth::logout();
 
-                if (!$request->routeIs('login')) {
+                if (! $request->routeIs('login')) {
                     return redirect()->route('login')->with('error', 'You do not have access to this shop.');
                 }
             }

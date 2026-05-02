@@ -48,4 +48,3 @@ class UpdateUserRequest extends FormRequest
         ];
     }
 }
-

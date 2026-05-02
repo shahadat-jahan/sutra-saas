@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\ReminderStatus;
 use App\Traits\HasUuid;
 use App\Traits\MultiTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Enums\ReminderStatus;
 
 class Reminder extends Model
 {

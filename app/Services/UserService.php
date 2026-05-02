@@ -17,9 +17,7 @@ final class UserService
     /**
      * Update user profile information.
      *
-     * @param User $user
-     * @param array<string, mixed> $data
-     * @return bool
+     * @param  array<string, mixed>  $data
      */
     public function updateProfile(User $user, array $data): bool
     {
@@ -34,9 +32,6 @@ final class UserService
 
     /**
      * Delete user account entirely and logout.
-     *
-     * @param User $user
-     * @return void
      */
     public function deleteAccount(User $user): void
     {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreShopRequest;
 use App\Http\Requests\Admin\ShopUpdateRequest;
+use App\Http\Requests\Admin\StoreShopRequest;
 use App\Models\Shop;
 use App\Models\User;
 use App\Notifications\PlatformAccessNotification;
@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 class ShopController extends Controller
@@ -80,7 +81,7 @@ class ShopController extends Controller
 
             $owner->notify(new PlatformAccessNotification(
                 appName: (string) config('app.name', 'Sutra'),
-                loginUrl: rtrim((string) config('app.url', 'http://localhost'), '/') . '/login',
+                loginUrl: rtrim((string) config('app.url', 'http://localhost'), '/').'/login',
                 tenantUrl: $tenantUrl,
                 email: $owner->email,
                 password: (string) $ownerPassword,
@@ -110,7 +111,7 @@ class ShopController extends Controller
             User::query()->where('shop_id', $shop->id)->delete();
 
             $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
-            \Spatie\Permission\Models\Role::query()->where($teamsKey, $shop->id)->delete();
+            Role::query()->where($teamsKey, $shop->id)->delete();
 
             $shop->delete();
         });

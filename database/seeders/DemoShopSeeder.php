@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Shop;
-use App\Models\User;
 use App\Enums\BusinessType;
 use App\Enums\Plan;
+use App\Models\Shop;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\PermissionRegistrar;
 
 class DemoShopSeeder extends Seeder
 {
@@ -24,7 +25,7 @@ class DemoShopSeeder extends Seeder
             [
                 'name' => 'Demo Retail Shop',
                 'business_type' => BusinessType::RETAIL,
-                'plan' => Plan::BASIC, 
+                'plan' => Plan::BASIC,
                 'status' => 1,
             ]
         );
@@ -42,10 +43,10 @@ class DemoShopSeeder extends Seeder
         );
 
         // Set Team Context for Spatie Permissions
-        app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
+        app(PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
 
         // Assign Shop Owner Role for this specific shop
-        if (!$owner->hasRole('shop-owner')) {
+        if (! $owner->hasRole('shop-owner')) {
             $owner->assignRole('shop-owner');
         }
     }

@@ -19,9 +19,6 @@ final class TenantUserService
 
     /**
      * Get all users for a shop.
-     *
-     * @param string $shopId
-     * @return Collection
      */
     public function getUsersByShop(string $shopId): Collection
     {
@@ -34,9 +31,7 @@ final class TenantUserService
     /**
      * Create a new user for a shop.
      *
-     * @param string $shopId
-     * @param array<string, mixed> $data
-     * @return User
+     * @param  array<string, mixed>  $data
      */
     public function createUser(string $shopId, array $data): User
     {
@@ -57,7 +52,7 @@ final class TenantUserService
 
         $user->notify(new PlatformAccessNotification(
             appName: (string) config('app.name', 'Sutra'),
-            loginUrl: rtrim((string) config('app.url', 'http://localhost'), '/') . '/login',
+            loginUrl: rtrim((string) config('app.url', 'http://localhost'), '/').'/login',
             tenantUrl: $user->shop ? sprintf('%s://%s.%s/dashboard',
                 parse_url((string) config('app.url', 'http://localhost'), PHP_URL_SCHEME) ?: 'http',
                 $user->shop->slug,
@@ -74,10 +69,7 @@ final class TenantUserService
     /**
      * Update a user within the current shop (including role assignment).
      *
-     * @param User                $user
-     * @param string              $shopId
-     * @param array<string,mixed> $data
-     * @return bool
+     * @param  array<string,mixed>  $data
      */
     public function updateUser(User $user, string $shopId, array $data): bool
     {
@@ -90,13 +82,13 @@ final class TenantUserService
             'email' => $data['email'] ?? $user->email,
         ];
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $payload['password'] = Hash::make((string) $data['password']);
         }
 
         $updated = $this->userRepository->update($user, $payload);
 
-        if (!empty($data['role'])) {
+        if (! empty($data['role'])) {
             app(PermissionRegistrar::class)->setPermissionsTeamId($shopId);
             $user->syncRoles([(string) $data['role']]);
         }
@@ -106,10 +98,6 @@ final class TenantUserService
 
     /**
      * Delete a user after authorization check.
-     *
-     * @param User $user
-     * @param string $shopId
-     * @return bool|null
      */
     public function deleteUser(User $user, string $shopId): ?bool
     {

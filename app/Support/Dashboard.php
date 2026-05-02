@@ -23,4 +23,3 @@ class Dashboard
         return route('admin.dashboard', $query, absolute: false);
     }
 }
-

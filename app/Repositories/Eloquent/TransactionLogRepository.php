@@ -54,4 +54,3 @@ final class TransactionLogRepository implements TransactionLogRepositoryInterfac
         return $log->delete();
     }
 }
-

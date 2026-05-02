@@ -31,10 +31,10 @@ class UpdateDailySummary implements ShouldQueue
 
         // Calculate total cost of goods sold for profit estimation
         $totalCost = collect($event->items)->sum(function (array $item) {
-            return ($item['unit_price'] * $item['quantity']);
+            return $item['unit_price'] * $item['quantity'];
         });
 
-        DB::transaction(function () use ($event, $today, $totalCost) {
+        DB::transaction(function () use ($event, $today) {
             $summary = DailySummary::firstOrCreate(
                 [
                     'shop_id' => $event->shopId,

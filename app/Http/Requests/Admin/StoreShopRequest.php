@@ -37,10 +37,9 @@ class StoreShopRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                'unique:' . User::class . ',email',
+                'unique:'.User::class.',email',
             ],
             'owner_password' => ['nullable', Password::defaults()],
         ];
     }
 }
-

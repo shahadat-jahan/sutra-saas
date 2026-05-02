@@ -26,7 +26,7 @@ class AdminSeeder extends Seeder
         );
 
         // Assign Role (Global, so no team_id needed)
-        if (!$admin->hasRole('super-admin')) {
+        if (! $admin->hasRole('super-admin')) {
             $admin->assignRole('super-admin');
         }
     }

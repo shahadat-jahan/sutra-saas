@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
@@ -18,14 +18,14 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     private const MODULES = [
         // ─── Admin-Level Modules ───────────────────────────────────
-        'shops'           => ['view', 'create', 'edit', 'delete'],
-        'users'           => ['view', 'create', 'edit', 'delete'],
-        'settings'        => ['view', 'edit'],
+        'shops' => ['view', 'create', 'edit', 'delete'],
+        'users' => ['view', 'create', 'edit', 'delete'],
+        'settings' => ['view', 'edit'],
 
         // ─── Tenant-Level Modules ──────────────────────────────────
-        'products'        => ['view', 'create', 'edit', 'delete'],
-        'inventory'       => ['view', 'create', 'edit', 'delete'],
-        'transactions'    => ['view', 'create', 'edit', 'delete'],
+        'products' => ['view', 'create', 'edit', 'delete'],
+        'inventory' => ['view', 'create', 'edit', 'delete'],
+        'transactions' => ['view', 'create', 'edit', 'delete'],
         'daily-summaries' => ['view', 'create'],
     ];
 

@@ -70,12 +70,12 @@ class HandleInertiaRequests extends Middleware
                     ] : null,
                 ] : null,
             ],
-            'business_types' => array_map(fn($type) => [
+            'business_types' => array_map(fn ($type) => [
                 'value' => $type->value,
                 'label' => $type->label(),
             ], BusinessType::cases()),
             'currency' => $this->getCurrency($request),
-            'plans' => array_map(fn($plan) => [
+            'plans' => array_map(fn ($plan) => [
                 'value' => $plan->value,
                 'label' => $plan->label(),
                 'price' => $plan->price($this->getCurrency($request)),

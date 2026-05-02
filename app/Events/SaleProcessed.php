@@ -14,7 +14,5 @@ class SaleProcessed
     /**
      * Create a new event instance.
      */
-    public function __construct(public Sale $sale)
-    {
-    }
+    public function __construct(public Sale $sale) {}
 }

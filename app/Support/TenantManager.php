@@ -38,6 +38,7 @@ class TenantManager
     public function isModuleEnabled(string $module): bool
     {
         $shop = $this->getTenant();
+
         return $shop && in_array($module, $shop->enabled_modules ?? []);
     }
 }

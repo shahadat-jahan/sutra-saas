@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\HasDynamicAttributes;
 use App\Traits\HasUuid;
 use App\Traits\MultiTenant;
-use App\Traits\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-    use HasFactory, HasUuid, MultiTenant, HasDynamicAttributes;
+    use HasDynamicAttributes, HasFactory, HasUuid, MultiTenant;
 
     protected $fillable = [
         'shop_id',

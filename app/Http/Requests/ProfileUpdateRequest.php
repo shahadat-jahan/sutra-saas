@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ActiveStatus;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Enums\ActiveStatus;
 
 class ProfileUpdateRequest extends FormRequest
 {

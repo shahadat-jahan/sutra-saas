@@ -22,10 +22,6 @@ class BakirKhataService
 
     /**
      * Validate if the customer can afford the sale based on their credit limit.
-     *
-     * @param Customer $customer
-     * @param float $saleAmount
-     * @return bool
      */
     public function canExtendCredit(Customer $customer, float $saleAmount): bool
     {
@@ -56,7 +52,7 @@ class BakirKhataService
      */
     private function ensureModuleEnabled(): void
     {
-        if (!$this->tenantManager->isModuleEnabled('pharma')) {
+        if (! $this->tenantManager->isModuleEnabled('pharma')) {
             throw new InvalidArgumentException('Pharma module is not enabled for this shop.');
         }
     }

@@ -48,7 +48,11 @@ export default function GuestLayout({ children }) {
                     ? (user.roles?.some(role => role.name === 'super-admin') ? route('admin.dashboard') : (user.shop ? route('dashboard', { subdomain: user.shop.slug }) : '/'))
                     : '/'
                 }>
-                    <ApplicationLogo className="w-12 h-12 fill-current text-gray-500 transition-transform duration-300 hover:scale-110" />
+                    <img 
+                        src={adminBranding.logo} 
+                        className="w-12 h-12 rounded-xl shadow-lg object-contain transition-transform duration-300 hover:scale-110" 
+                        alt="Sutra Logo" 
+                    />
                 </Link>
             </div>
 

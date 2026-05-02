@@ -73,7 +73,7 @@ export default function Welcome({ auth }) {
                     <header className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-6 w-full max-w-7xl mx-auto relative z-50">
                         <Link 
                             href={auth.user 
-                                ? (auth.user.role === 'super-admin' ? route('admin.dashboard') : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '/'))
+                                ? (auth.user.roles?.some(r => r.name === 'super-admin') ? route('admin.dashboard') : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '/'))
                                 : '/'
                             } 
                             className="flex items-center gap-2 sm:gap-3 group"
@@ -102,7 +102,10 @@ export default function Welcome({ auth }) {
                             <div className="hidden md:flex gap-3 items-center">
                                 {auth.user ? (
                                     <Link
-                                        href={auth.user?.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#'}
+                                        href={auth.user.roles?.some(r => r.name === 'super-admin') 
+                                            ? route('admin.dashboard') 
+                                            : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#')
+                                        }
                                         className={`px-5 py-2 text-sm font-bold rounded-full transition-all ${
                                             isDark
                                                 ? 'text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10'
@@ -166,7 +169,10 @@ export default function Welcome({ auth }) {
                             <div className={`w-12 h-1 ${isDark ? 'bg-white/10' : 'bg-slate-200'} rounded-full my-4`}></div>
                             {auth.user ? (
                                 <Link
-                                    href={auth.user?.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#'}
+                                    href={auth.user.roles?.some(r => r.name === 'super-admin') 
+                                        ? route('admin.dashboard') 
+                                        : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#')
+                                    }
                                     className="text-indigo-500"
                                     onClick={() => setIsMenuOpen(false)}
                                 >

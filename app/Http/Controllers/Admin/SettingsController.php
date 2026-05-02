@@ -29,7 +29,8 @@ class SettingsController extends Controller
 
         foreach ($catalog as $moduleKey => $moduleConfig) {
             $override[$moduleKey] = [
-                'monthly_price' => (int) ($payload[$moduleKey]['monthly_price'] ?? $moduleConfig['monthly_price']),
+                'monthly_price_bdt' => (int) ($payload[$moduleKey]['monthly_price_bdt'] ?? $moduleConfig['monthly_price_bdt']),
+                'monthly_price_usd' => (int) ($payload[$moduleKey]['monthly_price_usd'] ?? $moduleConfig['monthly_price_usd']),
             ];
         }
 

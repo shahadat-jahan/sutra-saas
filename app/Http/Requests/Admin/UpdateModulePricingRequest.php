@@ -26,7 +26,8 @@ class UpdateModulePricingRequest extends FormRequest
         ];
 
         foreach (array_keys($catalog) as $moduleKey) {
-            $rules["modules.$moduleKey.monthly_price"] = ['required', 'integer', 'min:0'];
+            $rules["modules.$moduleKey.monthly_price_bdt"] = ['required', 'integer', 'min:0'];
+            $rules["modules.$moduleKey.monthly_price_usd"] = ['required', 'integer', 'min:0'];
         }
 
         return $rules;

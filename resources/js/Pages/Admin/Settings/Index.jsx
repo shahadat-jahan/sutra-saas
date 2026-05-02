@@ -10,7 +10,10 @@ export default function Index() {
     const moduleEntries = Object.entries(module_catalog || {});
 
     const initialModules = moduleEntries.reduce((acc, [moduleKey, moduleConfig]) => {
-        acc[moduleKey] = { monthly_price: Number(moduleConfig.monthly_price || 0) };
+        acc[moduleKey] = { 
+            monthly_price_bdt: Number(moduleConfig.monthly_price_bdt || 0),
+            monthly_price_usd: Number(moduleConfig.monthly_price_usd || 0),
+        };
         return acc;
     }, {});
 
@@ -92,23 +95,45 @@ export default function Index() {
                                                         Key: {moduleKey}
                                                     </p>
                                                 </div>
-                                                <div className="w-full md:w-64">
-                                                    <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-                                                        Monthly Price (BDT)
-                                                    </label>
-                                                    <input
-                                                        type="number"
-                                                        min="0"
-                                                        value={data.modules[moduleKey]?.monthly_price ?? 0}
-                                                        onChange={(e) => setData('modules', {
-                                                            ...data.modules,
-                                                            [moduleKey]: {
-                                                                monthly_price: Number(e.target.value || 0),
-                                                            },
-                                                        })}
-                                                        className="mt-1 block w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-white/10 dark:text-slate-200 rounded-xl px-4 py-2.5 text-sm focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
-                                                    />
-                                                    <InputError message={errors[`modules.${moduleKey}.monthly_price`]} className="mt-1" />
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full md:w-80">
+                                                    <div>
+                                                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                                            Price (BDT)
+                                                        </label>
+                                                        <input
+                                                            type="number"
+                                                            min="0"
+                                                            value={data.modules[moduleKey]?.monthly_price_bdt ?? 0}
+                                                            onChange={(e) => setData('modules', {
+                                                                ...data.modules,
+                                                                [moduleKey]: {
+                                                                    ...data.modules[moduleKey],
+                                                                    monthly_price_bdt: Number(e.target.value || 0),
+                                                                },
+                                                            })}
+                                                            className="mt-1 block w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-white/10 dark:text-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                                                        />
+                                                        <InputError message={errors[`modules.${moduleKey}.monthly_price_bdt`]} className="mt-1" />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                                            Price (USD)
+                                                        </label>
+                                                        <input
+                                                            type="number"
+                                                            min="0"
+                                                            value={data.modules[moduleKey]?.monthly_price_usd ?? 0}
+                                                            onChange={(e) => setData('modules', {
+                                                                ...data.modules,
+                                                                [moduleKey]: {
+                                                                    ...data.modules[moduleKey],
+                                                                    monthly_price_usd: Number(e.target.value || 0),
+                                                                },
+                                                            })}
+                                                            className="mt-1 block w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-white/10 dark:text-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                                                        />
+                                                        <InputError message={errors[`modules.${moduleKey}.monthly_price_usd`]} className="mt-1" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

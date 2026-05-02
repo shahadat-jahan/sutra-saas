@@ -1,7 +1,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import InputError from '@/Components/InputError';
-import { Head, useForm, usePage } from '@inertiajs/react';
-import { Globe, CreditCard, Save, Bell } from 'lucide-react';
+import { Head, useForm, usePage, Link } from '@inertiajs/react';
+import { Globe, CreditCard, Save, Bell, History } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Index() {
@@ -87,10 +87,19 @@ export default function Index() {
                                             className="rounded-xl border border-slate-200 dark:border-white/10 p-4 bg-slate-50 dark:bg-slate-800/50"
                                         >
                                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                                <div>
-                                                    <h3 className="font-bold text-slate-900 dark:text-slate-100">
-                                                        {moduleConfig.name}
-                                                    </h3>
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <h3 className="font-bold text-slate-900 dark:text-slate-100 transition-colors">
+                                                            {moduleConfig.name}
+                                                        </h3>
+                                                        <Link 
+                                                            href={route('admin.settings.module-pricing.logs', moduleKey)}
+                                                            className="p-1 rounded-lg text-slate-400 hover:bg-slate-200 dark:hover:bg-white/5 transition-all"
+                                                            title="View Price History"
+                                                        >
+                                                            <History className="w-3.5 h-3.5" />
+                                                        </Link>
+                                                    </div>
                                                     <p className="text-xs text-slate-500 dark:text-slate-400">
                                                         Key: {moduleKey}
                                                     </p>

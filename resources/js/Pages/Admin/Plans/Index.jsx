@@ -180,7 +180,7 @@ export default function Index({ plans, available_modules }) {
                         </div>
 
                         <div>
-                            <InputLabel value="Included Modules" />
+                            <InputLabel value="Main Modules (Checkboxes)" />
                             <div className="grid grid-cols-1 gap-2 mt-2">
                                 {Object.entries(available_modules || {}).map(([key, module]) => (
                                     <label key={key} className={`flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer ${
@@ -198,42 +198,29 @@ export default function Index({ plans, available_modules }) {
                                             <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{module.name}</span>
                                         </div>
                                         <div className="flex flex-col items-end">
-                                            <span className="text-[10px] font-bold text-slate-500">৳{module.monthly_price_bdt}</span>
+                                            <span className="text-[10px] font-bold text-slate-500 uppercase">৳{module.monthly_price_bdt}</span>
                                             <span className="text-[10px] text-slate-400">${module.monthly_price_usd}</span>
                                         </div>
                                     </label>
                                 ))}
-                                <label className={`flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer ${
-                                    data.features.includes('basic_reports')
-                                    ? 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/30 dark:border-indigo-800'
-                                    : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-white/10'
-                                }`}>
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                                            checked={data.features.includes('basic_reports')}
-                                            onChange={() => toggleFeature('basic_reports')}
-                                        />
-                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Basic Reports</span>
-                                    </div>
-                                </label>
-                                <label className={`flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer ${
-                                    data.features.includes('customization')
-                                    ? 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/30 dark:border-indigo-800'
-                                    : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-white/10'
-                                }`}>
-                                    <div className="flex items-center gap-2">
-                                        <input
-                                            type="checkbox"
-                                            className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                                            checked={data.features.includes('customization')}
-                                            onChange={() => toggleFeature('customization')}
-                                        />
-                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Customization</span>
-                                    </div>
-                                </label>
                             </div>
+                        </div>
+
+                        <div>
+                            <InputLabel htmlFor="additional_features" value="Additional Features (One per line)" />
+                            <textarea
+                                id="additional_features"
+                                className="w-full h-32 px-4 py-3 mt-1 rounded-2xl border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 dark:text-white focus:ring-indigo-500 text-sm"
+                                placeholder="e.g. 24/7 Support&#10;Custom Domain&#10;Advanced Reports"
+                                value={data.features.filter(f => !Object.keys(available_modules || {}).includes(f)).join('\n')}
+                                onChange={(e) => {
+                                    const moduleKeys = Object.keys(available_modules || {});
+                                    const selectedModules = data.features.filter(f => moduleKeys.includes(f));
+                                    const additional = e.target.value.split('\n').map(s => s.trim()).filter(s => s !== '');
+                                    setData('features', [...selectedModules, ...additional]);
+                                }}
+                            ></textarea>
+                            <p className="text-[10px] text-slate-400 mt-1">Enter features that aren't modules, one per line.</p>
                         </div>
 
                         <div className="flex items-center gap-2">

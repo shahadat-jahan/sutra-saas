@@ -104,6 +104,8 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
                 ->name('settings.index');
             Route::patch('/settings/module-pricing', [SettingsController::class, 'updateModulePricing'])
                 ->name('settings.module-pricing.update');
+            Route::get('/settings/module-pricing/{module}/logs', [SettingsController::class, 'moduleLogs'])
+                ->name('settings.module-pricing.logs');
 
             Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
             Route::patch('/plans/{plan}', [PlanController::class, 'update'])->name('plans.update');

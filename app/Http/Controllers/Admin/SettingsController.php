@@ -28,14 +28,44 @@ class SettingsController extends Controller
         $override = [];
 
         foreach ($catalog as $moduleKey => $moduleConfig) {
+            $newBdt = (int) ($payload[$moduleKey]['monthly_price_bdt'] ?? $moduleConfig['monthly_price_bdt']);
+            $newUsd = (int) ($payload[$moduleKey]['monthly_price_usd'] ?? $moduleConfig['monthly_price_usd']);
+
+            // Create log if price changed
+            if ($newBdt !== (int) $moduleConfig['monthly_price_bdt'] || $newUsd !== (int) $moduleConfig['monthly_price_usd']) {
+                \App\Models\ModulePriceLog::create([
+                    'module_key' => $moduleKey,
+                    'user_id' => auth()->id(),
+                    'old_price_bdt' => $moduleConfig['monthly_price_bdt'],
+                    'new_price_bdt' => $newBdt,
+                    'old_price_usd' => $moduleConfig['monthly_price_usd'],
+                    'new_price_usd' => $newUsd,
+                ]);
+            }
+
             $override[$moduleKey] = [
-                'monthly_price_bdt' => (int) ($payload[$moduleKey]['monthly_price_bdt'] ?? $moduleConfig['monthly_price_bdt']),
-                'monthly_price_usd' => (int) ($payload[$moduleKey]['monthly_price_usd'] ?? $moduleConfig['monthly_price_usd']),
+                'monthly_price_bdt' => $newBdt,
+                'monthly_price_usd' => $newUsd,
             ];
         }
 
         SystemSetting::putArray('module_catalog', $override);
 
         return back()->with('success', 'Module pricing updated successfully.');
+    }
+
+    public function moduleLogs(string $moduleKey): Response
+    {
+        $catalog = Shop::moduleCatalog();
+        $module = $catalog[$moduleKey] ?? ['name' => ucfirst($moduleKey)];
+
+        return Inertia::render('Admin/Settings/ModuleLogs', [
+            'module_key' => $moduleKey,
+            'module_name' => $module['name'],
+            'logs' => \App\Models\ModulePriceLog::with('user')
+                ->where('module_key', $moduleKey)
+                ->orderBy('created_at', 'desc')
+                ->get(),
+        ]);
     }
 }

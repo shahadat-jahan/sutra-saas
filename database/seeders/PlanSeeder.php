@@ -16,22 +16,22 @@ class PlanSeeder extends Seeder
             [
                 'name' => 'Sutra Basic',
                 'slug' => 'basic',
-                'price_bdt' => 500,
-                'price_usd' => 8,
+                'price_bdt' => 1500, // Matches POS module
+                'price_usd' => 15,
                 'features' => ['pos'],
             ],
             [
                 'name' => 'Sutra Pro',
                 'slug' => 'pro',
-                'price_bdt' => 1000,
-                'price_usd' => 15,
+                'price_bdt' => 2200, // POS (1500) + Inventory (700)
+                'price_usd' => 25,
                 'features' => ['pos', 'inventory', 'basic_reports'],
             ],
             [
                 'name' => 'Sutra Enterprise',
                 'slug' => 'enterprise',
-                'price_bdt' => 0, // Custom
-                'price_usd' => 0, // Custom
+                'price_bdt' => 3100, // POS (1500) + Inventory (700) + Finance (900)
+                'price_usd' => 45,
                 'features' => ['pos', 'inventory', 'finance', 'customization', 'basic_reports'],
             ],
         ];

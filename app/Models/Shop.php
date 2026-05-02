@@ -51,11 +51,11 @@ class Shop extends Model
     }
 
     /**
-     * @return array<string, array{name: string, monthly_price: int}>
+     * @return array<string, array{name: string, monthly_price_bdt: int, monthly_price_usd: int}>
      */
     public static function moduleCatalog(): array
     {
-        /** @var array<string, array{name: string, monthly_price: int}> $catalog */
+        /** @var array<string, array{name: string, monthly_price_bdt: int, monthly_price_usd: int}> $catalog */
         $catalog = config('modules.catalog', []);
 
         // During fresh bootstrap (before running migrations) this table may not exist.
@@ -75,7 +75,8 @@ class Shop extends Model
                 continue;
             }
 
-            $catalog[$moduleKey]['monthly_price'] = (int) ($moduleConfig['monthly_price'] ?? $catalog[$moduleKey]['monthly_price']);
+            $catalog[$moduleKey]['monthly_price_bdt'] = (int) ($moduleConfig['monthly_price_bdt'] ?? $catalog[$moduleKey]['monthly_price_bdt']);
+            $catalog[$moduleKey]['monthly_price_usd'] = (int) ($moduleConfig['monthly_price_usd'] ?? $catalog[$moduleKey]['monthly_price_usd']);
         }
 
         return $catalog;
@@ -87,12 +88,18 @@ class Shop extends Model
             return 0;
         }
 
+        // If shop has an assigned plan, use the plan's BDT price
+        if ($this->plan_id) {
+            return (int) optional($this->plan)->price_bdt;
+        }
+
+        // Fallback to module-based pricing
         $catalog = self::moduleCatalog();
         $selectedModules = $this->enabled_modules ?? [];
 
         $total = 0;
         foreach ($selectedModules as $moduleKey) {
-            $total += (int) ($catalog[$moduleKey]['monthly_price'] ?? 0);
+            $total += (int) ($catalog[$moduleKey]['monthly_price_bdt'] ?? 0);
         }
 
         return $total;

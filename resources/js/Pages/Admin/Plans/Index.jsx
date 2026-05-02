@@ -8,23 +8,35 @@ import { Head, useForm } from '@inertiajs/react';
 import { CreditCard, History, Edit2, CheckCircle2, ShieldCheck, Zap, Crown } from 'lucide-react';
 import { useState } from 'react';
 
-export default function Index({ plans }) {
+export default function Index({ plans, available_modules }) {
     const [editingPlan, setEditingPlan] = useState(null);
     const [logPlan, setLogPlan] = useState(null);
 
     const { data, setData, patch, processing, errors, reset } = useForm({
+        name: '',
         price_bdt: 0,
         price_usd: 0,
+        features: [],
         is_active: true,
     });
 
     const openEdit = (plan) => {
         setEditingPlan(plan);
         setData({
+            name: plan.name,
             price_bdt: plan.price_bdt,
             price_usd: plan.price_usd,
+            features: plan.features || [],
             is_active: plan.is_active,
         });
+    };
+
+    const toggleFeature = (feature) => {
+        if (data.features.includes(feature)) {
+            setData('features', data.features.filter(f => f !== feature));
+        } else {
+            setData('features', [...data.features, feature]);
+        }
     };
 
     const submit = (e) => {
@@ -117,48 +129,118 @@ export default function Index({ plans }) {
                 ))}
             </div>
 
-            {/* Edit Plan Modal */}
             <Modal show={Boolean(editingPlan)} onClose={() => setEditingPlan(null)} maxWidth="md">
                 <form onSubmit={submit} className="p-8">
-                    <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-1">Update Pricing</h2>
+                    <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-1">Update Plan</h2>
                     <p className="text-slate-500 text-sm mb-6">Editing {editingPlan?.name} plan details.</p>
 
-                    <div className="space-y-6">
+                    <div className="space-y-5">
                         <div>
-                            <InputLabel htmlFor="price_bdt" value="Bangladesh Price (BDT)" />
-                            <div className="relative mt-1">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">৳</span>
-                                <input
-                                    id="price_bdt"
-                                    type="number"
-                                    className="w-full pl-10 pr-4 py-3 rounded-2xl border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 dark:text-white focus:ring-indigo-500"
-                                    value={data.price_bdt}
-                                    onChange={(e) => setData('price_bdt', e.target.value)}
-                                />
+                            <InputLabel htmlFor="name" value="Plan Name" />
+                            <input
+                                id="name"
+                                type="text"
+                                className="w-full px-4 py-3 mt-1 rounded-2xl border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 dark:text-white focus:ring-indigo-500"
+                                value={data.name}
+                                onChange={(e) => setData('name', e.target.value)}
+                            />
+                            <InputError message={errors.name} className="mt-2" />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <InputLabel htmlFor="price_bdt" value="Price (BDT)" />
+                                <div className="relative mt-1">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">৳</span>
+                                    <input
+                                        id="price_bdt"
+                                        type="number"
+                                        className="w-full pl-10 pr-4 py-3 rounded-2xl border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 dark:text-white focus:ring-indigo-500"
+                                        value={data.price_bdt}
+                                        onChange={(e) => setData('price_bdt', e.target.value)}
+                                    />
+                                </div>
+                                <InputError message={errors.price_bdt} className="mt-2" />
                             </div>
-                            <InputError message={errors.price_bdt} className="mt-2" />
+
+                            <div>
+                                <InputLabel htmlFor="price_usd" value="Price (USD)" />
+                                <div className="relative mt-1">
+                                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                                    <input
+                                        id="price_usd"
+                                        type="number"
+                                        className="w-full pl-10 pr-4 py-3 rounded-2xl border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 dark:text-white focus:ring-indigo-500"
+                                        value={data.price_usd}
+                                        onChange={(e) => setData('price_usd', e.target.value)}
+                                    />
+                                </div>
+                                <InputError message={errors.price_usd} className="mt-2" />
+                            </div>
                         </div>
 
                         <div>
-                            <InputLabel htmlFor="price_usd" value="International Price (USD)" />
-                            <div className="relative mt-1">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                                <input
-                                    id="price_usd"
-                                    type="number"
-                                    className="w-full pl-10 pr-4 py-3 rounded-2xl border-slate-200 dark:border-white/10 bg-white dark:bg-slate-800 dark:text-white focus:ring-indigo-500"
-                                    value={data.price_usd}
-                                    onChange={(e) => setData('price_usd', e.target.value)}
-                                />
+                            <InputLabel value="Included Modules" />
+                            <div className="grid grid-cols-1 gap-2 mt-2">
+                                {Object.entries(available_modules || {}).map(([key, module]) => (
+                                    <label key={key} className={`flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer ${
+                                        data.features.includes(key)
+                                        ? 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/30 dark:border-indigo-800'
+                                        : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-white/10'
+                                    }`}>
+                                        <div className="flex items-center gap-2">
+                                            <input
+                                                type="checkbox"
+                                                className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                                checked={data.features.includes(key)}
+                                                onChange={() => toggleFeature(key)}
+                                            />
+                                            <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">{module.name}</span>
+                                        </div>
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-[10px] font-bold text-slate-500">৳{module.monthly_price_bdt}</span>
+                                            <span className="text-[10px] text-slate-400">${module.monthly_price_usd}</span>
+                                        </div>
+                                    </label>
+                                ))}
+                                <label className={`flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer ${
+                                    data.features.includes('basic_reports')
+                                    ? 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/30 dark:border-indigo-800'
+                                    : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-white/10'
+                                }`}>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                            checked={data.features.includes('basic_reports')}
+                                            onChange={() => toggleFeature('basic_reports')}
+                                        />
+                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Basic Reports</span>
+                                    </div>
+                                </label>
+                                <label className={`flex items-center justify-between p-3 rounded-xl border transition-colors cursor-pointer ${
+                                    data.features.includes('customization')
+                                    ? 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/30 dark:border-indigo-800'
+                                    : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-white/10'
+                                }`}>
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                            checked={data.features.includes('customization')}
+                                            onChange={() => toggleFeature('customization')}
+                                        />
+                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-200">Customization</span>
+                                    </div>
+                                </label>
                             </div>
-                            <InputError message={errors.price_usd} className="mt-2" />
                         </div>
 
                         <div className="flex items-center gap-2">
                             <input
                                 id="is_active"
                                 type="checkbox"
-                                className="rounded-lg border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                                className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                                 checked={data.is_active}
                                 onChange={(e) => setData('is_active', e.target.checked)}
                             />

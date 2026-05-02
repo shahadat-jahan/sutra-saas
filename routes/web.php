@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\ShopController;
 use App\Http\Controllers\Admin\ShopRoleController;
@@ -42,7 +43,9 @@ Route::post('/theme/set', [ThemeController::class, 'set'])->name('theme.set');
 */
 Route::domain(config('app.domain', 'localhost'))->group(function () {
     Route::get('/', function () {
-        return Inertia::render('Welcome');
+        return Inertia::render('Welcome', [
+            'plans' => \App\Models\Plan::where('is_active', true)->get(),
+        ]);
     })->name('welcome');
 
     Route::middleware(['auth', 'verified', 'role:super-admin'])
@@ -101,6 +104,10 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
                 ->name('settings.index');
             Route::patch('/settings/module-pricing', [SettingsController::class, 'updateModulePricing'])
                 ->name('settings.module-pricing.update');
+
+            Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+            Route::patch('/plans/{plan}', [PlanController::class, 'update'])->name('plans.update');
+            Route::get('/plans/{plan}/logs', [PlanController::class, 'logs'])->name('plans.logs');
         });
 
     require __DIR__.'/auth.php';

@@ -4,22 +4,18 @@ import { Check, Globe, BarChart3, Users, LayoutDashboard, Clock } from 'lucide-r
 import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
 import { useAdminBranding } from '@/Support/BrandingProvider';
 
-export default function Welcome({ auth }) {
+export default function Welcome({ auth, plans }) {
     const { mode } = useTheme();
     const isDark = mode === 'dark';
     const adminBranding = useAdminBranding();
 
-    const { appName, module_catalog } = usePage().props;
+    const { appName } = usePage().props;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const pricingModules = Object.entries(module_catalog || {}).map(([key, module]) => ({
-        key,
-        name: module.name,
-        monthly_price: Number(module.monthly_price || 0),
-    }));
+    
     const moduleIcons = {
-        pos: Globe,
-        inventory: BarChart3,
-        finance: Users,
+        basic: Globe,
+        pro: BarChart3,
+        enterprise: Users,
     };
 
     return (
@@ -277,11 +273,13 @@ export default function Welcome({ auth }) {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
-                                {pricingModules.map((module) => {
-                                    const Icon = moduleIcons[module.key] ?? Globe;
+                                {plans?.map((plan) => {
+                                    const Icon = moduleIcons[plan.slug] ?? Globe;
+                                    const currency = usePage().props.currency || 'BDT';
+                                    const price = currency === 'BDT' ? `BDT ${Number(plan.price_bdt).toLocaleString()}` : `$${Number(plan.price_usd).toLocaleString()}`;
 
                                     return (
-                                    <div key={module.key} className={`p-8 rounded-3xl border flex flex-col transition-all duration-300 group shadow-2xl ${
+                                    <div key={plan.id} className={`p-8 rounded-3xl border flex flex-col transition-all duration-300 group shadow-2xl ${
                                         isDark
                                             ? 'border-white/5 bg-white/5 backdrop-blur-sm'
                                             : 'border-slate-200 bg-slate-50/50'
@@ -296,46 +294,44 @@ export default function Welcome({ auth }) {
                                             </div>
                                             <h3 className={`text-2xl font-bold mb-2 ${
                                                 isDark ? 'text-white' : 'text-slate-900'
-                                            }`}>{module.name}</h3>
+                                            }`}>{plan.name}</h3>
                                             <div className={`flex items-baseline gap-1 mb-2 ${
                                                 isDark ? 'text-slate-500' : 'text-slate-600'
-                                            }`}>
-                                                <span className={`text-4xl font-black ${
-                                                    isDark ? 'text-white' : 'text-slate-900'
-                                                }`}>BDT {module.monthly_price.toLocaleString()}</span>
-                                                <span>/month</span>
-                                            </div>
-                                            <p className={`text-sm ${
-                                                isDark ? 'text-slate-400' : 'text-slate-600'
-                                            }`}>
-                                                Activate this module when your business needs it.
-                                            </p>
-                                        </div>
-                                        <ul className={`space-y-4 mb-10 flex-1 ${
-                                            isDark ? 'text-slate-300' : 'text-slate-700'
-                                        }`}>
-                                            <li className="flex items-center gap-3 text-sm">
-                                                <Check className={`w-4 h-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
-                                                <span>Monthly billing, cancel anytime</span>
-                                            </li>
-                                            <li className="flex items-center gap-3 text-sm">
-                                                <Check className={`w-4 h-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
-                                                <span>Module access controlled by admin</span>
-                                            </li>
-                                        </ul>
-                                        <Link
-                                            href={route('register')}
-                                            className={`w-full py-3 px-6 rounded-xl font-bold text-center transition-all ${
-                                                isDark
-                                                    ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
-                                                    : 'border border-slate-300 bg-slate-100 text-slate-900 hover:bg-slate-200'
-                                            }`}
-                                        >
-                                            Get Started
-                                        </Link>
-                                    </div>
-                                )})}
-                            </div>
+                                             }`}>
+                                                 <span className={`text-3xl font-black ${
+                                                     isDark ? 'text-white' : 'text-slate-900'
+                                                 }`}>{price}</span>
+                                                 <span>/month</span>
+                                             </div>
+                                             <p className={`text-sm ${
+                                                 isDark ? 'text-slate-400' : 'text-slate-600'
+                                             }`}>
+                                                 {plan.slug === 'enterprise' ? 'Custom solutions for large businesses.' : 'Scale your business with this plan.'}
+                                             </p>
+                                         </div>
+                                         <ul className={`space-y-4 mb-10 flex-1 ${
+                                             isDark ? 'text-slate-300' : 'text-slate-700'
+                                         }`}>
+                                             {plan.features?.map((feature, i) => (
+                                                <li key={i} className="flex items-center gap-3 text-sm">
+                                                    <Check className={`w-4 h-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
+                                                    <span className="capitalize">{feature.replace('_', ' ')}</span>
+                                                </li>
+                                             ))}
+                                         </ul>
+                                         <Link
+                                             href={route('register')}
+                                             className={`w-full py-3 px-6 rounded-xl font-bold text-center transition-all ${
+                                                 isDark
+                                                     ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                                                     : 'border border-slate-300 bg-slate-100 text-slate-900 hover:bg-slate-200'
+                                             }`}
+                                         >
+                                             Get Started
+                                         </Link>
+                                     </div>
+                                 )})}
+                             </div>
                         </section>
 
                         {/* Free Trial Section */}

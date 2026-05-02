@@ -12,7 +12,7 @@ use Spatie\Permission\PermissionRegistrar;
 class RolesAndPermissionsSeeder extends Seeder
 {
     /**
-     * The 7 permission modules for the Sutra SaaS platform.
+     * The 7 permission modules for the Sutra platform.
      *
      * Each module maps to a set of CRUD-style permission verbs.
      */

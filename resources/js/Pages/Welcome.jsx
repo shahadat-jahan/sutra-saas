@@ -100,16 +100,18 @@ export default function Welcome({ auth }) {
                     </header>
 
                     <main className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full max-w-5xl mx-auto mt-16 mb-24 z-10">
-                        <div className={`inline-flex items-center gap-3 px-4 py-1.5 rounded-full border backdrop-blur-md text-sm font-medium mb-10 ${
-                            isDark
-                                ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-300'
-                                : 'border-indigo-300/50 bg-indigo-100/50 text-indigo-600'
-                        }`}>
-                            <span className={`flex h-2 w-2 rounded-full animate-ping ${
-                                isDark ? 'bg-indigo-400' : 'bg-indigo-500'
-                            }`}></span>
-                            Sutra v1.0 POS Architecture is now live
-                        </div>
+                        {usePage().props.announcements?.length > 0 && (
+                            <div className={`inline-flex items-center gap-3 px-4 py-1.5 rounded-full border backdrop-blur-md text-sm font-medium mb-10 ${
+                                isDark
+                                    ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-300'
+                                    : 'border-indigo-300/50 bg-indigo-100/50 text-indigo-600'
+                            }`}>
+                                <span className={`flex h-2 w-2 rounded-full animate-ping ${
+                                    isDark ? 'bg-indigo-400' : 'bg-indigo-500'
+                                }`}></span>
+                                {usePage().props.announcements[0].title}
+                            </div>
+                        )}
 
                         <h1 className={`text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-tight mb-8 ${
                             isDark

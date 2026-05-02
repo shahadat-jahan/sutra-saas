@@ -1,8 +1,11 @@
 import PrimaryButton from '@/Components/PrimaryButton';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { useTheme } from '@/Support/ThemeProvider';
 
 export default function VerifyEmail({ status }) {
+    const { mode } = useTheme();
+    const isDark = mode === 'dark';
     const { post, processing } = useForm({});
 
     const submit = (e) => {
@@ -15,7 +18,7 @@ export default function VerifyEmail({ status }) {
         <GuestLayout>
             <Head title="Email Verification" />
 
-            <div className="mb-4 text-sm text-gray-600">
+            <div className={`mb-4 text-sm transition-colors ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                 Thanks for signing up! Before getting started, could you verify
                 your email address by clicking on the link we just emailed to
                 you? If you didn't receive the email, we will gladly send you
@@ -31,7 +34,11 @@ export default function VerifyEmail({ status }) {
 
             <form onSubmit={submit}>
                 <div className="mt-4 flex items-center justify-between">
-                    <PrimaryButton disabled={processing}>
+                    <PrimaryButton className={`px-6 py-3 rounded-xl transition-all ${
+                        isDark 
+                            ? 'bg-indigo-600 hover:bg-indigo-500' 
+                            : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                    }`} disabled={processing}>
                         Resend Verification Email
                     </PrimaryButton>
 
@@ -39,7 +46,9 @@ export default function VerifyEmail({ status }) {
                         href="/logout"
                         method="post"
                         as="button"
-                        className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className={`text-sm underline transition-colors ${
+                            isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                        }`}
                     >
                         Log Out
                     </Link>

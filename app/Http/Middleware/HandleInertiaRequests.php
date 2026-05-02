@@ -59,6 +59,17 @@ class HandleInertiaRequests extends Middleware
                 'label' => $type->label(),
             ], BusinessType::cases()),
             'currency' => $this->getCurrency($request),
+            'announcements' => \App\Models\Announcement::query()
+                ->whereNotNull('published_at')
+                ->orderBy('published_at', 'desc')
+                ->take(3)
+                ->get()
+                ->map(fn($a) => [
+                    'uuid' => $a->uuid,
+                    'title' => $a->title,
+                    'body' => $a->body,
+                    'published_at' => $a->published_at?->diffForHumans(),
+                ]),
             'plans' => array_map(fn($plan) => [
                 'value' => $plan->value,
                 'label' => $plan->label(),

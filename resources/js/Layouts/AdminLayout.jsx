@@ -169,7 +169,9 @@ export default function AdminLayout({ children, header }) {
                                 isDark ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-100'
                             }`}>
                                 <Bell className="w-6 h-6" />
-                                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                                <span className={`absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 transition-colors ${
+                                    isDark ? 'border-slate-950' : 'border-white'
+                                }`}></span>
                             </button>
                             <div className={`h-8 w-[1px] mx-2 ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
                             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-100 shadow-sm">

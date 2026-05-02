@@ -247,17 +247,11 @@ export default function AuthenticatedLayout({ header, children }) {
                 </nav>
 
                 {header && (
-                    <header className="relative bg-white dark:bg-slate-900 shadow dark:shadow-white/5 transition-colors duration-300 overflow-hidden">
-                        {/* Header Banner Background */}
-                        <div 
-                            className="absolute inset-0 opacity-10 pointer-events-none"
-                            style={{
-                                backgroundImage: `url(${branding.banner})`,
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center'
-                            }}
-                        ></div>
-                        <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <header className="relative bg-white dark:bg-slate-900/50 backdrop-blur-md shadow-sm dark:shadow-white/5 transition-colors duration-300 overflow-hidden border-b border-gray-100 dark:border-white/5">
+                        {/* Subtle Header Accent */}
+                        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none bg-gradient-to-r from-indigo-500 via-transparent to-purple-500"></div>
+                        
+                        <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                             {header}
                         </div>
                     </header>

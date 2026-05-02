@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->decimal('quantity', 12, 3);
-            $table->string('type');
+            $table->tinyInteger('type')->default(1); // 1: In, 2: Out, 3: Adjustment, 4: Return
             $table->text('note')->nullable();
             $table->jsonb('metadata')->nullable();
             $table->timestamps();

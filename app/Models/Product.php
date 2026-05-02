@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasUuid;
 use App\Traits\MultiTenant;
+use App\Traits\HasDynamicAttributes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
-    use HasFactory, HasUuid, MultiTenant;
+    use HasFactory, HasUuid, MultiTenant, HasDynamicAttributes;
 
     protected $fillable = [
         'shop_id',
@@ -21,6 +22,7 @@ class Product extends Model
         'sale_price',
         'stock_quantity',
         'metadata',
+        'attributes',
     ];
 
     protected function casts(): array
@@ -30,7 +32,13 @@ class Product extends Model
             'sale_price' => 'decimal:2',
             'stock_quantity' => 'decimal:3',
             'metadata' => 'array',
+            'attributes' => 'array',
         ];
+    }
+
+    protected function getDynamicAttributesColumn(): string
+    {
+        return 'attributes';
     }
 
     public function shop(): BelongsTo

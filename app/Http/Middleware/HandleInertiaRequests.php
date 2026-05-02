@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use App\Enums\BusinessType;
 use App\Enums\Plan;
+use App\Models\Announcement;
+use App\Support\Theme;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -31,8 +33,30 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $themeMode = (string) $request->session()->get('theme_mode', 'dark');
+
+        $query = Announcement::query();
+        $query->whereNotNull('published_at');
+        $query->orderBy('published_at', 'desc');
+        $query->limit(3);
+        $announcements = $query->get()->map(function ($a) {
+            return [
+                'uuid' => $a->uuid,
+                'title' => $a->title,
+                'body' => $a->body,
+                'published_at' => $a->published_at ? $a->published_at->diffForHumans() : null,
+            ];
+        });
+
         return [
             ...parent::share($request),
+            'appName' => (string) config('app.name', 'Sutra'),
+            'appDomain' => (string) config('app.domain', parse_url((string) config('app.url'), PHP_URL_HOST) ?: 'localhost'),
+            'themeMode' => $themeMode,
+            'themePalette' => Theme::getPalette($themeMode),
+            'adminBranding' => Theme::getAdminBranding(),
+            'shopDefaults' => Theme::getShopDefaults(),
+            'announcements' => $announcements,
             'auth' => [
                 'user' => $request->user() ? [
                     'id' => $request->user()->id,

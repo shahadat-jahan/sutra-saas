@@ -9,40 +9,40 @@ export default function Index({ announcements }) {
     const next = links.find((l) => l.label === 'Next &raquo;');
 
     return (
-        <AdminLayout header="Announcements">
+        <AdminLayout header={<h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Announcements</h2>}>
             <Head title="Platform Announcements" />
 
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Platform Announcements</h1>
-                    <p className="text-slate-500 text-sm mt-1">Create and manage platform-wide updates.</p>
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white transition-colors">Platform Announcements</h1>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 transition-colors">Create and manage platform-wide updates.</p>
                 </div>
 
                 <Link
                     href={route('admin.announcements.create')}
-                    className="inline-flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all"
+                    className="inline-flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-xl shadow-indigo-100 dark:shadow-none hover:bg-indigo-700 transition-all"
                 >
                     <Plus className="w-4 h-4" />
                     New Announcement
                 </Link>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm overflow-hidden transition-colors">
                 {items.length ? (
-                    <div className="divide-y divide-slate-100">
+                    <div className="divide-y divide-slate-100 dark:divide-white/5 transition-colors">
                         {items.map((a) => (
-                            <div key={a.uuid} className="p-6 hover:bg-slate-50/50 transition-colors">
+                            <div key={a.uuid} className="p-6 hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors">
                                 <div className="flex items-start justify-between gap-6">
                                     <div>
-                                        <p className="font-bold text-slate-900">{a.title}</p>
-                                        <p className="text-xs text-slate-500 mt-1">
+                                        <p className="font-bold text-slate-900 dark:text-slate-200 transition-colors">{a.title}</p>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 transition-colors">
                                             Published: {a.published_at ? new Date(a.published_at).toLocaleString() : 'Draft'}
                                         </p>
                                     </div>
-                                    <span className={`text-xs font-bold px-3 py-1 rounded-full border ${
+                                    <span className={`text-xs font-bold px-3 py-1 rounded-full border transition-colors ${
                                         a.published_at
-                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
-                                            : 'bg-slate-50 text-slate-600 border-slate-200'
+                                            ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-100 dark:border-emerald-800'
+                                            : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700'
                                     }`}>
                                         {a.published_at ? 'Published' : 'Draft'}
                                     </span>
@@ -53,28 +53,28 @@ export default function Index({ announcements }) {
                 ) : (
                     <div className="p-12 text-center">
                         <div className="flex flex-col items-center">
-                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                                <Megaphone className="w-8 h-8 text-slate-300" />
+                            <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 transition-colors">
+                                <Megaphone className="w-8 h-8 text-slate-300 dark:text-slate-600" />
                             </div>
-                            <p className="text-slate-900 font-bold">No announcements yet</p>
-                            <p className="text-slate-500 text-sm mt-1">Create your first platform announcement.</p>
+                            <p className="text-slate-900 dark:text-white font-bold transition-colors">No announcements yet</p>
+                            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 transition-colors">Create your first platform announcement.</p>
                         </div>
                     </div>
                 )}
             </div>
 
-            <div className="mt-6 flex items-center justify-between text-sm">
-                <p className="text-slate-500">
+            <div className="mt-6 flex items-center justify-between text-sm transition-colors">
+                <p className="text-slate-500 dark:text-slate-400">
                     Page {announcements?.current_page ?? 1} of {announcements?.last_page ?? 1}
                 </p>
                 <div className="flex items-center gap-2">
                     <Link
                         href={prev?.url ?? '#'}
                         disabled={!prev?.url}
-                        className={`px-4 py-2 rounded-xl font-bold border ${
+                        className={`px-4 py-2 rounded-xl font-bold border transition-colors ${
                             prev?.url
-                                ? 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                                : 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed pointer-events-none'
+                                ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                                : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-white/5 text-slate-400 dark:text-slate-600 cursor-not-allowed pointer-events-none'
                         }`}
                     >
                         Previous
@@ -82,10 +82,10 @@ export default function Index({ announcements }) {
                     <Link
                         href={next?.url ?? '#'}
                         disabled={!next?.url}
-                        className={`px-4 py-2 rounded-xl font-bold border ${
+                        className={`px-4 py-2 rounded-xl font-bold border transition-colors ${
                             next?.url
-                                ? 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                                : 'bg-slate-50 border-slate-200 text-slate-400 cursor-not-allowed pointer-events-none'
+                                ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                                : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-white/5 text-slate-400 dark:text-slate-600 cursor-not-allowed pointer-events-none'
                         }`}
                     >
                         Next

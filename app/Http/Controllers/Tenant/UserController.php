@@ -6,11 +6,14 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\StoreUserRequest;
+use App\Http\Requests\Tenant\UpdateUserRequest;
 use App\Models\User;
 use App\Services\TenantUserService;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class UserController extends Controller
 {
@@ -24,9 +27,14 @@ class UserController extends Controller
     public function index(): Response
     {
         $shop = auth()->user()->shop;
+        $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
 
         return Inertia::render('Tenant/Users/Index', [
             'users' => $this->userService->getUsersByShop($shop->id),
+            'roles' => Role::query()
+                ->where(fn ($q) => $q->whereNull($teamsKey)->orWhere($teamsKey, $shop->id))
+                ->orderBy('name')
+                ->get(['id', 'name']),
         ]);
     }
 
@@ -56,5 +64,17 @@ class UserController extends Controller
 
 
         return back()->with('success', 'User deleted successfully.');
+    }
+
+    /**
+     * Update a user.
+     */
+    public function update(UpdateUserRequest $request, User $user): RedirectResponse
+    {
+        $shop = auth()->user()->shop;
+
+        $this->userService->updateUser($user, (string) $shop->id, $request->validated());
+
+        return back()->with('success', 'User updated successfully.');
     }
 }

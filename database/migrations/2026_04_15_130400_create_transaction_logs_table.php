@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('shop_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->decimal('amount', 12, 2);
-            $table->string('type');
-            $table->string('payment_method');
+            $table->tinyInteger('type')->default(1); // 1: Income, 2: Expense
+            $table->tinyInteger('payment_method')->default(1); // 1: Cash, 2: Card, 3: Mobile, 4: Credit
             $table->string('reference_id')->nullable();
             $table->text('note')->nullable();
             $table->jsonb('metadata')->nullable();

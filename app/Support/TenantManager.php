@@ -31,4 +31,13 @@ class TenantManager
     {
         return $this->tenant?->id;
     }
+
+    /**
+     * Check if a specific module is enabled for the current tenant (Shop).
+     */
+    public function isModuleEnabled(string $module): bool
+    {
+        $shop = $this->getTenant();
+        return $shop && in_array($module, $shop->enabled_modules ?? []);
+    }
 }

@@ -68,7 +68,7 @@ export default function Index({ products = [], customers = [], enabledModules = 
         <AuthenticatedLayout
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Point of Sale</h2>}
         >
-            <Head title="POS - Sutra SaaS" />
+            <Head title={`POS - ${usePage().props.appName}`} />
 
             <div className="py-6 h-[calc(100vh-120px)] overflow-hidden">
                 <div className="max-w-[1600px] mx-auto sm:px-6 lg:px-8 h-full">

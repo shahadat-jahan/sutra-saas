@@ -41,7 +41,7 @@ class Shop extends Model
         static::creating(function ($shop) {
             $slug = Str::slug($shop->name);
 
-            $count = static::where('slug', 'LIKE', "{$slug}%")->count();
+            $count = static::query()->where('slug', 'LIKE', "{$slug}%", 'and')->count();
             $shop->slug = $count ? "{$slug}-" . ($count + 1) : $slug;
             if (empty($shop->enabled_modules)) {
                 $shop->enabled_modules = ['pos'];
@@ -72,5 +72,10 @@ class Shop extends Model
     public function users(): HasMany
     {
         return $this->hasMany(User::class);
+    }
+
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class);
     }
 }

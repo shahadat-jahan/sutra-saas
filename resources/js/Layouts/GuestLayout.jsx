@@ -1,8 +1,9 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { useAdminBranding } from '@/Support/BrandingProvider';
 import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
 
 export default function GuestLayout({ children }) {
+    const { appName } = usePage().props;
     const adminBranding = useAdminBranding();
     const { mode } = useTheme();
     const isDark = mode === 'dark';
@@ -53,7 +54,7 @@ export default function GuestLayout({ children }) {
                         className={`w-20 h-20 rounded-2xl shadow-2xl object-contain ${
                             isDark ? 'shadow-indigo-500/20 brightness-125' : 'shadow-indigo-300/30'
                         }`}
-                        alt="Sutra Logo"
+                        alt={`${appName} Logo`}
                     />
                 </Link>
             </div>

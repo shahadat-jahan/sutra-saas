@@ -9,7 +9,7 @@ import { useTheme } from '@/Support/ThemeProvider';
 export default function Register() {
     const { mode } = useTheme();
     const isDark = mode === 'dark';
-    const { business_types } = usePage().props;
+    const { business_types, appName } = usePage().props;
     const queryParams = new URLSearchParams(window.location.search);
     const initialPlan = parseInt(queryParams.get('plan') || '1'); // Default to 1 (Basic)
 
@@ -38,7 +38,7 @@ export default function Register() {
                 {data.plan === 1 ? (
                     <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>Start your <span className="text-indigo-400 font-bold">14-day free trial</span> today.</p>
                 ) : (
-                    <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>Join Sutra as a <span className="text-indigo-400 font-bold capitalize">
+                    <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>Join {appName} as a <span className="text-indigo-400 font-bold capitalize">
                         {usePage().props.plans.find(p => p.value === data.plan)?.label || 'Partner'}
                     </span>.</p>
                 )}

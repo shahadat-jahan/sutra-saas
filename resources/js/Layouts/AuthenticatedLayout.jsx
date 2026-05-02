@@ -19,7 +19,8 @@ import { useShopBranding } from '@/Support/BrandingProvider';
 import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
 
 export default function AuthenticatedLayout({ children, header }) {
-    const user = usePage().props.auth.user;
+    const { auth, appName } = usePage().props;
+    const user = auth.user;
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const branding = useShopBranding();
     const { mode } = useTheme();
@@ -92,7 +93,7 @@ export default function AuthenticatedLayout({ children, header }) {
                         >
                             <img src={branding.logo} className={`w-10 h-10 object-contain ${isDark ? 'brightness-125' : ''}`} alt="Shop Logo" />
                             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-violet-500 tracking-tight">
-                                {user.shop?.name || 'Sutra Shop'}
+                                {user.shop?.name || `${appName} Shop`}
                             </span>
                         </Link>
                         

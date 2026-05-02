@@ -1,5 +1,5 @@
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { 
     Globe, 
     Mail, 
@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 
 export default function Index() {
+    const { appName } = usePage().props;
     const [activeTab, setActiveTab] = useState('general');
 
     const tabs = [
@@ -57,7 +58,7 @@ export default function Index() {
                                 <label className="text-sm font-bold text-slate-700 dark:text-slate-300 transition-colors">Platform Name</label>
                                 <input 
                                     type="text" 
-                                    defaultValue="Sutra SaaS"
+                                    defaultValue={appName}
                                     className="mt-1 block w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-white/10 dark:text-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                                 />
                             </div>

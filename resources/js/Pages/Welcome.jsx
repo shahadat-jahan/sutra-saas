@@ -9,13 +9,14 @@ export default function Welcome({ auth }) {
     const isDark = mode === 'dark';
     const adminBranding = useAdminBranding();
 
+    const { appName } = usePage().props;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
         <div className={`min-h-screen selection:bg-indigo-500 selection:text-white transition-colors duration-500 overflow-x-hidden ${
             isDark ? 'bg-slate-950' : 'bg-white'
         }`}>
-            <Head title="Welcome to Sutra" />
+            <Head title={`Welcome to ${appName}`} />
 
             <div className="relative">
                 {/* Background Blobs */}
@@ -80,12 +81,12 @@ export default function Welcome({ auth }) {
                         >
                             <img src={adminBranding.logo} className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl shadow-lg object-contain transition-transform duration-300 group-hover:scale-110 ${
                                 isDark ? 'shadow-indigo-500/30' : 'shadow-indigo-300/30'
-                            }`} alt="Sutra Logo" />
+                            }`} alt={`${appName} Logo`} />
                             <span className={`text-xl sm:text-2xl font-bold bg-clip-text text-transparent ${
                                 isDark
                                     ? 'bg-gradient-to-r from-white to-slate-400'
                                     : 'bg-gradient-to-r from-slate-900 to-slate-600'
-                            } tracking-tight`}>Sutra</span>
+                            } tracking-tight`}>{appName}</span>
                         </Link>
 
                         {/* Desktop Navigation */}
@@ -404,7 +405,7 @@ export default function Welcome({ auth }) {
                                         </Link>
                                         <p className={`text-sm text-center ${
                                             isDark ? 'text-slate-500' : 'text-slate-600'
-                                        }`}>Join 1,000+ businesses using Sutra</p>
+                                        }`}>{`Join 1,000+ businesses using ${appName}`}</p>
                                     </div>
                                 </div>
                             </div>
@@ -416,7 +417,7 @@ export default function Welcome({ auth }) {
                             ? 'border-white/5 text-slate-500'
                             : 'border-slate-300 text-slate-600'
                     }`}>
-                        <p>&copy; {new Date().getFullYear()} Sutra.</p>
+                        <p>&copy; {new Date().getFullYear()} {appName}.</p>
                         <div className={`flex gap-4 mt-4 sm:mt-0 ${
                             isDark ? 'hover:text-white' : 'hover:text-slate-900'
                         }`}>

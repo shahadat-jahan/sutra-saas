@@ -22,7 +22,8 @@ import { useAdminBranding } from '@/Support/BrandingProvider';
 import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
 
 export default function AdminLayout({ children, header }) {
-    const user = usePage().props.auth.user;
+    const { auth, appName } = usePage().props;
+    const user = auth.user;
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const adminBranding = useAdminBranding();
     const { mode } = useTheme();
@@ -92,7 +93,7 @@ export default function AdminLayout({ children, header }) {
                         >
                             <img src={adminBranding.logo} className={`w-10 h-10 object-contain ${isDark ? 'brightness-125' : ''}`} alt="Admin Logo" />
                             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-violet-500 tracking-tight">
-                                Sutra SaaS
+                                {appName}
                             </span>
                         </Link>
                         

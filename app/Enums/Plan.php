@@ -12,10 +12,11 @@ enum Plan: int
 
     public function label(): string
     {
+        $appName = config('app.name', 'Sutra');
         return match ($this) {
-            self::BASIC => 'Sutra Basic',
-            self::PROFESSIONAL => 'Sutra Pro',
-            self::ENTERPRISE => 'Sutra Enterprise',
+            self::BASIC => $appName . ' Basic',
+            self::PROFESSIONAL => $appName . ' Pro',
+            self::ENTERPRISE => $appName . ' Enterprise',
         };
     }
 

@@ -19,7 +19,7 @@ class IdentifyTenant
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Closure(Request): (Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -28,7 +28,7 @@ class IdentifyTenant
         $hostWithoutPort = preg_replace('/:\d+$/', '', $host);
 
         if ($hostWithoutPort !== $appDomain && Str::endsWith($hostWithoutPort, '.' . $appDomain)) {
-            // It's a subdomain 
+            // It's a subdomain
             $subdomain = Str::before($hostWithoutPort, '.' . $appDomain);
 
             $shop = Shop::where('slug', $subdomain)->where('status', 1)->first();
@@ -43,7 +43,7 @@ class IdentifyTenant
             // Set Team Context for Spatie Permissions
             app(\Spatie\Permission\PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
 
-            // Cross-tenant protection: Ensure logged in user belongs to this shop
+            // Cross-tenant protection: Ensure logged-in user belongs to this shop
             // We allow Super Admins (shop_id === null) to access any shop
             if (Auth::check() && Auth::user()->shop_id !== null && Auth::user()->shop_id !== $shop->id) {
                 \Illuminate\Support\Facades\Log::warning('Cross-tenant protection triggered: Logging out user', [
@@ -52,9 +52,9 @@ class IdentifyTenant
                     'request_shop_id' => $shop->id,
                     'host' => $host
                 ]);
-                
+
                 Auth::logout();
-                
+
                 if (!$request->routeIs('login')) {
                     return redirect()->route('login')->with('error', 'You do not have access to this shop.');
                 }

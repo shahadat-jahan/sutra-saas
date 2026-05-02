@@ -78,7 +78,7 @@ export default function AdminLayout({ children, header }) {
                             </div>
                         </div>
                         <Link
-                            href={route('logout')}
+                            href="/logout"
                             method="post"
                             as="button"
                             className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-colors font-medium"

@@ -154,4 +154,6 @@ Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
                         ->name('roles.destroy');
                 });
         });
+
+        require __DIR__ . '/auth.php';
     });

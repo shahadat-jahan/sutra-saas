@@ -5,8 +5,12 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { useTheme } from '@/Support/ThemeProvider';
 
 export default function Login({ status, canResetPassword }) {
+    const { mode } = useTheme();
+    const isDark = mode === 'dark';
+    
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -33,14 +37,16 @@ export default function Login({ status, canResetPassword }) {
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" className="text-slate-300" />
+                    <InputLabel htmlFor="email" value="Email" className={isDark ? 'text-slate-300' : 'text-slate-700'} />
 
                     <TextInput
                         id="email"
                         type="email"
                         name="email"
                         value={data.email}
-                        className="mt-1 block w-full bg-white/5 border-white/10 text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-xl transition-all"
+                        className={`mt-1 block w-full focus:border-indigo-500 focus:ring-indigo-500 rounded-xl transition-all ${
+                            isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                        }`}
                         autoComplete="username"
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
@@ -50,14 +56,16 @@ export default function Login({ status, canResetPassword }) {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" className="text-slate-300" />
+                    <InputLabel htmlFor="password" value="Password" className={isDark ? 'text-slate-300' : 'text-slate-700'} />
 
                     <TextInput
                         id="password"
                         type="password"
                         name="password"
                         value={data.password}
-                        className="mt-1 block w-full bg-white/5 border-white/10 text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-xl transition-all"
+                        className={`mt-1 block w-full focus:border-indigo-500 focus:ring-indigo-500 rounded-xl transition-all ${
+                            isDark ? 'bg-white/5 border-white/10 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                        }`}
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
@@ -74,14 +82,18 @@ export default function Login({ status, canResetPassword }) {
                                 setData('remember', e.target.checked)
                             }
                         />
-                        <span className="ms-2 text-sm text-slate-400">
+                        <span className={`ms-2 text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                             Remember me
                         </span>
                     </label>
                 </div>
 
                 <div className="mt-8 flex flex-col gap-4">
-                    <PrimaryButton className="w-full justify-center py-4 text-base bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all shadow-[0_0_20px_rgba(79,70,229,0.3)]" disabled={processing}>
+                    <PrimaryButton className={`w-full justify-center py-4 text-base rounded-xl transition-all ${
+                        isDark 
+                            ? 'bg-indigo-600 hover:bg-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.3)]' 
+                            : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-[0_10px_20px_rgba(79,70,229,0.2)]'
+                    }`} disabled={processing}>
                         Log in
                     </PrimaryButton>
 
@@ -89,7 +101,9 @@ export default function Login({ status, canResetPassword }) {
                         <div className="flex items-center justify-center">
                             <Link
                                 href={route('password.request')}
-                                className="text-sm text-slate-400 hover:text-white transition-colors underline decoration-slate-400/30 hover:decoration-white"
+                                className={`text-sm transition-colors underline decoration-slate-400/30 ${
+                                    isDark ? 'text-slate-400 hover:text-white hover:decoration-white' : 'text-slate-600 hover:text-slate-900 hover:decoration-slate-900'
+                                }`}
                             >
                                 Forgot your password?
                             </Link>

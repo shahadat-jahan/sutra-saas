@@ -15,9 +15,15 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 
+import { useAdminBranding } from '@/Support/BrandingProvider';
+import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
+
 export default function AdminLayout({ children, header }) {
     const user = usePage().props.auth.user;
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const adminBranding = useAdminBranding();
+    const { mode } = useTheme();
+    const isDark = mode === 'dark';
 
     const navigation = [
         { name: 'Dashboard', href: route('admin.dashboard'), icon: LayoutDashboard, current: route().current('admin.dashboard') },
@@ -28,17 +34,41 @@ export default function AdminLayout({ children, header }) {
     ];
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC]">
+        <div className={`min-h-screen relative transition-colors duration-300 ${isDark ? 'bg-slate-950 text-slate-300' : 'bg-[#F8FAFC] text-slate-600'}`}>
+            {/* Watermark Background */}
+            <div 
+                className={`fixed inset-0 z-0 pointer-events-none ${isDark ? 'opacity-10' : 'opacity-5'}`}
+                style={{
+                    backgroundImage: `url(${adminBranding.watermark})`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    backgroundSize: '50%',
+                }}
+            ></div>
+
             {/* Sidebar */}
             <aside 
-                className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 transition-transform duration-300 ease-in-out transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
+                className={`fixed inset-y-0 left-0 z-50 w-72 border-r transition-transform duration-300 ease-in-out transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 ${
+                    isDark ? 'bg-slate-900 border-white/10' : 'bg-white border-slate-200'
+                }`}
             >
-                <div className="flex flex-col h-full">
+                <div className="flex flex-col h-full relative z-10">
                     {/* Logo */}
-                    <div className="flex items-center h-20 px-8 border-b border-slate-100">
-                        <Link href="/" className="flex items-center gap-3">
-                            <ApplicationLogo className="w-10 h-10 fill-indigo-600" />
-                            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 tracking-tight">
+                    <div className={`flex items-center h-20 px-8 border-b relative overflow-hidden ${
+                        isDark ? 'border-white/10' : 'border-slate-100'
+                    }`}>
+                        {/* Sidebar Banner (Optional, very light behind logo) */}
+                        <div 
+                            className="absolute inset-0 opacity-10 pointer-events-none"
+                            style={{
+                                backgroundImage: `url(${adminBranding.banner})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center'
+                            }}
+                        ></div>
+                        <Link href="/" className="flex items-center gap-3 relative z-10">
+                            <img src={adminBranding.logo} className={`w-10 h-10 object-contain ${isDark ? 'brightness-125' : ''}`} alt="Admin Logo" />
+                            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-violet-500 tracking-tight">
                                 Sutra SaaS
                             </span>
                         </Link>
@@ -46,7 +76,7 @@ export default function AdminLayout({ children, header }) {
 
                     {/* Navigation */}
                     <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-                        <div className="px-4 mb-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                        <div className={`px-4 mb-4 text-xs font-semibold uppercase tracking-wider ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                             Main Menu
                         </div>
                         {navigation.map((item) => (
@@ -55,11 +85,15 @@ export default function AdminLayout({ children, header }) {
                                 href={item.href}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                                     item.current 
-                                    ? 'bg-indigo-50 text-indigo-700 shadow-sm' 
-                                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                                    ? (isDark ? 'bg-indigo-500/10 text-indigo-400 shadow-sm' : 'bg-indigo-50 text-indigo-700 shadow-sm')
+                                    : (isDark ? 'text-slate-400 hover:bg-slate-800 hover:text-slate-200' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900')
                                 }`}
                             >
-                                <item.icon className={`w-5 h-5 transition-colors ${item.current ? 'text-indigo-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                                <item.icon className={`w-5 h-5 transition-colors ${
+                                    item.current 
+                                        ? (isDark ? 'text-indigo-400' : 'text-indigo-600') 
+                                        : (isDark ? 'text-slate-500 group-hover:text-slate-300' : 'text-slate-400 group-hover:text-slate-600')
+                                }`} />
                                 <span className="font-medium">{item.name}</span>
                                 {item.current && <ChevronRight className="ml-auto w-4 h-4" />}
                             </Link>
@@ -67,21 +101,25 @@ export default function AdminLayout({ children, header }) {
                     </nav>
 
                     {/* User Profile */}
-                    <div className="p-4 border-t border-slate-100">
-                        <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-slate-100 mb-4">
+                    <div className={`p-4 border-t ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+                        <div className={`flex items-center gap-3 p-3 rounded-xl border mb-4 ${
+                            isDark ? 'bg-slate-800 border-white/10' : 'bg-slate-50 border-slate-100'
+                        }`}>
                             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-md">
                                 {user.name.charAt(0)}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-slate-900 truncate">{user.name}</p>
-                                <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                                <p className={`text-sm font-bold truncate ${isDark ? 'text-white' : 'text-slate-900'}`}>{user.name}</p>
+                                <p className={`text-xs truncate ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{user.email}</p>
                             </div>
                         </div>
                         <Link
                             href="/logout"
                             method="post"
                             as="button"
-                            className="flex items-center gap-3 w-full px-4 py-3 text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-colors font-medium"
+                            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl transition-colors font-medium ${
+                                isDark ? 'text-slate-400 hover:bg-red-500/10 hover:text-red-400' : 'text-slate-500 hover:bg-red-50 hover:text-red-600'
+                            }`}
                         >
                             <LogOut className="w-5 h-5" />
                             <span>Sign Out</span>
@@ -91,21 +129,25 @@ export default function AdminLayout({ children, header }) {
             </aside>
 
             {/* Main Content */}
-            <div className={`transition-all duration-300 ${isSidebarOpen ? 'lg:pl-72' : ''}`}>
+            <div className={`transition-all duration-300 relative z-10 ${isSidebarOpen ? 'lg:pl-72' : ''}`}>
                 {/* Header */}
-                <header className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
+                <header className={`h-20 backdrop-blur-md border-b sticky top-0 z-40 ${
+                    isDark ? 'bg-slate-950/80 border-white/10' : 'bg-white/80 border-slate-200'
+                }`}>
                     <div className="h-full px-6 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <button 
                                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                                className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors lg:hidden"
+                                className={`p-2 rounded-lg transition-colors lg:hidden ${
+                                    isDark ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-100'
+                                }`}
                             >
                                 {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                             </button>
-                            <div className="hidden md:flex items-center gap-2 text-sm font-medium text-slate-400">
+                            <div className={`hidden md:flex items-center gap-2 text-sm font-medium ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                                 <span>Platform Admin</span>
                                 <ChevronRight className="w-4 h-4" />
-                                <span className="text-slate-900">{header}</span>
+                                <span className={isDark ? 'text-slate-200' : 'text-slate-900'}>{header}</span>
                             </div>
                         </div>
 
@@ -115,14 +157,21 @@ export default function AdminLayout({ children, header }) {
                                 <input 
                                     type="text" 
                                     placeholder="Search..." 
-                                    className="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-indigo-500 w-64 transition-all"
+                                    className={`pl-10 pr-4 py-2 border-none rounded-full text-sm focus:ring-2 focus:ring-indigo-500 w-64 transition-all ${
+                                        isDark ? 'bg-slate-800 text-white placeholder-slate-400' : 'bg-slate-100 text-slate-900'
+                                    }`}
                                 />
                             </div>
-                            <button className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg relative">
+                            
+                            <ThemeToggle />
+
+                            <button className={`p-2 rounded-lg relative ${
+                                isDark ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-100'
+                            }`}>
                                 <Bell className="w-6 h-6" />
                                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
                             </button>
-                            <div className="h-8 w-[1px] bg-slate-200 mx-2"></div>
+                            <div className={`h-8 w-[1px] mx-2 ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
                             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-100 shadow-sm">
                                 <img 
                                     src={`https://ui-avatars.com/api/?name=${user.name}&background=6366f1&color=fff`} 

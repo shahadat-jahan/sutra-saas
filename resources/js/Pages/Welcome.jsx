@@ -1,10 +1,12 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Check, Shield, Zap, Building2, Globe, BarChart3, Users, LayoutDashboard, Clock } from 'lucide-react';
 import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
+import { useAdminBranding } from '@/Support/BrandingProvider';
 
 export default function Welcome({ auth }) {
     const { mode } = useTheme();
     const isDark = mode === 'dark';
+    const adminBranding = useAdminBranding();
 
     return (
         <>
@@ -29,10 +31,21 @@ export default function Welcome({ auth }) {
                     </>
                 )}
 
+                {/* Watermark Background */}
+                <div 
+                    className={`fixed inset-0 z-0 pointer-events-none ${isDark ? 'opacity-5' : 'opacity-5'}`}
+                    style={{
+                        backgroundImage: `url(${adminBranding.watermark})`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
+                        backgroundSize: '60%',
+                    }}
+                ></div>
+
                 <div className="relative z-10 flex flex-col min-h-screen">
                     <header className="flex items-center justify-between px-6 py-6 w-full max-w-7xl mx-auto">
                         <div className="flex items-center gap-3">
-                            <img src="/images/logo.png" className={`w-12 h-12 rounded-xl shadow-lg ${
+                            <img src={adminBranding.logo} className={`w-12 h-12 rounded-xl shadow-lg object-contain ${
                                 isDark ? 'shadow-indigo-500/30' : 'shadow-indigo-300/30'
                             }`} alt="Sutra Logo" />
                             <span className={`text-2xl font-bold bg-clip-text text-transparent ${

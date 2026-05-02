@@ -31,7 +31,10 @@ class ShopController extends Controller
      */
     public function index(): Response
     {
+        $moduleCatalog = Shop::moduleCatalog();
+
         return Inertia::render('Admin/Shops/Index', [
+            'module_catalog' => $moduleCatalog,
             'shops' => Shop::query()
                 ->latest()
                 ->get()
@@ -41,7 +44,9 @@ class ShopController extends Controller
                     'name' => $shop->name,
                     'slug' => $shop->slug,
                     'business_type' => $shop->business_type?->value ?? $shop->getAttribute('business_type'),
-                    'plan' => $shop->plan?->value ?? $shop->getAttribute('plan'),
+                    'enabled_modules' => $shop->enabled_modules ?? [],
+                    'is_free' => $shop->is_free,
+                    'monthly_price' => $shop->monthlyPrice(),
                     'status' => $shop->status?->value ?? $shop->getAttribute('status'),
                     'created_at' => $shop->created_at?->toDateTimeString(),
                 ]),
@@ -61,7 +66,8 @@ class ShopController extends Controller
             $shop = Shop::create([
                 'name' => $data['shop_name'],
                 'business_type' => $data['business_type'],
-                'plan' => $data['plan'],
+                'enabled_modules' => $data['enabled_modules'],
+                'is_free' => (bool) ($data['is_free'] ?? false),
                 'status' => $data['status'],
             ]);
 

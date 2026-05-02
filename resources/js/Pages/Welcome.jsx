@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Check, Shield, Zap, Building2, Globe, BarChart3, Users, LayoutDashboard, Clock } from 'lucide-react';
+import { Check, Globe, BarChart3, Users, LayoutDashboard, Clock } from 'lucide-react';
 import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
 import { useAdminBranding } from '@/Support/BrandingProvider';
 
@@ -9,8 +9,18 @@ export default function Welcome({ auth }) {
     const isDark = mode === 'dark';
     const adminBranding = useAdminBranding();
 
-    const { appName } = usePage().props;
+    const { appName, module_catalog } = usePage().props;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const pricingModules = Object.entries(module_catalog || {}).map(([key, module]) => ({
+        key,
+        name: module.name,
+        monthly_price: Number(module.monthly_price || 0),
+    }));
+    const moduleIcons = {
+        pos: Globe,
+        inventory: BarChart3,
+        finance: Users,
+    };
 
     return (
         <div className={`min-h-screen selection:bg-indigo-500 selection:text-white transition-colors duration-500 overflow-x-hidden ${
@@ -263,84 +273,68 @@ export default function Welcome({ auth }) {
                                 }`}>Simple, Transparent <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Pricing</span></h2>
                                 <p className={`text-lg max-w-2xl mx-auto ${
                                     isDark ? 'text-slate-400' : 'text-slate-600'
-                                }`}>Choose the perfect plan for your business scale. No hidden fees, cancel anytime.</p>
+                                }`}>Pay monthly for only the modules you use. POS is mandatory for every shop.</p>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
-                                {usePage().props.plans.map((plan) => (
-                                    <div key={plan.value} className={`p-8 rounded-3xl border flex flex-col transition-all duration-300 group shadow-2xl ${
-                                        plan.value === 2
-                                        ? isDark
-                                            ? 'border-indigo-500/50 bg-indigo-500/5 backdrop-blur-md relative transform scale-105'
-                                            : 'border-indigo-300/50 bg-indigo-50/50 relative transform scale-105'
-                                        : isDark
+                                {pricingModules.map((module) => {
+                                    const Icon = moduleIcons[module.key] ?? Globe;
+
+                                    return (
+                                    <div key={module.key} className={`p-8 rounded-3xl border flex flex-col transition-all duration-300 group shadow-2xl ${
+                                        isDark
                                             ? 'border-white/5 bg-white/5 backdrop-blur-sm'
                                             : 'border-slate-200 bg-slate-50/50'
                                     }`}>
-                                        {plan.value === 2 && (
-                                            <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 text-white text-xs font-bold rounded-full uppercase tracking-widest shadow-lg ${
-                                                isDark
-                                                    ? 'bg-indigo-500 shadow-indigo-500/50'
-                                                    : 'bg-indigo-600 shadow-indigo-600/30'
-                                            }`}>
-                                                Most Popular
-                                            </div>
-                                        )}
                                         <div className="mb-6">
                                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${
-                                                plan.value === 2
-                                                    ? isDark
-                                                        ? 'bg-indigo-500 text-white shadow-lg'
-                                                        : 'bg-indigo-600 text-white shadow-lg'
-                                                    : isDark
-                                                        ? 'bg-white/10 text-slate-300'
-                                                        : 'bg-slate-200 text-slate-600'
+                                                isDark
+                                                    ? 'bg-white/10 text-slate-300'
+                                                    : 'bg-slate-200 text-slate-600'
                                             }`}>
-                                                {plan.value === 1 ? <Zap className="w-6 h-6" /> : (plan.value === 2 ? <Shield className="w-6 h-6" /> : <Building2 className="w-6 h-6" />)}
+                                                <Icon className="w-6 h-6" />
                                             </div>
                                             <h3 className={`text-2xl font-bold mb-2 ${
                                                 isDark ? 'text-white' : 'text-slate-900'
-                                            }`}>{plan.label}</h3>
+                                            }`}>{module.name}</h3>
                                             <div className={`flex items-baseline gap-1 mb-2 ${
                                                 isDark ? 'text-slate-500' : 'text-slate-600'
                                             }`}>
                                                 <span className={`text-4xl font-black ${
                                                     isDark ? 'text-white' : 'text-slate-900'
-                                                }`}>{plan.price}</span>
-                                                {plan.value !== 3 && <span>/{plan.value === 1 ? 'forever' : 'month'}</span>}
+                                                }`}>BDT {module.monthly_price.toLocaleString()}</span>
+                                                <span>/month</span>
                                             </div>
                                             <p className={`text-sm ${
                                                 isDark ? 'text-slate-400' : 'text-slate-600'
                                             }`}>
-                                                {plan.value === 1 ? 'Perfect for small shops.' : (plan.value === 2 ? 'Scale your growing business.' : 'Tailored enterprise solutions.')}
+                                                Activate this module when your business needs it.
                                             </p>
                                         </div>
                                         <ul className={`space-y-4 mb-10 flex-1 ${
                                             isDark ? 'text-slate-300' : 'text-slate-700'
                                         }`}>
-                                            {plan.modules.map((module) => (
-                                                <li key={module} className="flex items-center gap-3 text-sm">
-                                                    <Check className={`w-4 h-4 ${plan.value === 2 ? 'text-indigo-400' : isDark ? 'text-slate-500' : 'text-slate-400'}`} />
-                                                    <span className="capitalize">{module.replace('_', ' ')}</span>
-                                                </li>
-                                            ))}
+                                            <li className="flex items-center gap-3 text-sm">
+                                                <Check className={`w-4 h-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
+                                                <span>Monthly billing, cancel anytime</span>
+                                            </li>
+                                            <li className="flex items-center gap-3 text-sm">
+                                                <Check className={`w-4 h-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
+                                                <span>Module access controlled by admin</span>
+                                            </li>
                                         </ul>
                                         <Link
-                                            href={route('register', { plan: plan.value })}
+                                            href={route('register')}
                                             className={`w-full py-3 px-6 rounded-xl font-bold text-center transition-all ${
-                                                plan.value === 2
-                                                ? isDark
-                                                    ? 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-lg shadow-indigo-500/25'
-                                                    : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-600/25'
-                                                : isDark
+                                                isDark
                                                     ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
                                                     : 'border border-slate-300 bg-slate-100 text-slate-900 hover:bg-slate-200'
                                             }`}
                                         >
-                                            {plan.value === 1 ? 'Start 14-Day Free Trial' : (plan.value === 3 ? 'Contact Sales' : 'Get Started')}
+                                            Get Started
                                         </Link>
                                     </div>
-                                ))}
+                                )})}
                             </div>
                         </section>
 

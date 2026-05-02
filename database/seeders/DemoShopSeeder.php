@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Enums\BusinessType;
-use App\Enums\Plan;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -25,7 +24,8 @@ class DemoShopSeeder extends Seeder
             [
                 'name' => 'Demo Retail Shop',
                 'business_type' => BusinessType::RETAIL,
-                'plan' => Plan::BASIC,
+                'enabled_modules' => ['pos'],
+                'is_free' => true,
                 'status' => 1,
             ]
         );

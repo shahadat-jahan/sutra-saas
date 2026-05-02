@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\ShopController;
 use App\Http\Controllers\Admin\ShopRoleController;
 use App\Http\Controllers\Admin\ShopUserController;
@@ -96,9 +97,10 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
                 '/users',
                 [UserController::class, 'index']
             )->name('users.index');
-            Route::get('/settings', function () {
-                return Inertia::render('Admin/Settings/Index');
-            })->name('settings.index');
+            Route::get('/settings', [SettingsController::class, 'index'])
+                ->name('settings.index');
+            Route::patch('/settings/module-pricing', [SettingsController::class, 'updateModulePricing'])
+                ->name('settings.module-pricing.update');
         });
 
     require __DIR__.'/auth.php';

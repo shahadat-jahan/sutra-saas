@@ -34,33 +34,24 @@ enum Plan: int
     {
         return match ($this) {
             self::BASIC => [
+                // MVP Phase 1
+                'pos',
+            ],
+
+            self::PROFESSIONAL => [
+                // MVP Phase 2
                 'pos',
                 'inventory',
                 'basic_reports',
             ],
 
-            self::PROFESSIONAL => [
-                'pos',
-                'inventory',
-                'advanced_analytics',
-                'subdomain_access',
-                'team_management',
-                'expense_tracker',
-                'whatsapp_notifications',
-            ],
-
             self::ENTERPRISE => [
+                // MVP Phase 3
                 'pos',
                 'inventory',
-                'advanced_analytics',
-                'custom_domain',
-                'team_management',
-                'email_notifications',
-                'whatsapp_notifications',
-                'api_access',
-                'dedicated_support',
-                'e_commerce_sync',
-                'multi_branch',
+                'finance',
+                'customization',
+                'basic_reports',
             ],
         };
     }

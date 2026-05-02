@@ -24,16 +24,18 @@ class CheckPlanModule
             return $next($request);
         }
 
-        // Check if the plan associated with the shop has the required module
-        if (! $user->shop->plan->hasModule($module)) {
+        $enabledModules = $user->shop->enabled_modules ?? [];
+
+        // Module access is driven by per-shop module selection.
+        if (! in_array($module, $enabledModules, true)) {
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => "Your current plan does not include the '{$module}' module. Please upgrade to access this feature.",
+                    'message' => "Your shop does not have the '{$module}' module enabled.",
                 ], 403);
             }
 
             return redirect()->route('dashboard', ['subdomain' => $user->shop->slug])
-                ->with('error', "Your current plan does not include the '{$module}' module. Please upgrade to access this feature.");
+                ->with('error', "Your shop does not have the '{$module}' module enabled.");
         }
 
         return $next($request);

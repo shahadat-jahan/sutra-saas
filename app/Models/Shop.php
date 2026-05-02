@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Enums\ActiveStatus;
 use App\Enums\BusinessType;
-use App\Enums\Plan;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class Shop extends Model
@@ -19,9 +20,10 @@ class Shop extends Model
         'name',
         'slug',
         'business_type',
-        'plan',
         'logo_path',
+        'plan_id',
         'enabled_modules',
+        'is_free',
         'status',
     ];
 
@@ -29,9 +31,9 @@ class Shop extends Model
     {
         return [
             'enabled_modules' => 'array',
+            'is_free' => 'boolean',
             'status' => ActiveStatus::class,
             'business_type' => BusinessType::class,
-            'plan' => Plan::class,
         ];
     }
 
@@ -46,6 +48,59 @@ class Shop extends Model
                 $shop->enabled_modules = ['pos'];
             }
         });
+    }
+
+    /**
+     * @return array<string, array{name: string, monthly_price: int}>
+     */
+    public static function moduleCatalog(): array
+    {
+        /** @var array<string, array{name: string, monthly_price: int}> $catalog */
+        $catalog = config('modules.catalog', []);
+
+        // During fresh bootstrap (before running migrations) this table may not exist.
+        if (! Schema::hasTable('system_settings')) {
+            return $catalog;
+        }
+
+        /** @var array<string, array{name?: string, monthly_price?: int|string>> $override */
+        $override = SystemSetting::getValue('module_catalog', []);
+
+        if (! is_array($override)) {
+            return $catalog;
+        }
+
+        foreach ($override as $moduleKey => $moduleConfig) {
+            if (! isset($catalog[$moduleKey]) || ! is_array($moduleConfig)) {
+                continue;
+            }
+
+            $catalog[$moduleKey]['monthly_price'] = (int) ($moduleConfig['monthly_price'] ?? $catalog[$moduleKey]['monthly_price']);
+        }
+
+        return $catalog;
+    }
+
+    public function monthlyPrice(): int
+    {
+        if ($this->is_free) {
+            return 0;
+        }
+
+        $catalog = self::moduleCatalog();
+        $selectedModules = $this->enabled_modules ?? [];
+
+        $total = 0;
+        foreach ($selectedModules as $moduleKey) {
+            $total += (int) ($catalog[$moduleKey]['monthly_price'] ?? 0);
+        }
+
+        return $total;
+    }
+
+    public function plan(): BelongsTo
+    {
+        return $this->belongsTo(Plan::class);
     }
 
     public function products(): HasMany

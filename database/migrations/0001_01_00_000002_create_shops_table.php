@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
+            $table->foreignId('plan_id')->nullable()->constrained()->onDelete('set null');
             $table->string('name');
             $table->string('slug', 255)->unique();
             $table->tinyInteger('business_type')->default(1);
-            $table->tinyInteger('plan')->default(1);
             $table->string('logo_path')->nullable();
             $table->string('banner_path')->nullable();
             $table->string('watermark_path')->nullable();
-            $table->jsonb('enabled_modules')->nullable();
+            $table->jsonb('enabled_modules')->default(json_encode(['pos']));
+            $table->boolean('is_free')->default(false);
             $table->jsonb('metadata')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();

@@ -34,7 +34,8 @@ class RegisteredUserController extends Controller
             [
                 'name' => $request->shop_name,
                 'business_type' => $request->business_type,
-                'plan' => $request->plan,
+                'enabled_modules' => $request->enabled_modules,
+                'is_free' => false,
             ],
             [
                 'name' => $request->name,

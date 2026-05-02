@@ -1,4 +1,5 @@
 import ApplicationLogo from '@/Components/ApplicationLogo';
+import Dropdown from '@/Components/Dropdown';
 import { Link, usePage } from '@inertiajs/react';
 import { 
     LayoutDashboard, 
@@ -11,7 +12,9 @@ import {
     X, 
     Bell,
     Search,
-    ChevronRight
+    ChevronRight,
+    User,
+    ChevronDown
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -195,12 +198,45 @@ export default function AdminLayout({ children, header }) {
                                     isDark ? 'border-slate-950' : 'border-white'
                                 }`}></span>
                             </button>
-                            <div className={`h-8 w-[1px] mx-2 ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}></div>
-                            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-100 shadow-sm">
-                                <img 
-                                    src={`https://ui-avatars.com/api/?name=${user.name}&background=6366f1&color=fff`} 
-                                    alt={user.name} 
-                                />
+                            <div className="flex items-center ml-2">
+                                <Dropdown>
+                                    <Dropdown.Trigger>
+                                        <button className="flex items-center gap-2 group transition-all">
+                                            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-100 group-hover:border-indigo-500 shadow-sm transition-all transform group-hover:scale-105">
+                                                <img 
+                                                    src={`https://ui-avatars.com/api/?name=${user.name}&background=6366f1&color=fff`} 
+                                                    alt={user.name} 
+                                                />
+                                            </div>
+                                            <div className="hidden lg:block text-left">
+                                                <p className={`text-xs font-bold leading-none mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>{user.name}</p>
+                                                <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Super Admin</p>
+                                            </div>
+                                            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isDark ? 'text-slate-500' : 'text-slate-400'} group-hover:translate-y-0.5`} />
+                                        </button>
+                                    </Dropdown.Trigger>
+
+                                    <Dropdown.Content align="right" width="48" contentClasses={`py-1 ${isDark ? 'bg-slate-900 border-white/10' : 'bg-white'}`}>
+                                        <div className={`px-4 py-3 border-b mb-1 ${isDark ? 'border-white/10' : 'border-slate-100'}`}>
+                                            <p className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>{user.name}</p>
+                                            <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                                        </div>
+                                        
+                                        <Dropdown.Link href={route('profile.edit')} className={isDark ? 'text-slate-300 hover:bg-white/5 hover:text-white' : ''}>
+                                            <div className="flex items-center gap-2">
+                                                <User className="w-4 h-4" />
+                                                <span>Profile Settings</span>
+                                            </div>
+                                        </Dropdown.Link>
+
+                                        <Dropdown.Link href={route('logout')} method="post" as="button" className={isDark ? 'text-rose-400 hover:bg-rose-500/10 hover:text-rose-300' : 'text-rose-600'}>
+                                            <div className="flex items-center gap-2">
+                                                <LogOut className="w-4 h-4" />
+                                                <span>Log Out</span>
+                                            </div>
+                                        </Dropdown.Link>
+                                    </Dropdown.Content>
+                                </Dropdown>
                             </div>
                         </div>
                     </div>

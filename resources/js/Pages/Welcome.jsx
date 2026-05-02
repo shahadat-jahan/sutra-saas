@@ -81,7 +81,7 @@ export default function Welcome({ auth }) {
                         </div>
 
                         {/* Desktop Navigation */}
-                        <nav className="hidden lg:flex gap-8 text-sm font-medium">
+                        <nav className={`hidden lg:flex gap-8 text-sm font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                             <a href="#features" className={`${isDark ? 'hover:text-white' : 'hover:text-slate-900'} transition cursor-pointer`}>Features</a>
                             <a href="#solutions" className={`${isDark ? 'hover:text-white' : 'hover:text-slate-900'} transition cursor-pointer`}>Solutions</a>
                             <a href="#pricing" className={`${isDark ? 'hover:text-white' : 'hover:text-slate-900'} transition cursor-pointer`}>Pricing</a>
@@ -108,17 +108,17 @@ export default function Welcome({ auth }) {
                                         <Link
                                             href={route('login')}
                                             className={`px-4 py-2 text-sm font-semibold transition-colors ${
-                                                isDark ? 'hover:text-white' : 'hover:text-slate-900'
+                                                isDark ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
                                             }`}
                                         >
                                             Log in
                                         </Link>
                                         <Link
                                             href={route('register')}
-                                            className={`px-5 py-2 text-sm font-bold text-white rounded-full transition-all transform hover:scale-105 ${
+                                            className={`px-6 py-2.5 text-sm font-bold text-white rounded-full transition-all transform hover:scale-105 ${
                                                 isDark
-                                                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600'
-                                                    : 'bg-gradient-to-r from-indigo-500 to-purple-500'
+                                                    ? 'bg-indigo-600 shadow-lg shadow-indigo-500/20'
+                                                    : 'bg-indigo-600 shadow-lg shadow-indigo-600/20'
                                             }`}
                                         >
                                             Start Free Trial
@@ -151,7 +151,7 @@ export default function Welcome({ auth }) {
                         isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
                     }`}>
                         <div className={`absolute inset-0 backdrop-blur-xl ${isDark ? 'bg-slate-950/95' : 'bg-white/95'}`} onClick={() => setIsMenuOpen(false)}></div>
-                        <nav className="relative flex flex-col items-center justify-center h-full gap-6 text-2xl font-black">
+                        <nav className="relative flex flex-col items-center justify-center h-full gap-8 text-2xl font-bold">
                             <a href="#features" onClick={() => setIsMenuOpen(false)} className={`${isDark ? 'text-white' : 'text-slate-900'}`}>Features</a>
                             <a href="#solutions" onClick={() => setIsMenuOpen(false)} className={`${isDark ? 'text-white' : 'text-slate-900'}`}>Solutions</a>
                             <a href="#pricing" onClick={() => setIsMenuOpen(false)} className={`${isDark ? 'text-white' : 'text-slate-900'}`}>Pricing</a>

@@ -45,12 +45,14 @@ export default function AdminLayout({ children, header }) {
                      style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
                 </div>
 
-                {/* Elegant Tilted Watermark */}
+                {/* Elegant Tilted Watermark with Faded Edges */}
                 <div 
                     className="absolute -top-32 -right-32 w-[600px] h-[600px] transition-opacity duration-700"
                     style={{
                         transform: 'rotate(-25deg)',
-                        opacity: isDark ? '0.08' : '0.05'
+                        opacity: isDark ? '0.08' : '0.05',
+                        maskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)',
+                        WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)'
                     }}
                 >
                     <img 
@@ -81,7 +83,13 @@ export default function AdminLayout({ children, header }) {
                                 backgroundPosition: 'center'
                             }}
                         ></div>
-                        <Link href="/" className="flex items-center gap-3 relative z-10">
+                        <Link 
+                            href={user 
+                                ? (user.roles?.some(role => role.name === 'super-admin') ? route('admin.dashboard') : (user.shop ? route('dashboard', { subdomain: user.shop.slug }) : '/'))
+                                : '/'
+                            } 
+                            className="relative z-10 flex items-center gap-3 group transition-transform duration-300 hover:scale-105"
+                        >
                             <img src={adminBranding.logo} className={`w-10 h-10 object-contain ${isDark ? 'brightness-125' : ''}`} alt="Admin Logo" />
                             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-violet-500 tracking-tight">
                                 Sutra SaaS

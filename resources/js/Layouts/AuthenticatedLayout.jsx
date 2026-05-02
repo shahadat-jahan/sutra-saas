@@ -24,12 +24,14 @@ export default function AuthenticatedLayout({ header, children }) {
                      style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
                 </div>
 
-                {/* Elegant Tilted Watermark */}
+                {/* Elegant Tilted Watermark with Faded Edges */}
                 <div 
                     className="absolute -top-20 -right-20 w-[500px] h-[500px] transition-opacity duration-700"
                     style={{
                         transform: 'rotate(-25deg)',
-                        opacity: isDark ? '0.08' : '0.05'
+                        opacity: isDark ? '0.08' : '0.05',
+                        maskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)',
+                        WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)'
                     }}
                 >
                     <img 
@@ -42,223 +44,226 @@ export default function AuthenticatedLayout({ header, children }) {
 
             <div className="relative z-10">
                 <nav className="border-b border-gray-100 dark:border-white/10 bg-white dark:bg-slate-900 transition-colors duration-300 relative z-20">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-16 justify-between">
-                        <div className="flex">
-                            <div className="flex shrink-0 items-center">
-                                <Link href="/">
-                                    <ShopLogo className="block h-10 w-auto object-contain dark:brightness-125" />
-                                </Link>
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <div className="flex h-16 justify-between">
+                            <div className="flex">
+                                <div className="flex shrink-0 items-center">
+                                    <Link href={user 
+                                        ? (user.roles?.some(role => role.name === 'super-admin') ? route('admin.dashboard') : (user.shop ? route('dashboard', { subdomain: user.shop.slug }) : '/'))
+                                        : '/'
+                                    }>
+                                        <ShopLogo className="block h-10 w-auto object-contain dark:brightness-125 transition-transform duration-300 hover:scale-110" />
+                                    </Link>
+                                </div>
+
+                                <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                    {user.roles?.some(role => role.name === 'super-admin') ? (
+                                        <>
+                                            <NavLink href={route('admin.dashboard')} active={route().current('admin.dashboard')}>
+                                                System Dashboard
+                                            </NavLink>
+                                            <NavLink href={route('admin.shops.index')} active={route().current('admin.shops.index')}>
+                                                Manage Shops
+                                            </NavLink>
+                                            <NavLink href={route('admin.users.index')} active={route().current('admin.users.index')}>
+                                                Platform Users
+                                            </NavLink>
+                                        </>
+                                    ) : (
+                                        <NavLink
+                                            href={route('dashboard', { subdomain: user.shop?.slug })}
+                                            active={route().current('dashboard')}
+                                        >
+                                            Shop Dashboard
+                                        </NavLink>
+                                    )}
+                                </div>
                             </div>
 
-                            <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                {user.roles?.some(role => role.name === 'super-admin') ? (
-                                    <>
-                                        <NavLink href={route('admin.dashboard')} active={route().current('admin.dashboard')}>
-                                            System Dashboard
-                                        </NavLink>
-                                        <NavLink href={route('admin.shops.index')} active={route().current('admin.shops.index')}>
-                                            Manage Shops
-                                        </NavLink>
-                                        <NavLink href={route('admin.users.index')} active={route().current('admin.users.index')}>
-                                            Platform Users
-                                        </NavLink>
-                                    </>
-                                ) : (
-                                    <NavLink
-                                        href={route('dashboard', { subdomain: user.shop?.slug })}
-                                        active={route().current('dashboard')}
-                                    >
-                                        Shop Dashboard
-                                    </NavLink>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="hidden sm:ms-6 sm:flex sm:items-center">
-                            <ThemeToggle />
-                            <div className="relative ms-3">
-                                <Dropdown>
-                                    <Dropdown.Trigger>
-                                        <span className="inline-flex rounded-md">
-                                            <button
-                                                type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white dark:bg-slate-900 px-3 py-2 text-sm font-medium leading-4 text-gray-500 dark:text-slate-400 transition duration-150 ease-in-out hover:text-gray-700 dark:hover:text-slate-300 focus:outline-none"
-                                            >
-                                                {user.name}
-
-                                                <svg
-                                                    className="-me-0.5 ms-2 h-4 w-4"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
+                            <div className="hidden sm:ms-6 sm:flex sm:items-center">
+                                <ThemeToggle />
+                                <div className="relative ms-3">
+                                    <Dropdown>
+                                        <Dropdown.Trigger>
+                                            <span className="inline-flex rounded-md">
+                                                <button
+                                                    type="button"
+                                                    className="inline-flex items-center rounded-md border border-transparent bg-white dark:bg-slate-900 px-3 py-2 text-sm font-medium leading-4 text-gray-500 dark:text-slate-400 transition duration-150 ease-in-out hover:text-gray-700 dark:hover:text-slate-300 focus:outline-none"
                                                 >
-                                                    <path
-                                                        fillRule="evenodd"
-                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clipRule="evenodd"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </span>
-                                    </Dropdown.Trigger>
+                                                    {user.name}
 
-                                    <Dropdown.Content>
-                                        <Dropdown.Link
-                                            href={route('profile.edit')}
-                                        >
-                                            Profile
-                                        </Dropdown.Link>
-                                        <Dropdown.Link
-                                            href="/logout"
-                                            method="post"
-                                            as="button"
-                                        >
-                                            Log Out
-                                        </Dropdown.Link>
-                                    </Dropdown.Content>
-                                </Dropdown>
+                                                    <svg
+                                                        className="-me-0.5 ms-2 h-4 w-4"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                            clipRule="evenodd"
+                                                        />
+                                                    </svg>
+                                                </button>
+                                            </span>
+                                        </Dropdown.Trigger>
+
+                                        <Dropdown.Content>
+                                            <Dropdown.Link
+                                                href={route('profile.edit')}
+                                            >
+                                                Profile
+                                            </Dropdown.Link>
+                                            <Dropdown.Link
+                                                href={route('logout')}
+                                                method="post"
+                                                as="button"
+                                            >
+                                                Log Out
+                                            </Dropdown.Link>
+                                        </Dropdown.Content>
+                                    </Dropdown>
+                                </div>
+                            </div>
+
+                            <div className="-me-2 flex items-center sm:hidden gap-2">
+                                <ThemeToggle />
+                                <button
+                                    onClick={() =>
+                                        setShowingNavigationDropdown(
+                                            (previousState) => !previousState,
+                                        )
+                                    }
+                                    className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 dark:text-slate-500 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-500 dark:hover:text-slate-400 focus:bg-gray-100 dark:focus:bg-slate-800 focus:text-gray-500 dark:focus:text-slate-400 focus:outline-none"
+                                >
+                                    <svg
+                                        className="h-6 w-6"
+                                        stroke="currentColor"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            className={
+                                                !showingNavigationDropdown
+                                                    ? 'inline-flex'
+                                                    : 'hidden'
+                                            }
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M4 6h16M4 12h16M4 18h16"
+                                        />
+                                        <path
+                                            className={
+                                                showingNavigationDropdown
+                                                    ? 'inline-flex'
+                                                    : 'hidden'
+                                            }
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M6 18L18 6M6 6l12 12"
+                                        />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="-me-2 flex items-center sm:hidden gap-2">
-                            <ThemeToggle />
-                            <button
-                                onClick={() =>
-                                    setShowingNavigationDropdown(
-                                        (previousState) => !previousState,
-                                    )
-                                }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 dark:text-slate-500 transition duration-150 ease-in-out hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-500 dark:hover:text-slate-400 focus:bg-gray-100 dark:focus:bg-slate-800 focus:text-gray-500 dark:focus:text-slate-400 focus:outline-none"
-                            >
-                                <svg
-                                    className="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
+                    <div
+                        className={
+                            (showingNavigationDropdown ? 'block' : 'hidden') +
+                            ' sm:hidden'
+                        }
+                    >
+                        <div className="space-y-1 pb-3 pt-2">
+                            {user.roles?.some(role => role.name === 'super-admin') ? (
+                                <>
+                                    <ResponsiveNavLink
+                                        href={route('admin.dashboard')}
+                                        active={route().current('admin.dashboard')}
+                                    >
+                                        System Dashboard
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        href={route('admin.announcements.index')}
+                                        active={route().current('admin.announcements.*')}
+                                    >
+                                        Announcements
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        href={route('admin.shops.index')}
+                                        active={route().current('admin.shops.*')}
+                                    >
+                                        Manage Shops
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        href={route('admin.users.index')}
+                                        active={route().current('admin.users.*')}
+                                    >
+                                        Platform Users
+                                    </ResponsiveNavLink>
+                                    <ResponsiveNavLink
+                                        href={route('admin.settings.index')}
+                                        active={route().current('admin.settings.*')}
+                                    >
+                                        Settings
+                                    </ResponsiveNavLink>
+                                </>
+                            ) : (
+                                <ResponsiveNavLink
+                                    href={route('dashboard', { subdomain: user.shop?.slug })}
+                                    active={route().current('dashboard')}
                                 >
-                                    <path
-                                        className={
-                                            !showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                    <path
-                                        className={
-                                            showingNavigationDropdown
-                                                ? 'inline-flex'
-                                                : 'hidden'
-                                        }
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </button>
+                                    Shop Dashboard
+                                </ResponsiveNavLink>
+                            )}
                         </div>
-                    </div>
-                </div>
 
-                <div
-                    className={
-                        (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden'
-                    }
-                >
-                    <div className="space-y-1 pb-3 pt-2">
-                        {user.roles?.some(role => role.name === 'super-admin') ? (
-                            <>
-                                <ResponsiveNavLink
-                                    href={route('admin.dashboard')}
-                                    active={route().current('admin.dashboard')}
-                                >
-                                    System Dashboard
-                                </ResponsiveNavLink>
-                                <ResponsiveNavLink
-                                    href={route('admin.announcements.index')}
-                                    active={route().current('admin.announcements.*')}
-                                >
-                                    Announcements
-                                </ResponsiveNavLink>
-                                <ResponsiveNavLink
-                                    href={route('admin.shops.index')}
-                                    active={route().current('admin.shops.*')}
-                                >
-                                    Manage Shops
-                                </ResponsiveNavLink>
-                                <ResponsiveNavLink
-                                    href={route('admin.users.index')}
-                                    active={route().current('admin.users.*')}
-                                >
-                                    Platform Users
-                                </ResponsiveNavLink>
-                                <ResponsiveNavLink
-                                    href={route('admin.settings.index')}
-                                    active={route().current('admin.settings.*')}
-                                >
-                                    Settings
-                                </ResponsiveNavLink>
-                            </>
-                        ) : (
-                            <ResponsiveNavLink
-                                href={route('dashboard', { subdomain: user.shop?.slug })}
-                                active={route().current('dashboard')}
-                            >
-                                Shop Dashboard
-                            </ResponsiveNavLink>
-                        )}
-                    </div>
-
-                    <div className="border-t border-gray-200 dark:border-white/10 pb-1 pt-4">
-                        <div className="px-4">
-                            <div className="text-base font-medium text-gray-800 dark:text-slate-200">
-                                {user.name}
+                        <div className="border-t border-gray-200 dark:border-white/10 pb-1 pt-4">
+                            <div className="px-4">
+                                <div className="text-base font-medium text-gray-800 dark:text-slate-200">
+                                    {user.name}
+                                </div>
+                                <div className="text-sm font-medium text-gray-500 dark:text-slate-400">
+                                    {user.email}
+                                </div>
                             </div>
-                            <div className="text-sm font-medium text-gray-500 dark:text-slate-400">
-                                {user.email}
+
+                            <div className="mt-3 space-y-1">
+                                <ResponsiveNavLink href={route('profile.edit')}>
+                                    Profile
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    method="post"
+                                    href={route('logout')}
+                                    as="button"
+                                >
+                                    Log Out
+                                </ResponsiveNavLink>
                             </div>
                         </div>
+                    </div>
+                </nav>
 
-                        <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>
-                                Profile
-                            </ResponsiveNavLink>
-                            <ResponsiveNavLink
-                                method="post"
-                                href="/logout"
-                                as="button"
-                            >
-                                Log Out
-                            </ResponsiveNavLink>
+                {header && (
+                    <header className="relative bg-white dark:bg-slate-900 shadow dark:shadow-white/5 transition-colors duration-300 overflow-hidden">
+                        {/* Header Banner Background */}
+                        <div 
+                            className="absolute inset-0 opacity-10 pointer-events-none"
+                            style={{
+                                backgroundImage: `url(${branding.banner})`,
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center'
+                            }}
+                        ></div>
+                        <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                            {header}
                         </div>
-                    </div>
-                </div>
-            </nav>
+                    </header>
+                )}
 
-            {header && (
-                <header className="relative bg-white dark:bg-slate-900 shadow dark:shadow-white/5 transition-colors duration-300 overflow-hidden">
-                    {/* Header Banner Background */}
-                    <div 
-                        className="absolute inset-0 opacity-10 pointer-events-none"
-                        style={{
-                            backgroundImage: `url(${branding.banner})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center'
-                        }}
-                    ></div>
-                    <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                        {header}
-                    </div>
-                </header>
-            )}
-
-            <main className="relative z-10">{children}</main>
+                <main className="relative z-10">{children}</main>
             </div>
         </div>
     );

@@ -1,8 +1,10 @@
-import { Link } from '@inertiajs/react';
+import ApplicationLogo from '@/Components/ApplicationLogo';
+import { Link, usePage } from '@inertiajs/react';
 import { useAdminBranding } from '@/Support/BrandingProvider';
 import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
 
 export default function GuestLayout({ children }) {
+    const user = usePage().props.auth.user;
     const adminBranding = useAdminBranding();
     const { mode } = useTheme();
     const isDark = mode === 'dark';
@@ -23,12 +25,14 @@ export default function GuestLayout({ children }) {
                      style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
                 </div>
 
-                {/* Elegant Tilted Watermark */}
+                {/* Elegant Tilted Watermark with Faded Edges */}
                 <div 
                     className="absolute -top-20 -right-20 w-[400px] h-[400px] transition-opacity duration-700"
                     style={{
                         transform: 'rotate(-25deg)',
-                        opacity: isDark ? '0.08' : '0.06'
+                        opacity: isDark ? '0.08' : '0.06',
+                        maskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)',
+                        WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)'
                     }}
                 >
                     <img 
@@ -37,6 +41,15 @@ export default function GuestLayout({ children }) {
                         alt=""
                     />
                 </div>
+            </div>
+
+            <div className="fixed top-8 left-8 z-50">
+                <Link href={user 
+                    ? (user.roles?.some(role => role.name === 'super-admin') ? route('admin.dashboard') : (user.shop ? route('dashboard', { subdomain: user.shop.slug }) : '/'))
+                    : '/'
+                }>
+                    <ApplicationLogo className="w-12 h-12 fill-current text-gray-500 transition-transform duration-300 hover:scale-110" />
+                </Link>
             </div>
 
             {/* Background Decorations */}

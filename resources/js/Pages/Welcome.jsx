@@ -34,12 +34,14 @@ export default function Welcome({ auth }) {
                          style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
                     </div>
 
-                    {/* Elegant Tilted Watermark */}
+                    {/* Elegant Tilted Watermark with Faded Edges */}
                     <div 
                         className="absolute -top-32 -right-32 w-[600px] h-[600px] transition-opacity duration-700"
                         style={{
                             transform: 'rotate(-25deg)',
-                            opacity: isDark ? '0.08' : '0.05'
+                            opacity: isDark ? '0.08' : '0.05',
+                            maskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)',
+                            WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)'
                         }}
                     >
                         <img 
@@ -69,8 +71,14 @@ export default function Welcome({ auth }) {
 
                 <div className="relative z-10 flex flex-col min-h-screen">
                     <header className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-6 w-full max-w-7xl mx-auto relative z-50">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            <img src={adminBranding.logo} className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl shadow-lg object-contain ${
+                        <Link 
+                            href={auth.user 
+                                ? (auth.user.role === 'super-admin' ? route('admin.dashboard') : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '/'))
+                                : '/'
+                            } 
+                            className="flex items-center gap-2 sm:gap-3 group"
+                        >
+                            <img src={adminBranding.logo} className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl shadow-lg object-contain transition-transform duration-300 group-hover:scale-110 ${
                                 isDark ? 'shadow-indigo-500/30' : 'shadow-indigo-300/30'
                             }`} alt="Sutra Logo" />
                             <span className={`text-xl sm:text-2xl font-bold bg-clip-text text-transparent ${
@@ -78,7 +86,7 @@ export default function Welcome({ auth }) {
                                     ? 'bg-gradient-to-r from-white to-slate-400'
                                     : 'bg-gradient-to-r from-slate-900 to-slate-600'
                             } tracking-tight`}>Sutra</span>
-                        </div>
+                        </Link>
 
                         {/* Desktop Navigation */}
                         <nav className={`hidden lg:flex gap-8 text-sm font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>

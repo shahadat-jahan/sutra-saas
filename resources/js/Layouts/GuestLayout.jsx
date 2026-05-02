@@ -16,6 +16,29 @@ export default function GuestLayout({ children }) {
                 <ThemeToggle />
             </div>
 
+            {/* Premium Background Elements */}
+            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                {/* Grid Pattern */}
+                <div className={`absolute inset-0 ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'}`} 
+                     style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
+                </div>
+
+                {/* Elegant Tilted Watermark */}
+                <div 
+                    className="absolute -top-20 -right-20 w-[400px] h-[400px] transition-opacity duration-700"
+                    style={{
+                        transform: 'rotate(-25deg)',
+                        opacity: isDark ? '0.08' : '0.06'
+                    }}
+                >
+                    <img 
+                        src={adminBranding.watermark} 
+                        className="w-full h-full object-contain"
+                        alt=""
+                    />
+                </div>
+            </div>
+
             {/* Background Decorations */}
             <div className={`absolute -top-20 -left-20 w-96 h-96 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 ${
                 isDark ? 'bg-indigo-600' : 'bg-indigo-300'

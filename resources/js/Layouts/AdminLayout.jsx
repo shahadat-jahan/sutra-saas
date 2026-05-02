@@ -35,16 +35,28 @@ export default function AdminLayout({ children, header }) {
 
     return (
         <div className={`min-h-screen relative transition-colors duration-300 ${isDark ? 'bg-slate-950 text-slate-300' : 'bg-[#F8FAFC] text-slate-600'}`}>
-            {/* Watermark Background */}
-            <div 
-                className={`fixed inset-0 z-0 pointer-events-none ${isDark ? 'opacity-10' : 'opacity-5'}`}
-                style={{
-                    backgroundImage: `url(${adminBranding.watermark})`,
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
-                    backgroundSize: '50%',
-                }}
-            ></div>
+            {/* Premium Background Elements */}
+            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                {/* Grid Pattern */}
+                <div className={`absolute inset-0 ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'}`} 
+                     style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
+                </div>
+
+                {/* Elegant Tilted Watermark */}
+                <div 
+                    className="absolute -top-32 -right-32 w-[600px] h-[600px] transition-opacity duration-700"
+                    style={{
+                        transform: 'rotate(-25deg)',
+                        opacity: isDark ? '0.08' : '0.05'
+                    }}
+                >
+                    <img 
+                        src={adminBranding.watermark} 
+                        className="w-full h-full object-contain"
+                        alt=""
+                    />
+                </div>
+            </div>
 
             {/* Sidebar */}
             <aside 
@@ -53,8 +65,8 @@ export default function AdminLayout({ children, header }) {
                 }`}
             >
                 <div className="flex flex-col h-full relative z-10">
-                    {/* Logo */}
-                    <div className={`flex items-center h-20 px-8 border-b relative overflow-hidden ${
+                    {/* Logo & Mobile Close */}
+                    <div className={`flex items-center justify-between h-20 px-8 border-b relative overflow-hidden ${
                         isDark ? 'border-white/10' : 'border-slate-100'
                     }`}>
                         {/* Sidebar Banner (Optional, very light behind logo) */}
@@ -72,6 +84,16 @@ export default function AdminLayout({ children, header }) {
                                 Sutra SaaS
                             </span>
                         </Link>
+                        
+                        {/* Mobile Close Button */}
+                        <button 
+                            onClick={() => setIsSidebarOpen(false)}
+                            className={`lg:hidden p-2 rounded-lg relative z-20 ${
+                                isDark ? 'text-slate-400 hover:bg-slate-800' : 'text-slate-500 hover:bg-slate-100'
+                            }`}
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
                     </div>
 
                     {/* Navigation */}

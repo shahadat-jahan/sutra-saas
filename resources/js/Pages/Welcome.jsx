@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Check, Shield, Zap, Building2, Globe, BarChart3, Users, LayoutDashboard, Clock } from 'lucide-react';
 import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
@@ -8,96 +9,184 @@ export default function Welcome({ auth }) {
     const isDark = mode === 'dark';
     const adminBranding = useAdminBranding();
 
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
     return (
-        <>
-            <Head title="Sutra SaaS - Elevate Your Business" />
-            <div className={`min-h-screen font-sans selection:bg-indigo-500 selection:text-white overflow-hidden relative ${
-                isDark
-                    ? 'bg-slate-950 text-slate-300'
-                    : 'bg-white text-slate-600'
-            }`}>
-                {/* Background Blobs for Glassmorphism */}
-                {isDark ? (
+        <div className={`min-h-screen selection:bg-indigo-500 selection:text-white transition-colors duration-500 overflow-x-hidden ${
+            isDark ? 'bg-slate-950' : 'bg-white'
+        }`}>
+            <Head title="Welcome to Sutra" />
+
+            <div className="relative">
+                {/* Background Blobs */}
+                {isDark && (
                     <>
-                        <div className="absolute -top-20 -left-20 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-[100px] opacity-30 animate-pulse"></div>
-                        <div className="absolute top-40 -right-20 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-[100px] opacity-30 animate-pulse" style={{animationDelay: "2s"}}></div>
-                        <div className="absolute -bottom-40 left-1/2 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-[100px] opacity-30 animate-pulse" style={{animationDelay: "4s"}}></div>
-                    </>
-                ) : (
-                    <>
-                        <div className="absolute -top-20 -left-20 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-pulse"></div>
-                        <div className="absolute top-40 -right-20 w-96 h-96 bg-indigo-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-pulse" style={{animationDelay: "2s"}}></div>
+                        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full mix-blend-screen filter blur-[120px] animate-pulse"></div>
+                        <div className="absolute top-[20%] right-[-5%] w-[400px] h-[400px] bg-purple-600/20 rounded-full mix-blend-screen filter blur-[120px] animate-pulse" style={{animationDelay: "2s"}}></div>
                         <div className="absolute -bottom-40 left-1/2 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-pulse" style={{animationDelay: "4s"}}></div>
                     </>
                 )}
 
-                {/* Watermark Background */}
+                {/* Premium Background Elements */}
+                <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                    {/* Grid Pattern */}
+                    <div className={`absolute inset-0 ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'}`} 
+                         style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
+                    </div>
+
+                    {/* Elegant Tilted Watermark */}
+                    <div 
+                        className="absolute -top-32 -right-32 w-[600px] h-[600px] transition-opacity duration-700"
+                        style={{
+                            transform: 'rotate(-25deg)',
+                            opacity: isDark ? '0.08' : '0.05'
+                        }}
+                    >
+                        <img 
+                            src={adminBranding.watermark} 
+                            className="w-full h-full object-contain"
+                            alt=""
+                        />
+                    </div>
+                </div>
+
+                {/* Hero Banner Background Decoration */}
                 <div 
-                    className={`fixed inset-0 z-0 pointer-events-none ${isDark ? 'opacity-5' : 'opacity-5'}`}
-                    style={{
-                        backgroundImage: `url(${adminBranding.watermark})`,
-                        backgroundRepeat: 'no-repeat',
-                        backgroundPosition: 'center',
-                        backgroundSize: '60%',
-                    }}
-                ></div>
+                    className="absolute top-0 left-0 right-0 h-[600px] opacity-10 pointer-events-none z-0 overflow-hidden"
+                >
+                    <div 
+                        className="absolute inset-0 scale-110 blur-sm"
+                        style={{
+                            backgroundImage: `url(${adminBranding.banner})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                    ></div>
+                    <div className={`absolute inset-0 bg-gradient-to-b ${
+                        isDark ? 'from-slate-950/0 via-slate-950/50 to-slate-950' : 'from-white/0 via-white/50 to-white'
+                    }`}></div>
+                </div>
 
                 <div className="relative z-10 flex flex-col min-h-screen">
-                    <header className="flex items-center justify-between px-6 py-6 w-full max-w-7xl mx-auto">
-                        <div className="flex items-center gap-3">
-                            <img src={adminBranding.logo} className={`w-12 h-12 rounded-xl shadow-lg object-contain ${
+                    <header className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-6 w-full max-w-7xl mx-auto relative z-50">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <img src={adminBranding.logo} className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl shadow-lg object-contain ${
                                 isDark ? 'shadow-indigo-500/30' : 'shadow-indigo-300/30'
                             }`} alt="Sutra Logo" />
-                            <span className={`text-2xl font-bold bg-clip-text text-transparent ${
+                            <span className={`text-xl sm:text-2xl font-bold bg-clip-text text-transparent ${
                                 isDark
                                     ? 'bg-gradient-to-r from-white to-slate-400'
                                     : 'bg-gradient-to-r from-slate-900 to-slate-600'
                             } tracking-tight`}>Sutra</span>
                         </div>
 
-                        <nav className="hidden md:flex gap-8 text-sm font-medium z-20">
+                        {/* Desktop Navigation */}
+                        <nav className="hidden lg:flex gap-8 text-sm font-medium">
                             <a href="#features" className={`${isDark ? 'hover:text-white' : 'hover:text-slate-900'} transition cursor-pointer`}>Features</a>
                             <a href="#solutions" className={`${isDark ? 'hover:text-white' : 'hover:text-slate-900'} transition cursor-pointer`}>Solutions</a>
                             <a href="#pricing" className={`${isDark ? 'hover:text-white' : 'hover:text-slate-900'} transition cursor-pointer`}>Pricing</a>
                         </nav>
 
-                        <nav className="flex gap-4 items-center z-20">
+                        <div className="flex gap-2 sm:gap-4 items-center">
                             <ThemeToggle />
+                            
+                            {/* Desktop Auth Buttons */}
+                            <div className="hidden md:flex gap-3 items-center">
+                                {auth.user ? (
+                                    <Link
+                                        href={auth.user?.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#'}
+                                        className={`px-5 py-2 text-sm font-bold rounded-full transition-all ${
+                                            isDark
+                                                ? 'text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10'
+                                                : 'text-slate-900 bg-indigo-500/10 hover:bg-indigo-500/20 border border-indigo-500/20'
+                                        }`}
+                                    >
+                                        Dashboard
+                                    </Link>
+                                ) : (
+                                    <>
+                                        <Link
+                                            href={route('login')}
+                                            className={`px-4 py-2 text-sm font-semibold transition-colors ${
+                                                isDark ? 'hover:text-white' : 'hover:text-slate-900'
+                                            }`}
+                                        >
+                                            Log in
+                                        </Link>
+                                        <Link
+                                            href={route('register')}
+                                            className={`px-5 py-2 text-sm font-bold text-white rounded-full transition-all transform hover:scale-105 ${
+                                                isDark
+                                                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600'
+                                                    : 'bg-gradient-to-r from-indigo-500 to-purple-500'
+                                            }`}
+                                        >
+                                            Start Free Trial
+                                        </Link>
+                                    </>
+                                )}
+                            </div>
+                            
+                            {/* Mobile Menu Button */}
+                            <button 
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className={`lg:hidden p-2 rounded-xl transition-colors ${
+                                    isDark ? 'text-white hover:bg-white/10' : 'text-slate-900 hover:bg-slate-100'
+                                }`}
+                                aria-label="Toggle menu"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    {isMenuOpen ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                    ) : (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                                    )}
+                                </svg>
+                            </button>
+                        </div>
+                    </header>
+
+                    {/* Mobile Navigation Menu */}
+                    <div className={`lg:hidden fixed inset-0 z-[100] transition-all duration-300 ${
+                        isMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+                    }`}>
+                        <div className={`absolute inset-0 backdrop-blur-xl ${isDark ? 'bg-slate-950/95' : 'bg-white/95'}`} onClick={() => setIsMenuOpen(false)}></div>
+                        <nav className="relative flex flex-col items-center justify-center h-full gap-6 text-2xl font-black">
+                            <a href="#features" onClick={() => setIsMenuOpen(false)} className={`${isDark ? 'text-white' : 'text-slate-900'}`}>Features</a>
+                            <a href="#solutions" onClick={() => setIsMenuOpen(false)} className={`${isDark ? 'text-white' : 'text-slate-900'}`}>Solutions</a>
+                            <a href="#pricing" onClick={() => setIsMenuOpen(false)} className={`${isDark ? 'text-white' : 'text-slate-900'}`}>Pricing</a>
+                            <div className={`w-12 h-1 ${isDark ? 'bg-white/10' : 'bg-slate-200'} rounded-full my-4`}></div>
                             {auth.user ? (
                                 <Link
                                     href={auth.user?.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#'}
-                                    className={`px-6 py-2.5 text-sm font-bold rounded-full transition-all ${
-                                        isDark
-                                            ? 'text-white bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10'
-                                            : 'text-slate-900 bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-500/30'
-                                    }`}
+                                    className="text-indigo-500"
+                                    onClick={() => setIsMenuOpen(false)}
                                 >
-                                    Go to Dashboard
+                                    Dashboard
                                 </Link>
                             ) : (
                                 <>
-                                    <Link
-                                        href={route('login')}
-                                        className={`hidden sm:block px-5 py-2.5 text-sm font-semibold transition-colors ${
-                                            isDark ? 'hover:text-white' : 'hover:text-slate-900'
-                                        }`}
-                                    >
-                                        Log in
-                                    </Link>
-                                    <Link
-                                        href={route('register')}
-                                        className={`px-6 py-2.5 text-sm font-bold text-white rounded-full transition-all transform hover:scale-105 ${
-                                            isDark
-                                                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-[0_0_20px_rgba(79,70,229,0.4)]'
-                                                : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 shadow-[0_0_20px_rgba(79,70,229,0.3)]'
-                                        }`}
+                                    <Link href={route('login')} onClick={() => setIsMenuOpen(false)} className={isDark ? 'text-white' : 'text-slate-900'}>Log in</Link>
+                                    <Link 
+                                        href={route('register')} 
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="px-10 py-4 bg-indigo-600 text-white rounded-2xl shadow-xl shadow-indigo-600/20"
                                     >
                                         Start Free Trial
                                     </Link>
                                 </>
                             )}
+                            
+                            <button 
+                                onClick={() => setIsMenuOpen(false)}
+                                className={`mt-10 p-4 rounded-full ${isDark ? 'bg-white/5 text-white' : 'bg-slate-100 text-slate-900'}`}
+                            >
+                                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
                         </nav>
-                    </header>
+                    </div>
 
                     <main className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full max-w-5xl mx-auto mt-16 mb-24 z-10">
                         {usePage().props.announcements?.length > 0 && (
@@ -323,6 +412,6 @@ export default function Welcome({ auth }) {
                     </footer>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

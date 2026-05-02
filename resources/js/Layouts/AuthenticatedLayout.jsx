@@ -3,18 +3,45 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import { ShopLogo } from '@/Support/BrandingProvider';
-import { ThemeToggle } from '@/Support/ThemeProvider';
+import { ShopLogo, useShopBranding } from '@/Support/BrandingProvider';
+import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
+    const branding = useShopBranding();
+    const { mode } = useTheme();
+    const isDark = mode === 'dark';
 
     return (
-        <div className="min-h-screen bg-gray-100 dark:bg-slate-950 transition-colors duration-300">
-            <nav className="border-b border-gray-100 dark:border-white/10 bg-white dark:bg-slate-900 transition-colors duration-300">
+        <div className="min-h-screen relative bg-gray-100 dark:bg-slate-950 transition-colors duration-300">
+            {/* Premium Background Elements */}
+            <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+                {/* Grid Pattern */}
+                <div className={`absolute inset-0 ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'}`} 
+                     style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
+                </div>
+
+                {/* Elegant Tilted Watermark */}
+                <div 
+                    className="absolute -top-20 -right-20 w-[500px] h-[500px] transition-opacity duration-700"
+                    style={{
+                        transform: 'rotate(-25deg)',
+                        opacity: isDark ? '0.08' : '0.05'
+                    }}
+                >
+                    <img 
+                        src={branding.watermark} 
+                        className="w-full h-full object-contain"
+                        alt=""
+                    />
+                </div>
+            </div>
+
+            <div className="relative z-10">
+                <nav className="border-b border-gray-100 dark:border-white/10 bg-white dark:bg-slate-900 transition-colors duration-300 relative z-20">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
@@ -154,16 +181,28 @@ export default function AuthenticatedLayout({ header, children }) {
                                     System Dashboard
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
+                                    href={route('admin.announcements.index')}
+                                    active={route().current('admin.announcements.*')}
+                                >
+                                    Announcements
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
                                     href={route('admin.shops.index')}
-                                    active={route().current('admin.shops.index')}
+                                    active={route().current('admin.shops.*')}
                                 >
                                     Manage Shops
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
                                     href={route('admin.users.index')}
-                                    active={route().current('admin.users.index')}
+                                    active={route().current('admin.users.*')}
                                 >
                                     Platform Users
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink
+                                    href={route('admin.settings.index')}
+                                    active={route().current('admin.settings.*')}
+                                >
+                                    Settings
                                 </ResponsiveNavLink>
                             </>
                         ) : (
@@ -171,7 +210,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                 href={route('dashboard', { subdomain: user.shop?.slug })}
                                 active={route().current('dashboard')}
                             >
-                                Dashboard
+                                Shop Dashboard
                             </ResponsiveNavLink>
                         )}
                     </div>
@@ -203,14 +242,24 @@ export default function AuthenticatedLayout({ header, children }) {
             </nav>
 
             {header && (
-                <header className="bg-white dark:bg-slate-900 shadow dark:shadow-white/5 transition-colors duration-300">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <header className="relative bg-white dark:bg-slate-900 shadow dark:shadow-white/5 transition-colors duration-300 overflow-hidden">
+                    {/* Header Banner Background */}
+                    <div 
+                        className="absolute inset-0 opacity-10 pointer-events-none"
+                        style={{
+                            backgroundImage: `url(${branding.banner})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                        }}
+                    ></div>
+                    <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>
                 </header>
             )}
 
-            <main>{children}</main>
+            <main className="relative z-10">{children}</main>
+            </div>
         </div>
     );
 }

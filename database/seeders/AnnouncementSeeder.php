@@ -18,7 +18,7 @@ class AnnouncementSeeder extends Seeder
         $admin = User::query()->where('email', 'admin@sutra.com')->first();
 
         Announcement::updateOrCreate(
-            ['title' => 'Welcome to Sutra SaaS'],
+            ['title' => 'Welcome to Sutra'],
             [
                 'user_id' => $admin?->id,
                 'body' => 'We are live. Expect frequent improvements to the platform admin, tenant dashboards, and analytics.',
@@ -27,4 +27,3 @@ class AnnouncementSeeder extends Seeder
         );
     }
 }
-

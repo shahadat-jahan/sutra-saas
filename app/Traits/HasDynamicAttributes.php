@@ -2,12 +2,15 @@
 
 namespace App\Traits;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
 /**
  * Trait HasDynamicAttributes
  *
  * Allows magic access to attributes stored in a JSONB column.
  *
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  */
 trait HasDynamicAttributes
 {
@@ -48,6 +51,6 @@ trait HasDynamicAttributes
     {
         return array_key_exists($key, $this->attributes) ||
                (method_exists($this, 'getCasts') && array_key_exists($key, $this->getCasts())) ||
-               method_exists($this, \Illuminate\Support\Str::camel($key));
+               method_exists($this, Str::camel($key));
     }
 }

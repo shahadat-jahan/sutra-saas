@@ -34,7 +34,8 @@ class RegisteredUserController extends Controller
             [
                 'name' => $request->shop_name,
                 'business_type' => $request->business_type,
-                'plan' => $request->plan,
+                'enabled_modules' => $request->enabled_modules,
+                'is_free' => false,
             ],
             [
                 'name' => $request->name,
@@ -47,12 +48,12 @@ class RegisteredUserController extends Controller
         $appDomain = config('app.domain', 'localhost');
         $port = $request->getPort() == 8000 ? ':8000' : '';
         $subdomainUrl = $request->getScheme()
-            . '://'
-            . $user->shop->slug
-            . '.'
-            . $appDomain
-            . $port
-            . '/dashboard';
+            .'://'
+            .$user->shop->slug
+            .'.'
+            .$appDomain
+            .$port
+            .'/dashboard';
 
         return Inertia::location($subdomainUrl);
     }

@@ -9,6 +9,8 @@ use App\Enums\BusinessType;
 use App\Models\Announcement;
 use App\Models\Shop;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -68,8 +70,7 @@ final class DashboardService
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Builder<\Illuminate\Database\Eloquent\Model> $query
-     *
+     * @param  Builder<Model>  $query
      * @return array<int, array{name: string, value: int}>
      */
     private function monthlyCounts($query, int $months): array

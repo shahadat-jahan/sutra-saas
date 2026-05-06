@@ -13,14 +13,14 @@ class DashboardUrlTest extends TestCase
 {
     public function test_url_for_platform_user_without_shop_points_to_admin_dashboard(): void
     {
-        $user = new User();
+        $user = new User;
 
         $this->assertSame('/admin/dashboard', Dashboard::urlFor($user));
     }
 
     public function test_url_for_tenant_user_with_shop_points_to_subdomain_dashboard(): void
     {
-        $user = new User();
+        $user = new User;
         $shop = new Shop(['slug' => 'acme']);
         $user->setRelation('shop', $shop);
 
@@ -30,4 +30,3 @@ class DashboardUrlTest extends TestCase
         $this->assertStringEndsWith('/dashboard', $url);
     }
 }
-

@@ -16,9 +16,7 @@ final class ShopService
     /**
      * Update a shop.
      *
-     * @param Shop $shop
-     * @param array<string, mixed> $data
-     * @return bool
+     * @param  array<string, mixed>  $data
      */
     public function update(Shop $shop, array $data): bool
     {
@@ -27,8 +25,6 @@ final class ShopService
 
     /**
      * Get shop count.
-     *
-     * @return int
      */
     public function getCount(): int
     {
@@ -37,12 +33,9 @@ final class ShopService
 
     /**
      * Get count of active shops.
-     *
-     * @return int
      */
     public function getActiveCount(): int
     {
         return Shop::where('status', 1)->count();
     }
 }
-

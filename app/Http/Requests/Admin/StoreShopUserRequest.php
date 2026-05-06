@@ -30,7 +30,7 @@ class StoreShopUserRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['nullable', Password::defaults()],
             'role' => [
                 'required',
@@ -40,4 +40,3 @@ class StoreShopUserRequest extends FormRequest
         ];
     }
 }
-

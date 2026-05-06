@@ -11,43 +11,30 @@ interface InventoryLogRepositoryInterface
 {
     /**
      * Get all inventory logs for a shop.
-     *
-     * @param string $shopId
-     * @return Paginator
      */
     public function getByShop(string $shopId): Paginator;
 
     /**
      * Find an inventory log by ID.
-     *
-     * @param string $id
-     * @return InventoryLog|null
      */
     public function find(string $id): ?InventoryLog;
 
     /**
      * Create a new inventory log.
      *
-     * @param array<string, mixed> $data
-     * @return InventoryLog
+     * @param  array<string, mixed>  $data
      */
     public function create(array $data): InventoryLog;
 
     /**
      * Update an inventory log.
      *
-     * @param InventoryLog $log
-     * @param array<string, mixed> $data
-     * @return bool
+     * @param  array<string, mixed>  $data
      */
     public function update(InventoryLog $log, array $data): bool;
 
     /**
      * Delete an inventory log.
-     *
-     * @param InventoryLog $log
-     * @return bool|null
      */
     public function delete(InventoryLog $log): ?bool;
 }
-

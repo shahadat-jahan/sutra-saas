@@ -11,17 +11,14 @@ interface ShopRepositoryInterface
     /**
      * Create a new shop.
      *
-     * @param array<string, mixed> $data
-     * @return Shop
+     * @param  array<string, mixed>  $data
      */
     public function create(array $data): Shop;
 
     /**
      * Update a shop.
      *
-     * @param Shop $shop
-     * @param array<string, mixed> $data
-     * @return bool
+     * @param  array<string, mixed>  $data
      */
     public function update(Shop $shop, array $data): bool;
 }

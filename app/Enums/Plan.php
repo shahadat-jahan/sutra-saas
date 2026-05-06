@@ -13,10 +13,11 @@ enum Plan: int
     public function label(): string
     {
         $appName = config('app.name', 'Sutra');
+
         return match ($this) {
-            self::BASIC => $appName . ' Basic',
-            self::PROFESSIONAL => $appName . ' Pro',
-            self::ENTERPRISE => $appName . ' Enterprise',
+            self::BASIC => $appName.' Basic',
+            self::PROFESSIONAL => $appName.' Pro',
+            self::ENTERPRISE => $appName.' Enterprise',
         };
     }
 
@@ -33,33 +34,24 @@ enum Plan: int
     {
         return match ($this) {
             self::BASIC => [
+                // MVP Phase 1
                 'pos',
-                'inventory',
-                'basic_reports'
             ],
 
             self::PROFESSIONAL => [
+                // MVP Phase 2
                 'pos',
                 'inventory',
-                'advanced_analytics',
-                'subdomain_access',
-                'team_management',
-                'expense_tracker',
-                'whatsapp_notifications'
+                'basic_reports',
             ],
 
             self::ENTERPRISE => [
+                // MVP Phase 3
                 'pos',
                 'inventory',
-                'advanced_analytics',
-                'custom_domain',
-                'team_management',
-                'email_notifications',
-                'whatsapp_notifications',
-                'api_access',
-                'dedicated_support',
-                'e_commerce_sync',
-                'multi_branch'
+                'finance',
+                'customization',
+                'basic_reports',
             ],
         };
     }

@@ -22,9 +22,8 @@ final class TenantRegistrationService
     /**
      * Register a new tenant along with the owner user.
      *
-     * @param array<string, mixed> $shopData
-     * @param array<string, mixed> $userData
-     * @return User
+     * @param  array<string, mixed>  $shopData
+     * @param  array<string, mixed>  $userData
      */
     public function registerTenant(array $shopData, array $userData): User
     {

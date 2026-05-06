@@ -2,12 +2,12 @@
 
 namespace App\Modules\Pos\Application\Services;
 
-use App\Models\Sale;
-use App\Repositories\Interfaces\SaleRepositoryInterface;
-use App\Repositories\Interfaces\CustomerRepositoryInterface;
-use App\Modules\Finance\Application\Services\BakirKhataService;
 use App\Enums\PaymentMethod;
 use App\Enums\SaleStatus;
+use App\Models\Sale;
+use App\Modules\Finance\Application\Services\BakirKhataService;
+use App\Repositories\Interfaces\CustomerRepositoryInterface;
+use App\Repositories\Interfaces\SaleRepositoryInterface;
 use Exception;
 
 /**
@@ -25,8 +25,6 @@ class SaleService
     /**
      * Process a sale with conditional logic for Cash vs Credit vs Partial.
      *
-     * @param array $data
-     * @return Sale
      * @throws Exception
      */
     public function processSale(array $data): Sale
@@ -49,18 +47,18 @@ class SaleService
         // 1. Handle Credit or Partial Logic (both require customer)
         if ($paymentMethod === PaymentMethod::CREDIT || $isPartial) {
             if (empty($data['customer_id']) && empty($data['customer'])) {
-                throw new Exception("A registered or new customer is required for credit or partial sales.");
+                throw new Exception('A registered or new customer is required for credit or partial sales.');
             }
 
             // Find or create the customer record
-            if (!empty($data['customer_id'])) {
+            if (! empty($data['customer_id'])) {
                 $customer = $this->customerRepository->find($data['customer_id']);
-            } elseif (!empty($data['customer'])) {
+            } elseif (! empty($data['customer'])) {
                 $customer = $this->customerService->findOrCreate($data['customer']);
             }
 
             // 2. Handle Validation (Check credit_limit for registered customers on credit sales)
-            if ($paymentMethod === PaymentMethod::CREDIT && !$isPartial && !$this->bakirKhataService->canExtendCredit($customer, $totalAmount)) {
+            if ($paymentMethod === PaymentMethod::CREDIT && ! $isPartial && ! $this->bakirKhataService->canExtendCredit($customer, $totalAmount)) {
                 throw new Exception("Credit limit exceeded. This sale cannot be processed as 'Credit'.");
             }
         }

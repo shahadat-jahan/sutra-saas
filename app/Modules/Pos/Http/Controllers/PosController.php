@@ -3,16 +3,15 @@
 namespace App\Modules\Pos\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Interfaces\ProductRepositoryInterface;
-use App\Repositories\Interfaces\CustomerRepositoryInterface;
 use App\Http\Requests\Pos\StoreSaleRequest;
 use App\Modules\Pos\Application\Services\SaleService;
+use App\Repositories\Interfaces\CustomerRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Support\TenantManager;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PosController extends Controller
 {
@@ -46,6 +45,7 @@ class PosController extends Controller
 
         try {
             $this->saleService->processSale($data);
+
             return back()->with('success', 'Sale completed successfully!');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => $e->getMessage()]);

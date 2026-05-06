@@ -16,8 +16,6 @@ final class AdminUserService
 
     /**
      * Get all users with their shop information.
-     *
-     * @return Collection
      */
     public function getAllUsers(): Collection
     {
@@ -26,13 +24,9 @@ final class AdminUserService
 
     /**
      * Delete a user.
-     *
-     * @param User $user
-     * @return bool|null
      */
     public function deleteUser(User $user): ?bool
     {
         return $this->userRepository->delete($user);
     }
 }
-

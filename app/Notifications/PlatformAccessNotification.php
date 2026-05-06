@@ -31,7 +31,7 @@ class PlatformAccessNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $mail = (new MailMessage())
+        $mail = (new MailMessage)
             ->subject("Your {$this->appName} account details")
             ->greeting("Hello {$notifiable->name},")
             ->line("An account has been created for you on {$this->appName}.")
@@ -52,4 +52,3 @@ class PlatformAccessNotification extends Notification
         return $mail->line('If you did not expect this email, please ignore it.');
     }
 }
-

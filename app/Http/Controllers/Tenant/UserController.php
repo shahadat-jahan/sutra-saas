@@ -58,10 +58,9 @@ class UserController extends Controller
         $shop = auth()->user()->shop;
         $shopId = $shop->id;
 
-        if (!$this->userService->deleteUser($user, $shopId)) {
+        if (! $this->userService->deleteUser($user, $shopId)) {
             return back()->with('error', 'You cannot delete yourself.');
         }
-
 
         return back()->with('success', 'User deleted successfully.');
     }

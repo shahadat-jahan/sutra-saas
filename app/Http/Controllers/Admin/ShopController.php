@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreShopRequest;
 use App\Http\Requests\Admin\ShopUpdateRequest;
+use App\Http\Requests\Admin\StoreShopRequest;
 use App\Models\Shop;
 use App\Models\User;
 use App\Notifications\PlatformAccessNotification;
@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 class ShopController extends Controller
@@ -30,7 +31,10 @@ class ShopController extends Controller
      */
     public function index(): Response
     {
+        $moduleCatalog = Shop::moduleCatalog();
+
         return Inertia::render('Admin/Shops/Index', [
+            'module_catalog' => $moduleCatalog,
             'shops' => Shop::query()
                 ->latest()
                 ->get()
@@ -40,7 +44,9 @@ class ShopController extends Controller
                     'name' => $shop->name,
                     'slug' => $shop->slug,
                     'business_type' => $shop->business_type?->value ?? $shop->getAttribute('business_type'),
-                    'plan' => $shop->plan?->value ?? $shop->getAttribute('plan'),
+                    'enabled_modules' => $shop->enabled_modules ?? [],
+                    'is_free' => $shop->is_free,
+                    'monthly_price' => $shop->monthlyPrice(),
                     'status' => $shop->status?->value ?? $shop->getAttribute('status'),
                     'created_at' => $shop->created_at?->toDateTimeString(),
                 ]),
@@ -60,7 +66,8 @@ class ShopController extends Controller
             $shop = Shop::create([
                 'name' => $data['shop_name'],
                 'business_type' => $data['business_type'],
-                'plan' => $data['plan'],
+                'enabled_modules' => $data['enabled_modules'],
+                'is_free' => (bool) ($data['is_free'] ?? false),
                 'status' => $data['status'],
             ]);
 
@@ -80,7 +87,7 @@ class ShopController extends Controller
 
             $owner->notify(new PlatformAccessNotification(
                 appName: (string) config('app.name', 'Sutra'),
-                loginUrl: rtrim((string) config('app.url', 'http://localhost'), '/') . '/login',
+                loginUrl: rtrim((string) config('app.url', 'http://localhost'), '/').'/login',
                 tenantUrl: $tenantUrl,
                 email: $owner->email,
                 password: (string) $ownerPassword,
@@ -110,7 +117,7 @@ class ShopController extends Controller
             User::query()->where('shop_id', $shop->id)->delete();
 
             $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
-            \Spatie\Permission\Models\Role::query()->where($teamsKey, $shop->id)->delete();
+            Role::query()->where($teamsKey, $shop->id)->delete();
 
             $shop->delete();
         });

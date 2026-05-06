@@ -54,4 +54,3 @@ final class InventoryLogRepository implements InventoryLogRepositoryInterface
         return $log->delete();
     }
 }
-

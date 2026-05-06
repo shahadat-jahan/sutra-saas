@@ -12,33 +12,48 @@ class Theme
 {
     // Primary Colors from Welcome Design
     public const PRIMARY = '#6366f1'; // Indigo
+
     public const PRIMARY_DARK = '#4f46e5';
+
     public const PRIMARY_LIGHT = '#818cf8';
 
     public const SECONDARY = '#a855f7'; // Purple
+
     public const SECONDARY_DARK = '#9333ea';
+
     public const SECONDARY_LIGHT = '#c084fc';
 
     public const ACCENT = '#ec4899'; // Pink
+
     public const ACCENT_DARK = '#db2777';
+
     public const ACCENT_LIGHT = '#f472b6';
 
     // Background Colors
     public const BG_DARK = '#0f172a'; // slate-950
+
     public const BG_DARK_SECONDARY = '#1e293b'; // slate-800
+
     public const BG_LIGHT = '#ffffff';
+
     public const BG_LIGHT_SECONDARY = '#f1f5f9'; // slate-100
 
     // Text Colors
     public const TEXT_DARK_PRIMARY = '#ffffff';
+
     public const TEXT_DARK_SECONDARY = '#cbd5e1'; // slate-300
+
     public const TEXT_DARK_TERTIARY = '#94a3b8'; // slate-400
+
     public const TEXT_LIGHT_PRIMARY = '#0f172a'; // slate-950
+
     public const TEXT_LIGHT_SECONDARY = '#475569'; // slate-600
+
     public const TEXT_LIGHT_TERTIARY = '#94a3b8'; // slate-400
 
     // Border Colors
     public const BORDER_DARK = 'rgba(255, 255, 255, 0.1)';
+
     public const BORDER_LIGHT = 'rgba(0, 0, 0, 0.1)';
 
     /**
@@ -49,6 +64,7 @@ class Theme
         if ($mode === 'light') {
             return self::getLightPalette();
         }
+
         return self::getDarkPalette();
     }
 

@@ -49,4 +49,3 @@ class UpdateShopUserRequest extends FormRequest
         ];
     }
 }
-

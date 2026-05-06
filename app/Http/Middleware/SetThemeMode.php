@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Support\Theme;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Support\Theme;
 
 class SetThemeMode
 {
@@ -29,4 +29,3 @@ class SetThemeMode
         return $next($request);
     }
 }
-

@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Enums\BusinessType;
-use App\Enums\Plan;
 use App\Models\Announcement;
+use App\Models\Shop;
 use App\Support\Theme;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -70,17 +70,12 @@ class HandleInertiaRequests extends Middleware
                     ] : null,
                 ] : null,
             ],
-            'business_types' => array_map(fn($type) => [
+            'business_types' => array_map(fn ($type) => [
                 'value' => $type->value,
                 'label' => $type->label(),
             ], BusinessType::cases()),
+            'module_catalog' => Shop::moduleCatalog(),
             'currency' => $this->getCurrency($request),
-            'plans' => array_map(fn($plan) => [
-                'value' => $plan->value,
-                'label' => $plan->label(),
-                'price' => $plan->price($this->getCurrency($request)),
-                'modules' => $plan->modules(),
-            ], Plan::cases()),
         ];
     }
 

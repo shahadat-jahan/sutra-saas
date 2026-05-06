@@ -54,4 +54,3 @@ final class DailySummaryRepository implements DailySummaryRepositoryInterface
         return $summary->delete();
     }
 }
-

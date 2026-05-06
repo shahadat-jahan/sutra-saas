@@ -9,9 +9,12 @@ import { useTheme } from '@/Support/ThemeProvider';
 export default function Register() {
     const { mode } = useTheme();
     const isDark = mode === 'dark';
-    const { business_types, appName } = usePage().props;
-    const queryParams = new URLSearchParams(window.location.search);
-    const initialPlan = parseInt(queryParams.get('plan') || '1'); // Default to 1 (Basic)
+    const { business_types, appName, module_catalog } = usePage().props;
+    const moduleOptions = Object.entries(module_catalog || {}).map(([key, value]) => ({
+        key,
+        name: value.name,
+        monthly_price: Number(value.monthly_price || 0),
+    }));
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -20,8 +23,26 @@ export default function Register() {
         password_confirmation: '',
         shop_name: '',
         business_type: 1,
-        plan: initialPlan,
+        enabled_modules: ['pos'],
     });
+
+    const monthlyPrice = data.enabled_modules.reduce((sum, moduleKey) => {
+        const module = moduleOptions.find((item) => item.key === moduleKey);
+        return sum + (module?.monthly_price ?? 0);
+    }, 0);
+
+    const toggleModule = (moduleKey) => {
+        if (moduleKey === 'pos') {
+            return;
+        }
+
+        if (data.enabled_modules.includes(moduleKey)) {
+            setData('enabled_modules', data.enabled_modules.filter((m) => m !== moduleKey));
+            return;
+        }
+
+        setData('enabled_modules', [...data.enabled_modules, moduleKey]);
+    };
 
     const submit = (e) => {
         e.preventDefault();
@@ -33,15 +54,12 @@ export default function Register() {
 
     return (
         <GuestLayout>
+            <Head title={`${appName} - Register`} />
             <div className="mb-8 text-center">
                 <h1 className={`text-3xl font-black mb-2 transition-colors ${isDark ? 'text-white' : 'text-slate-900'}`}>Create Your Shop</h1>
-                {data.plan === 1 ? (
-                    <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>Start your <span className="text-indigo-400 font-bold">14-day free trial</span> today.</p>
-                ) : (
-                    <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>Join {appName} as a <span className="text-indigo-400 font-bold capitalize">
-                        {usePage().props.plans.find(p => p.value === data.plan)?.label || 'Partner'}
-                    </span>.</p>
-                )}
+                <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>
+                    Pick only the modules you need. POS is always included.
+                </p>
             </div>
 
             <form onSubmit={submit} className="space-y-5">
@@ -66,7 +84,7 @@ export default function Register() {
 
                 <div className="mb-4">
                     <InputLabel htmlFor="business_type" value="Business Type" className={isDark ? 'text-slate-300' : 'text-slate-700'} />
-                    
+
                     <select
                         id="business_type"
                         className={`mt-1 block w-full rounded-xl shadow-sm transition-all ${
@@ -84,9 +102,52 @@ export default function Register() {
 
                     <InputError message={errors.business_type} className="mt-2" />
                 </div>
-                
+
+                <div className={`rounded-2xl border p-4 ${isDark ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-slate-50'}`}>
+                    <div className="flex items-center justify-between mb-3">
+                        <InputLabel value="Modules (Monthly)" className={isDark ? 'text-slate-300' : 'text-slate-700'} />
+                        <span className={`text-sm font-bold ${isDark ? 'text-indigo-300' : 'text-indigo-700'}`}>
+                            Monthly: BDT {monthlyPrice.toLocaleString()}
+                        </span>
+                    </div>
+                    <div className="space-y-2">
+                        {moduleOptions.map((module) => {
+                            const checked = data.enabled_modules.includes(module.key);
+                            const isPos = module.key === 'pos';
+
+                            return (
+                                <label
+                                    key={module.key}
+                                    className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2 border ${
+                                        checked
+                                            ? (isDark ? 'border-indigo-500/40 bg-indigo-500/10' : 'border-indigo-300 bg-indigo-50')
+                                            : (isDark ? 'border-white/10 bg-white/0' : 'border-slate-200 bg-white')
+                                    }`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <input
+                                            type="checkbox"
+                                            checked={checked}
+                                            disabled={isPos}
+                                            onChange={() => toggleModule(module.key)}
+                                        />
+                                        <span className={isDark ? 'text-slate-200' : 'text-slate-800'}>
+                                            {module.name}
+                                            {isPos ? ' (Mandatory)' : ''}
+                                        </span>
+                                    </div>
+                                    <span className={`text-xs font-semibold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+                                        BDT {module.monthly_price.toLocaleString()}/month
+                                    </span>
+                                </label>
+                            );
+                        })}
+                    </div>
+                    <InputError message={errors.enabled_modules} className="mt-2" />
+                </div>
+
                 <hr className={`my-8 ${isDark ? 'border-white/5' : 'border-slate-100'}`} />
-                
+
                 <div>
                     <InputLabel htmlFor="name" value="Name" className={isDark ? 'text-slate-300' : 'text-slate-700'} />
 
@@ -173,8 +234,8 @@ export default function Register() {
 
                 <div className="mt-8 flex flex-col gap-4">
                     <PrimaryButton className={`w-full justify-center py-4 text-base rounded-xl transition-all ${
-                        isDark 
-                            ? 'bg-indigo-600 hover:bg-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.3)]' 
+                        isDark
+                            ? 'bg-indigo-600 hover:bg-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.3)]'
                             : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-[0_10px_20px_rgba(79,70,229,0.2)]'
                     }`} disabled={processing}>
                         Create My Account

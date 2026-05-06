@@ -4,13 +4,13 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import {Head, Link, useForm, usePage} from '@inertiajs/react';
 import { useTheme } from '@/Support/ThemeProvider';
 
 export default function Login({ status, canResetPassword }) {
     const { mode } = useTheme();
     const isDark = mode === 'dark';
-    
+    const { appName } = usePage().props;
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -27,7 +27,7 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <GuestLayout>
-            <Head title="Log in" />
+            <Head title={`${appName} - Login`} />
 
             {status && (
                 <div className="mb-4 text-sm font-medium text-green-600">
@@ -90,8 +90,8 @@ export default function Login({ status, canResetPassword }) {
 
                 <div className="mt-8 flex flex-col gap-4">
                     <PrimaryButton className={`w-full justify-center py-4 text-base rounded-xl transition-all ${
-                        isDark 
-                            ? 'bg-indigo-600 hover:bg-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.3)]' 
+                        isDark
+                            ? 'bg-indigo-600 hover:bg-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.3)]'
                             : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-[0_10px_20px_rgba(79,70,229,0.2)]'
                     }`} disabled={processing}>
                         Log in

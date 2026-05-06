@@ -11,25 +11,19 @@ interface UserRepositoryInterface
     /**
      * Create a new user.
      *
-     * @param array<string, mixed> $data
-     * @return User
+     * @param  array<string, mixed>  $data
      */
     public function create(array $data): User;
 
     /**
      * Update an existing user.
      *
-     * @param User $user
-     * @param array<string, mixed> $data
-     * @return bool
+     * @param  array<string, mixed>  $data
      */
     public function update(User $user, array $data): bool;
 
     /**
      * Delete a user.
-     *
-     * @param User $user
-     * @return bool|null
      */
     public function delete(User $user): ?bool;
 }

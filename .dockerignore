@@ -1,0 +1,42 @@
+# Laravel specific
+.env
+.env.*
+!.env.example
+node_modules
+public/build
+public/storage
+vendor
+storage/framework/cache
+storage/logs
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Version control
+.git
+.gitignore
+
+# Tests
+tests
+.phpunit.result.cache
+
+# Documentation
+*.md
+docs/
+
+# Other
+*.log
+.sail
+composer.lock
+package-lock.json
+.npm
+yarn.lock
+bun.lockb

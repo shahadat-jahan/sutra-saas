@@ -6,10 +6,11 @@ namespace App\Http\Requests\Admin;
 
 use App\Enums\ActiveStatus;
 use App\Enums\BusinessType;
-use App\Enums\Plan;
+use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
@@ -25,10 +26,14 @@ class StoreShopRequest extends FormRequest
      */
     public function rules(): array
     {
+        $availableModules = array_keys(Shop::moduleCatalog());
+
         return [
             'shop_name' => ['required', 'string', 'max:255'],
             'business_type' => ['required', Rule::enum(BusinessType::class)],
-            'plan' => ['required', Rule::enum(Plan::class)],
+            'enabled_modules' => ['required', 'array'],
+            'enabled_modules.*' => ['string', Rule::in($availableModules)],
+            'is_free' => ['nullable', 'boolean'],
             'status' => ['required', Rule::enum(ActiveStatus::class)],
             'owner_name' => ['required', 'string', 'max:255'],
             'owner_email' => [
@@ -37,10 +42,22 @@ class StoreShopRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                'unique:' . User::class . ',email',
+                'unique:'.User::class.',email',
             ],
             'owner_password' => ['nullable', Password::defaults()],
         ];
     }
-}
 
+    public function after(): array
+    {
+        return [
+            function (Validator $validator): void {
+                $enabledModules = $this->input('enabled_modules', []);
+
+                if (! in_array('pos', $enabledModules, true)) {
+                    $validator->errors()->add('enabled_modules', 'POS module is mandatory.');
+                }
+            },
+        ];
+    }
+}

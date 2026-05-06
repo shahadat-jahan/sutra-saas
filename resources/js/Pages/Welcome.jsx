@@ -1,16 +1,22 @@
 import { useState } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { Check, Shield, Zap, Building2, Globe, BarChart3, Users, LayoutDashboard, Clock } from 'lucide-react';
+import { Check, Globe, BarChart3, Users, LayoutDashboard, Clock } from 'lucide-react';
 import { ThemeToggle, useTheme } from '@/Support/ThemeProvider';
 import { useAdminBranding } from '@/Support/BrandingProvider';
 
-export default function Welcome({ auth }) {
+export default function Welcome({ auth, plans }) {
     const { mode } = useTheme();
     const isDark = mode === 'dark';
     const adminBranding = useAdminBranding();
 
     const { appName } = usePage().props;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const moduleIcons = {
+        basic: Globe,
+        pro: BarChart3,
+        enterprise: Users,
+    };
 
     return (
         <div className={`min-h-screen selection:bg-indigo-500 selection:text-white transition-colors duration-500 overflow-x-hidden ${
@@ -31,12 +37,12 @@ export default function Welcome({ auth }) {
                 {/* Premium Background Elements */}
                 <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
                     {/* Grid Pattern */}
-                    <div className={`absolute inset-0 ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'}`} 
+                    <div className={`absolute inset-0 ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'}`}
                          style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
                     </div>
 
                     {/* Elegant Tilted Watermark with Faded Edges */}
-                    <div 
+                    <div
                         className="absolute -top-32 -right-32 w-[600px] h-[600px] transition-opacity duration-700"
                         style={{
                             transform: 'rotate(-25deg)',
@@ -45,8 +51,8 @@ export default function Welcome({ auth }) {
                             WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)'
                         }}
                     >
-                        <img 
-                            src={adminBranding.watermark} 
+                        <img
+                            src={adminBranding.watermark}
                             className="w-full h-full object-contain"
                             alt=""
                         />
@@ -54,10 +60,10 @@ export default function Welcome({ auth }) {
                 </div>
 
                 {/* Hero Banner Background Decoration */}
-                <div 
+                <div
                     className="absolute top-0 left-0 right-0 h-[600px] opacity-10 pointer-events-none z-0 overflow-hidden"
                 >
-                    <div 
+                    <div
                         className="absolute inset-0 scale-110 blur-sm"
                         style={{
                             backgroundImage: `url(${adminBranding.banner})`,
@@ -72,11 +78,11 @@ export default function Welcome({ auth }) {
 
                 <div className="relative z-10 flex flex-col min-h-screen">
                     <header className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-6 w-full max-w-7xl mx-auto relative z-50">
-                        <Link 
-                            href={auth.user 
+                        <Link
+                            href={auth.user
                                 ? (auth.user.roles?.some(r => r.name === 'super-admin') ? route('admin.dashboard') : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '/'))
                                 : '/'
-                            } 
+                            }
                             className="flex items-center gap-2 sm:gap-3 group"
                         >
                             <img src={adminBranding.logo} className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl shadow-lg object-contain transition-transform duration-300 group-hover:scale-110 ${
@@ -98,13 +104,13 @@ export default function Welcome({ auth }) {
 
                         <div className="flex gap-2 sm:gap-4 items-center">
                             <ThemeToggle />
-                            
+
                             {/* Desktop Auth Buttons */}
                             <div className="hidden md:flex gap-3 items-center">
                                 {auth.user ? (
                                     <Link
-                                        href={auth.user.roles?.some(r => r.name === 'super-admin') 
-                                            ? route('admin.dashboard') 
+                                        href={auth.user.roles?.some(r => r.name === 'super-admin')
+                                            ? route('admin.dashboard')
                                             : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#')
                                         }
                                         className={`px-5 py-2 text-sm font-bold rounded-full transition-all ${
@@ -138,9 +144,9 @@ export default function Welcome({ auth }) {
                                     </>
                                 )}
                             </div>
-                            
+
                             {/* Mobile Menu Button */}
-                            <button 
+                            <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 className={`lg:hidden p-2 rounded-xl transition-colors ${
                                     isDark ? 'text-white hover:bg-white/10' : 'text-slate-900 hover:bg-slate-100'
@@ -170,8 +176,8 @@ export default function Welcome({ auth }) {
                             <div className={`w-12 h-1 ${isDark ? 'bg-white/10' : 'bg-slate-200'} rounded-full my-4`}></div>
                             {auth.user ? (
                                 <Link
-                                    href={auth.user.roles?.some(r => r.name === 'super-admin') 
-                                        ? route('admin.dashboard') 
+                                    href={auth.user.roles?.some(r => r.name === 'super-admin')
+                                        ? route('admin.dashboard')
                                         : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#')
                                     }
                                     className="text-indigo-500"
@@ -182,8 +188,8 @@ export default function Welcome({ auth }) {
                             ) : (
                                 <>
                                     <Link href={route('login')} onClick={() => setIsMenuOpen(false)} className={isDark ? 'text-white' : 'text-slate-900'}>Log in</Link>
-                                    <Link 
-                                        href={route('register')} 
+                                    <Link
+                                        href={route('register')}
                                         onClick={() => setIsMenuOpen(false)}
                                         className="px-10 py-4 bg-indigo-600 text-white rounded-2xl shadow-xl shadow-indigo-600/20"
                                     >
@@ -191,8 +197,8 @@ export default function Welcome({ auth }) {
                                     </Link>
                                 </>
                             )}
-                            
-                            <button 
+
+                            <button
                                 onClick={() => setIsMenuOpen(false)}
                                 className={`mt-10 p-4 rounded-full ${isDark ? 'bg-white/5 text-white' : 'bg-slate-100 text-slate-900'}`}
                             >
@@ -263,85 +269,69 @@ export default function Welcome({ auth }) {
                                 }`}>Simple, Transparent <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Pricing</span></h2>
                                 <p className={`text-lg max-w-2xl mx-auto ${
                                     isDark ? 'text-slate-400' : 'text-slate-600'
-                                }`}>Choose the perfect plan for your business scale. No hidden fees, cancel anytime.</p>
+                                }`}>Pay monthly for only the modules you use. POS is mandatory for every shop.</p>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
-                                {usePage().props.plans.map((plan) => (
-                                    <div key={plan.value} className={`p-8 rounded-3xl border flex flex-col transition-all duration-300 group shadow-2xl ${
-                                        plan.value === 2
-                                        ? isDark
-                                            ? 'border-indigo-500/50 bg-indigo-500/5 backdrop-blur-md relative transform scale-105'
-                                            : 'border-indigo-300/50 bg-indigo-50/50 relative transform scale-105'
-                                        : isDark
+                                {plans?.map((plan) => {
+                                    const Icon = moduleIcons[plan.slug] ?? Globe;
+                                    const currency = usePage().props.currency || 'BDT';
+                                    const price = currency === 'BDT' ? `BDT ${Number(plan.price_bdt).toLocaleString()}` : `$${Number(plan.price_usd).toLocaleString()}`;
+
+                                    return (
+                                    <div key={plan.id} className={`p-8 rounded-3xl border flex flex-col transition-all duration-300 group shadow-2xl ${
+                                        isDark
                                             ? 'border-white/5 bg-white/5 backdrop-blur-sm'
                                             : 'border-slate-200 bg-slate-50/50'
                                     }`}>
-                                        {plan.value === 2 && (
-                                            <div className={`absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 text-white text-xs font-bold rounded-full uppercase tracking-widest shadow-lg ${
-                                                isDark
-                                                    ? 'bg-indigo-500 shadow-indigo-500/50'
-                                                    : 'bg-indigo-600 shadow-indigo-600/30'
-                                            }`}>
-                                                Most Popular
-                                            </div>
-                                        )}
                                         <div className="mb-6">
                                             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4 ${
-                                                plan.value === 2
-                                                    ? isDark
-                                                        ? 'bg-indigo-500 text-white shadow-lg'
-                                                        : 'bg-indigo-600 text-white shadow-lg'
-                                                    : isDark
-                                                        ? 'bg-white/10 text-slate-300'
-                                                        : 'bg-slate-200 text-slate-600'
+                                                isDark
+                                                    ? 'bg-white/10 text-slate-300'
+                                                    : 'bg-slate-200 text-slate-600'
                                             }`}>
-                                                {plan.value === 1 ? <Zap className="w-6 h-6" /> : (plan.value === 2 ? <Shield className="w-6 h-6" /> : <Building2 className="w-6 h-6" />)}
+                                                <Icon className="w-6 h-6" />
                                             </div>
                                             <h3 className={`text-2xl font-bold mb-2 ${
                                                 isDark ? 'text-white' : 'text-slate-900'
-                                            }`}>{plan.label}</h3>
+                                            }`}>{plan.name}</h3>
                                             <div className={`flex items-baseline gap-1 mb-2 ${
                                                 isDark ? 'text-slate-500' : 'text-slate-600'
-                                            }`}>
-                                                <span className={`text-4xl font-black ${
-                                                    isDark ? 'text-white' : 'text-slate-900'
-                                                }`}>{plan.price}</span>
-                                                {plan.value !== 3 && <span>/{plan.value === 1 ? 'forever' : 'month'}</span>}
-                                            </div>
-                                            <p className={`text-sm ${
-                                                isDark ? 'text-slate-400' : 'text-slate-600'
-                                            }`}>
-                                                {plan.value === 1 ? 'Perfect for small shops.' : (plan.value === 2 ? 'Scale your growing business.' : 'Tailored enterprise solutions.')}
-                                            </p>
-                                        </div>
-                                        <ul className={`space-y-4 mb-10 flex-1 ${
-                                            isDark ? 'text-slate-300' : 'text-slate-700'
-                                        }`}>
-                                            {plan.modules.map((module) => (
-                                                <li key={module} className="flex items-center gap-3 text-sm">
-                                                    <Check className={`w-4 h-4 ${plan.value === 2 ? 'text-indigo-400' : isDark ? 'text-slate-500' : 'text-slate-400'}`} />
-                                                    <span className="capitalize">{module.replace('_', ' ')}</span>
+                                             }`}>
+                                                 <span className={`text-3xl font-black ${
+                                                     isDark ? 'text-white' : 'text-slate-900'
+                                                 }`}>{price}</span>
+                                                 <span>/month</span>
+                                             </div>
+                                             <p className={`text-sm ${
+                                                 isDark ? 'text-slate-400' : 'text-slate-600'
+                                             }`}>
+                                                 {plan.slug === 'enterprise' ? 'Custom solutions for large businesses.' : 'Scale your business with this plan.'}
+                                             </p>
+                                         </div>
+                                         <ul className={`space-y-4 mb-10 flex-1 ${
+                                             isDark ? 'text-slate-300' : 'text-slate-700'
+                                         }`}>
+                                             {plan.features?.map((feature, i) => (
+                                                <li key={i} className="flex items-center gap-3 text-sm">
+                                                    <Check className={`w-4 h-4 ${isDark ? 'text-slate-500' : 'text-slate-400'}`} />
+                                                    <span className="capitalize">{feature.replace('_', ' ')}</span>
                                                 </li>
-                                            ))}
-                                        </ul>
-                                        <Link
-                                            href={route('register', { plan: plan.value })}
-                                            className={`w-full py-3 px-6 rounded-xl font-bold text-center transition-all ${
-                                                plan.value === 2
-                                                ? isDark
-                                                    ? 'bg-indigo-500 text-white hover:bg-indigo-600 shadow-lg shadow-indigo-500/25'
-                                                    : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-600/25'
-                                                : isDark
-                                                    ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
-                                                    : 'border border-slate-300 bg-slate-100 text-slate-900 hover:bg-slate-200'
-                                            }`}
-                                        >
-                                            {plan.value === 1 ? 'Start 14-Day Free Trial' : (plan.value === 3 ? 'Contact Sales' : 'Get Started')}
-                                        </Link>
-                                    </div>
-                                ))}
-                            </div>
+                                             ))}
+                                         </ul>
+                                         <Link
+                                             href={route('register')}
+                                             className={`w-full py-3 px-6 rounded-xl font-bold text-center transition-all ${
+                                                 isDark
+                                                     ? 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                                                     : 'border border-slate-300 bg-slate-100 text-slate-900 hover:bg-slate-200'
+                                             }`}
+                                         >
+                                             Get Started
+                                         </Link>
+                                     </div>
+                                 )})}
+                             </div>
                         </section>
 
                         {/* Free Trial Section */}

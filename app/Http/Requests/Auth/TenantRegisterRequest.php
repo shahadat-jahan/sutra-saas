@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Requests\Auth;
 
 use App\Enums\BusinessType;
-use App\Enums\Plan;
+use App\Models\Shop;
 use App\Models\User;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Validator;
 
 class TenantRegisterRequest extends FormRequest
 {
@@ -24,10 +26,12 @@ class TenantRegisterRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
+        $availableModules = array_keys(Shop::moduleCatalog());
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -36,12 +40,26 @@ class TenantRegisterRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                'unique:' . User::class,
+                'unique:'.User::class,
             ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'shop_name' => ['required', 'string', 'max:255'],
             'business_type' => ['required', Rule::enum(BusinessType::class)],
-            'plan' => ['required', Rule::enum(Plan::class)],
+            'enabled_modules' => ['required', 'array'],
+            'enabled_modules.*' => ['string', Rule::in($availableModules)],
+        ];
+    }
+
+    public function after(): array
+    {
+        return [
+            function (Validator $validator): void {
+                $enabledModules = $this->input('enabled_modules', []);
+
+                if (! in_array('pos', $enabledModules, true)) {
+                    $validator->errors()->add('enabled_modules', 'POS module is mandatory.');
+                }
+            },
         ];
     }
 }

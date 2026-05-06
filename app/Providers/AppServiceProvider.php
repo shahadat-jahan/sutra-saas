@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Singleton for TenantManager
         $this->app->singleton(TenantManager::class, function () {
-            return new TenantManager();
+            return new TenantManager;
         });
 
         // Repository bindings

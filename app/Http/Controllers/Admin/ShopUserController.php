@@ -72,7 +72,7 @@ class ShopUserController extends Controller
 
         $user->notify(new PlatformAccessNotification(
             appName: (string) config('app.name', 'Sutra'),
-            loginUrl: rtrim((string) config('app.url', 'http://localhost'), '/') . '/login',
+            loginUrl: rtrim((string) config('app.url', 'http://localhost'), '/').'/login',
             tenantUrl: $tenantUrl,
             email: $user->email,
             password: (string) $password,
@@ -95,7 +95,7 @@ class ShopUserController extends Controller
             'email' => $data['email'],
         ];
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $payload['password'] = Hash::make((string) $data['password']);
         }
 
@@ -118,4 +118,3 @@ class ShopUserController extends Controller
         return back()->with('success', 'User deleted successfully.');
     }
 }
-

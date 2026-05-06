@@ -2,6 +2,7 @@
 
 namespace App\Modules\Pos\Application\Services;
 
+use App\Enums\ActiveStatus;
 use App\Models\Customer;
 use App\Repositories\Interfaces\CustomerRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
@@ -14,14 +15,11 @@ class CustomerService
 
     /**
      * Find an existing customer by ID or create a new one for the current shop.
-     * 
-     * @param array $data
-     * @return Customer
      */
     public function findOrCreate(array $data): Customer
     {
         // If ID is provided, fetch existing
-        if (!empty($data['id'])) {
+        if (! empty($data['id'])) {
             return $this->customerRepository->find($data['id']);
         }
 
@@ -32,7 +30,7 @@ class CustomerService
             'phone' => $data['phone'] ?? null,
             'credit_limit' => $data['credit_limit'] ?? 0,
             'current_balance' => 0,
-            'status' => \App\Enums\ActiveStatus::ACTIVE,
+            'status' => ActiveStatus::ACTIVE,
         ]);
     }
 }

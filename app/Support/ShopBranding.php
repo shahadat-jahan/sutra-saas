@@ -24,9 +24,10 @@ class ShopBranding
      */
     public function getLogo(): string
     {
-        if (!empty($this->shop->logo_path)) {
+        if (! empty($this->shop->logo_path)) {
             return storage_path("app/public/{$this->shop->logo_path}");
         }
+
         return Theme::getShopDefaults()['logo'];
     }
 
@@ -35,9 +36,10 @@ class ShopBranding
      */
     public function getBanner(): string
     {
-        if (!empty($this->shop->banner_path) && $this->shop->banner_path !== null) {
+        if (! empty($this->shop->banner_path) && $this->shop->banner_path !== null) {
             return storage_path("app/public/{$this->shop->banner_path}");
         }
+
         return Theme::getShopDefaults()['banner'];
     }
 
@@ -46,9 +48,10 @@ class ShopBranding
      */
     public function getWatermark(): string
     {
-        if (!empty($this->shop->watermark_path) && $this->shop->watermark_path !== null) {
+        if (! empty($this->shop->watermark_path) && $this->shop->watermark_path !== null) {
             return storage_path("app/public/{$this->shop->watermark_path}");
         }
+
         return Theme::getShopDefaults()['watermark'];
     }
 
@@ -70,10 +73,9 @@ class ShopBranding
     public function toArray(): array
     {
         return [
-            'logo' => asset(!empty($this->shop->logo_path) ? "storage/{$this->shop->logo_path}" : Theme::getShopDefaults()['logo']),
-            'banner' => asset(!empty($this->shop->banner_path) ? "storage/{$this->shop->banner_path}" : Theme::getShopDefaults()['banner']),
-            'watermark' => asset(!empty($this->shop->watermark_path) ? "storage/{$this->shop->watermark_path}" : Theme::getShopDefaults()['watermark']),
+            'logo' => asset(! empty($this->shop->logo_path) ? "storage/{$this->shop->logo_path}" : Theme::getShopDefaults()['logo']),
+            'banner' => asset(! empty($this->shop->banner_path) ? "storage/{$this->shop->banner_path}" : Theme::getShopDefaults()['banner']),
+            'watermark' => asset(! empty($this->shop->watermark_path) ? "storage/{$this->shop->watermark_path}" : Theme::getShopDefaults()['watermark']),
         ];
     }
 }
-

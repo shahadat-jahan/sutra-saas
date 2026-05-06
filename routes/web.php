@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ShopController;
-use App\Http\Controllers\Admin\ShopUserController;
-use App\Http\Controllers\Admin\ShopRoleController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AnnouncementController;
-use App\Http\Controllers\Tenant\UserController as TenantUserController;
-use App\Http\Controllers\Tenant\RoleController as TenantRoleController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PlanController;
+use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\ShopController;
+use App\Http\Controllers\Admin\ShopRoleController;
+use App\Http\Controllers\Admin\ShopUserController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Tenant\RoleController as TenantRoleController;
+use App\Http\Controllers\Tenant\UserController as TenantUserController;
 use App\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,7 +43,9 @@ Route::post('/theme/set', [ThemeController::class, 'set'])->name('theme.set');
 */
 Route::domain(config('app.domain', 'localhost'))->group(function () {
     Route::get('/', function () {
-        return Inertia::render('Welcome');
+        return Inertia::render('Welcome', [
+            'plans' => \App\Models\Plan::where('is_active', true)->get(),
+        ]);
     })->name('welcome');
 
     Route::middleware(['auth', 'verified', 'role:super-admin'])
@@ -96,12 +100,19 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
                 '/users',
                 [UserController::class, 'index']
             )->name('users.index');
-            Route::get('/settings', function () {
-                return Inertia::render('Admin/Settings/Index');
-            })->name('settings.index');
+            Route::get('/settings', [SettingsController::class, 'index'])
+                ->name('settings.index');
+            Route::patch('/settings/module-pricing', [SettingsController::class, 'updateModulePricing'])
+                ->name('settings.module-pricing.update');
+            Route::get('/settings/module-pricing/{module}/logs', [SettingsController::class, 'moduleLogs'])
+                ->name('settings.module-pricing.logs');
+
+            Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+            Route::patch('/plans/{plan}', [PlanController::class, 'update'])->name('plans.update');
+            Route::get('/plans/{plan}/logs', [PlanController::class, 'logs'])->name('plans.logs');
         });
 
-    require __DIR__ . '/auth.php';
+    require __DIR__.'/auth.php';
 });
 
 /*
@@ -109,7 +120,7 @@ Route::domain(config('app.domain', 'localhost'))->group(function () {
 | Tenant Subdomain Routes (*.sutra-saas.test)
 |--------------------------------------------------------------------------
 */
-Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
+Route::domain('{subdomain}.'.config('app.domain', 'localhost'))
     ->group(function () {
         Route::get('/', function () {
             return redirect()->route('dashboard', [
@@ -155,5 +166,5 @@ Route::domain('{subdomain}.' . config('app.domain', 'localhost'))
                 });
         });
 
-        require __DIR__ . '/auth.php';
+        require __DIR__.'/auth.php';
     });

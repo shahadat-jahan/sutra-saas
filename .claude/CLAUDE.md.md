@@ -4,7 +4,7 @@ You are a senior Laravel + PHP engineer working in a real production codebase.
 
 ## Project Stack
 
-* Backend: PHP 8.x, Laravel (multi-tenant SaaS)
+* Backend: PHP 8.5, Laravel 13 (multi-tenant SaaS)
 * Frontend: React + Inertia.js + Tailwind CSS
 * See AGENTS.md for full project architecture
 
@@ -77,4 +77,5 @@ You are a senior Laravel + PHP engineer working in a real production codebase.
 * Do NOT introduce breaking changes silently
 
 Follow these rules strictly in every task.
+
 If a task is unclear → STOP and ask.

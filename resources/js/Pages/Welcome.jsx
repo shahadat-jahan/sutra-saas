@@ -11,7 +11,7 @@ export default function Welcome({ auth, plans }) {
 
     const { appName } = usePage().props;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    
+
     const moduleIcons = {
         basic: Globe,
         pro: BarChart3,
@@ -37,12 +37,12 @@ export default function Welcome({ auth, plans }) {
                 {/* Premium Background Elements */}
                 <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
                     {/* Grid Pattern */}
-                    <div className={`absolute inset-0 ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'}`} 
+                    <div className={`absolute inset-0 ${isDark ? 'opacity-[0.03]' : 'opacity-[0.02]'}`}
                          style={{ backgroundImage: `radial-gradient(${isDark ? '#fff' : '#000'} 1px, transparent 1px)`, backgroundSize: '32px 32px' }}>
                     </div>
 
                     {/* Elegant Tilted Watermark with Faded Edges */}
-                    <div 
+                    <div
                         className="absolute -top-32 -right-32 w-[600px] h-[600px] transition-opacity duration-700"
                         style={{
                             transform: 'rotate(-25deg)',
@@ -51,8 +51,8 @@ export default function Welcome({ auth, plans }) {
                             WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 90%)'
                         }}
                     >
-                        <img 
-                            src={adminBranding.watermark} 
+                        <img
+                            src={adminBranding.watermark}
                             className="w-full h-full object-contain"
                             alt=""
                         />
@@ -60,10 +60,10 @@ export default function Welcome({ auth, plans }) {
                 </div>
 
                 {/* Hero Banner Background Decoration */}
-                <div 
+                <div
                     className="absolute top-0 left-0 right-0 h-[600px] opacity-10 pointer-events-none z-0 overflow-hidden"
                 >
-                    <div 
+                    <div
                         className="absolute inset-0 scale-110 blur-sm"
                         style={{
                             backgroundImage: `url(${adminBranding.banner})`,
@@ -78,11 +78,11 @@ export default function Welcome({ auth, plans }) {
 
                 <div className="relative z-10 flex flex-col min-h-screen">
                     <header className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-6 w-full max-w-7xl mx-auto relative z-50">
-                        <Link 
-                            href={auth.user 
+                        <Link
+                            href={auth.user
                                 ? (auth.user.roles?.some(r => r.name === 'super-admin') ? route('admin.dashboard') : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '/'))
                                 : '/'
-                            } 
+                            }
                             className="flex items-center gap-2 sm:gap-3 group"
                         >
                             <img src={adminBranding.logo} className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl shadow-lg object-contain transition-transform duration-300 group-hover:scale-110 ${
@@ -104,13 +104,13 @@ export default function Welcome({ auth, plans }) {
 
                         <div className="flex gap-2 sm:gap-4 items-center">
                             <ThemeToggle />
-                            
+
                             {/* Desktop Auth Buttons */}
                             <div className="hidden md:flex gap-3 items-center">
                                 {auth.user ? (
                                     <Link
-                                        href={auth.user.roles?.some(r => r.name === 'super-admin') 
-                                            ? route('admin.dashboard') 
+                                        href={auth.user.roles?.some(r => r.name === 'super-admin')
+                                            ? route('admin.dashboard')
                                             : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#')
                                         }
                                         className={`px-5 py-2 text-sm font-bold rounded-full transition-all ${
@@ -144,9 +144,9 @@ export default function Welcome({ auth, plans }) {
                                     </>
                                 )}
                             </div>
-                            
+
                             {/* Mobile Menu Button */}
-                            <button 
+                            <button
                                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                                 className={`lg:hidden p-2 rounded-xl transition-colors ${
                                     isDark ? 'text-white hover:bg-white/10' : 'text-slate-900 hover:bg-slate-100'
@@ -176,8 +176,8 @@ export default function Welcome({ auth, plans }) {
                             <div className={`w-12 h-1 ${isDark ? 'bg-white/10' : 'bg-slate-200'} rounded-full my-4`}></div>
                             {auth.user ? (
                                 <Link
-                                    href={auth.user.roles?.some(r => r.name === 'super-admin') 
-                                        ? route('admin.dashboard') 
+                                    href={auth.user.roles?.some(r => r.name === 'super-admin')
+                                        ? route('admin.dashboard')
                                         : (auth.user.shop ? route('dashboard', { subdomain: auth.user.shop.slug }) : '#')
                                     }
                                     className="text-indigo-500"
@@ -188,8 +188,8 @@ export default function Welcome({ auth, plans }) {
                             ) : (
                                 <>
                                     <Link href={route('login')} onClick={() => setIsMenuOpen(false)} className={isDark ? 'text-white' : 'text-slate-900'}>Log in</Link>
-                                    <Link 
-                                        href={route('register')} 
+                                    <Link
+                                        href={route('register')}
                                         onClick={() => setIsMenuOpen(false)}
                                         className="px-10 py-4 bg-indigo-600 text-white rounded-2xl shadow-xl shadow-indigo-600/20"
                                     >
@@ -197,8 +197,8 @@ export default function Welcome({ auth, plans }) {
                                     </Link>
                                 </>
                             )}
-                            
-                            <button 
+
+                            <button
                                 onClick={() => setIsMenuOpen(false)}
                                 className={`mt-10 p-4 rounded-full ${isDark ? 'bg-white/5 text-white' : 'bg-slate-100 text-slate-900'}`}
                             >

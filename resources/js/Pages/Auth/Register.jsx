@@ -54,6 +54,7 @@ export default function Register() {
 
     return (
         <GuestLayout>
+            <Head title={`${appName} - Register`} />
             <div className="mb-8 text-center">
                 <h1 className={`text-3xl font-black mb-2 transition-colors ${isDark ? 'text-white' : 'text-slate-900'}`}>Create Your Shop</h1>
                 <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>
@@ -83,7 +84,7 @@ export default function Register() {
 
                 <div className="mb-4">
                     <InputLabel htmlFor="business_type" value="Business Type" className={isDark ? 'text-slate-300' : 'text-slate-700'} />
-                    
+
                     <select
                         id="business_type"
                         className={`mt-1 block w-full rounded-xl shadow-sm transition-all ${
@@ -144,9 +145,9 @@ export default function Register() {
                     </div>
                     <InputError message={errors.enabled_modules} className="mt-2" />
                 </div>
-                
+
                 <hr className={`my-8 ${isDark ? 'border-white/5' : 'border-slate-100'}`} />
-                
+
                 <div>
                     <InputLabel htmlFor="name" value="Name" className={isDark ? 'text-slate-300' : 'text-slate-700'} />
 
@@ -233,8 +234,8 @@ export default function Register() {
 
                 <div className="mt-8 flex flex-col gap-4">
                     <PrimaryButton className={`w-full justify-center py-4 text-base rounded-xl transition-all ${
-                        isDark 
-                            ? 'bg-indigo-600 hover:bg-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.3)]' 
+                        isDark
+                            ? 'bg-indigo-600 hover:bg-indigo-500 shadow-[0_0_20px_rgba(79,70,229,0.3)]'
                             : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-[0_10px_20px_rgba(79,70,229,0.2)]'
                     }`} disabled={processing}>
                         Create My Account

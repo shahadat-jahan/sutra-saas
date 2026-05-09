@@ -6,43 +6,53 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/var/www/html
+      # For production: remove these volumes entirely to use the built image
+      - ./storage:/var/www/html/storage
+      - ./public/build:/var/www/html/public/build
     environment:
-      - APP_NAME=${APP_NAME}
-      - APP_ENV=${APP_ENV}
+      - APP_NAME=${APP_NAME:-Sutra}
+      - APP_ENV=${APP_ENV:-production}
       - APP_KEY=${APP_KEY}
-      - APP_DEBUG=${APP_DEBUG}
-      - APP_URL=${APP_URL}
-      - APP_DOMAIN=${APP_DOMAIN}
-      - DB_CONNECTION=${DB_CONNECTION}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - SESSION_DRIVER=${SESSION_DRIVER}
-      - SESSION_LIFETIME=${SESSION_LIFETIME}
-      - SESSION_ENCRYPT=${SESSION_ENCRYPT}
-      - SESSION_PATH=${SESSION_PATH}
-      - SESSION_DOMAIN=${SESSION_DOMAIN}
-      - QUEUE_CONNECTION=${QUEUE_CONNECTION}
-      - CACHE_STORE=${CACHE_STORE}
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_PORT=${REDIS_PORT}
-      - MAIL_MAILER=${MAIL_MAILER}
-      - MAIL_HOST=${MAIL_HOST}
-      - MAIL_PORT=${MAIL_PORT}
-      - MAIL_USERNAME=${MAIL_USERNAME}
-      - MAIL_PASSWORD=${MAIL_PASSWORD}
-      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
-      - MAIL_FROM_NAME=${MAIL_FROM_NAME}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_URL=${APP_URL:-http://localhost:8000}
+      - APP_DOMAIN=${APP_DOMAIN:-localhost}
+      - DB_CONNECTION=${DB_CONNECTION:-pgsql}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_DATABASE=${DB_DATABASE:-sutra}
+      - DB_USERNAME=${DB_USERNAME:-sutra}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - SESSION_LIFETIME=${SESSION_LIFETIME:-120}
+      - SESSION_ENCRYPT=${SESSION_ENCRYPT:-false}
+      - SESSION_PATH=${SESSION_PATH:-/}
+      - SESSION_DOMAIN=${SESSION_DOMAIN:-null}
+      - QUEUE_CONNECTION=${QUEUE_CONNECTION:-redis}
+      - CACHE_STORE=${CACHE_STORE:-redis}
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-null}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - MAIL_MAILER=${MAIL_MAILER:-log}
+      - MAIL_HOST=${MAIL_HOST:-127.0.0.1}
+      - MAIL_PORT=${MAIL_PORT:-2525}
+      - MAIL_USERNAME=${MAIL_USERNAME:-null}
+      - MAIL_PASSWORD=${MAIL_PASSWORD:-null}
+      - MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS:-hello@example.com}
+      - MAIL_FROM_NAME=${MAIL_FROM_NAME:-Sutra}
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - sutra-network
+    healthcheck:
+      test: ["CMD", "php-fpm", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   nginx:
     image: nginx:alpine
@@ -50,9 +60,10 @@ services:
       - "8000:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./:/var/www/html:ro
+      - ./public:/var/www/html/public:ro
     depends_on:
-      - app
+      app:
+        condition: service_healthy
     networks:
       - sutra-network
 
@@ -61,13 +72,19 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=${DB_DATABASE}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE:-sutra}
+      - POSTGRES_USER=${DB_USERNAME:-sutra}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-secret}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - sutra-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-sutra} -d ${DB_DATABASE:-sutra}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   redis:
     image: redis:7-alpine
@@ -77,6 +94,33 @@ services:
       - redis_data:/data
     networks:
       - sutra-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: php artisan migrate --force
+    environment:
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=${DB_CONNECTION:-pgsql}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_DATABASE=${DB_DATABASE:-sutra}
+      - DB_USERNAME=${DB_USERNAME:-sutra}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - sutra-network
+    profiles:
+      - migrate
 
 volumes:
   postgres_data:

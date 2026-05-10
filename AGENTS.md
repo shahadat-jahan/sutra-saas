@@ -74,12 +74,16 @@ Each module under `app/Modules/` follows this layout:
 ```
 app/Modules/Inventory/
 ├── Application/        # Module-level use cases / app services
+├── Database/           # Migrations, seeders, factories
 ├── Domain/             # Entities, value objects, domain logic
+├── Http/
+│   ├── Controllers/
+│   └── Requests/
 ├── Infrastructure/     # Eloquent repos, external API integrations
-└── Http/
-    ├── Controllers/
-    ├── Requests/
-    └── Routes/
+├── Providers/          # Module-specific service providers
+├── Resources/          # Additional resources (views, assets)
+├── Routes/             # Web and API routes (web.php, api.php)
+└── Tests/              # Module-specific tests
 ```
 
 > **Rule:** New feature inside an existing module → add to that module's layers.
@@ -137,6 +141,7 @@ class Product extends Model
 
 - `HasUuid` — apply to every model (UUIDs enable offline-sync)
 - `MultiTenant` — apply to every tenant-scoped model
+- `HasDynamicAttributes` — apply to models with flexible JSONB metadata (e.g., Product.attributes, Customer.profile_data)
 
 ### Validation
 
@@ -258,7 +263,7 @@ Follow this order every time — do not skip steps:
 4. **Bind in AppServiceProvider** → `$this->app->bind(ProductRepositoryInterface::class, ProductRepository::class)`
 5. **Service** → `app/Services/ProductService.php`
 6. **Controller** → `php artisan make:controller Tenant/ProductController`
-7. **Routes** → Add to module's `Routes/` folder or `routes/tenant.php`
+7. **Routes** → Add to module's `Routes/` folder (web.php or api.php)
 8. **Frontend Page** → `resources/js/Pages/Products/Index.jsx`
 9. **Tests** → Unit test the Service (mock repo); Feature test the endpoint
 
@@ -279,6 +284,7 @@ Follow this order every time — do not skip steps:
 ```bash
 composer run setup    # Install deps + migrate + build assets (first time)
 composer run dev      # Start Laravel + queue worker + Vite concurrently
+composer run dev:logs # Start Laravel + queue worker + logs + Vite concurrently
 composer run test     # Run full test suite
 php artisan test      # Same as above
 ```
@@ -303,7 +309,7 @@ php artisan test      # Same as above
 | Frontend Components | `resources/js/Components/` |
 | Feature Tests | `tests/Feature/` |
 | Unit Tests | `tests/Unit/` |
-| Module Routes | `app/Modules/{Module}/Http/Routes/` |
+| Module Routes | `app/Modules/{Module}/Routes/` |
 
 ---
 

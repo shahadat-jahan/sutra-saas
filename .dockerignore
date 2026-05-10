@@ -35,8 +35,6 @@ docs/
 # Other
 *.log
 .sail
-composer.lock
-package-lock.json
 .npm
 yarn.lock
 bun.lockb

@@ -129,9 +129,7 @@ Route::domain('{subdomain}.'.config('app.domain', 'localhost'))
         });
 
         Route::middleware(['auth', 'verified'])->group(function () {
-            Route::get('/dashboard', function () {
-                return Inertia::render('Dashboard');
-            })->name('dashboard');
+            Route::get('/dashboard', [App\Http\Controllers\Tenant\DashboardController::class, 'index'])->name('dashboard');
 
             // User Management for Shop Owners
             Route::prefix('settings')

@@ -7,6 +7,10 @@ namespace App\Services;
 use App\Enums\ActiveStatus;
 use App\Enums\BusinessType;
 use App\Models\Announcement;
+use App\Models\Customer;
+use App\Models\Product;
+use App\Models\Sale;
+use App\Enums\SaleStatus;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -157,5 +161,56 @@ final class DashboardService
         }
 
         return (int) round((($current - $previous) / $previous) * 100);
+    }
+
+    /**
+     * Get tenant dashboard statistics.
+     *
+     * @return array<string, mixed>
+     */
+    public function getTenantDashboardData(int|string $shopId): array
+    {
+        $now = now();
+        $startOfDay = $now->copy()->startOfDay();
+        $startOfYesterday = $now->copy()->subDay()->startOfDay();
+        
+        $todaySales = Sale::where('shop_id', $shopId)->where('created_at', '>=', $startOfDay)->sum('total_amount');
+        $yesterdaySales = Sale::where('shop_id', $shopId)->whereBetween('created_at', [$startOfYesterday, $startOfDay])->sum('total_amount');
+        $salesChange = $this->percentChange((int)$todaySales, (int)$yesterdaySales);
+
+        $activeOrders = Sale::where('shop_id', $shopId)->where('status', '!=', SaleStatus::PAID->value)->count(); // assuming active means not fully paid
+        
+        // Let's get top products or recent low stock
+        $lowStockProducts = Product::where('shop_id', $shopId)
+            ->where('stock_quantity', '<=', 10)
+            ->take(5)
+            ->get(['name', 'stock_quantity', 'uuid']);
+
+        $totalCustomers = Customer::where('shop_id', $shopId)->count();
+
+        return [
+            'stats' => [
+                'today_sales' => number_format((float)$todaySales, 2),
+                'sales_change_pct' => $salesChange,
+                'active_orders' => $activeOrders,
+                'total_customers' => $totalCustomers,
+            ],
+            'inventory' => [
+                'low_stock' => $lowStockProducts,
+                'total_products' => Product::where('shop_id', $shopId)->count(),
+            ],
+            'recent_sales' => Sale::where('shop_id', $shopId)
+                ->with('customer:id,name')
+                ->latest()
+                ->take(5)
+                ->get()
+                ->map(fn(Sale $sale) => [
+                    'id' => $sale->uuid,
+                    'customer' => $sale->customer?->name ?? 'Walk-in Customer',
+                    'amount' => number_format((float)$sale->total_amount, 2),
+                    'status' => $sale->status->label(),
+                    'time' => $sale->created_at->diffForHumans(),
+                ]),
+        ];
     }
 }

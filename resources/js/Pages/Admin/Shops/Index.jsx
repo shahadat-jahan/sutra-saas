@@ -17,13 +17,13 @@ export default function Index({ shops, module_catalog }) {
     const moduleOptions = Object.entries(module_catalog || {}).map(([key, value]) => ({
         key,
         name: value.name,
-        monthly_price: Number(value.monthly_price || 0),
+        monthly_price: Number(value.monthly_price_bdt || 0),
     }));
 
     const createForm = useForm({
         shop_name: '',
         business_type: business_types?.[0]?.value ?? 1,
-        enabled_modules: ['pos'],
+        enabled_modules: ['inventory'],
         is_free: false,
         status: 1,
         owner_name: '',
@@ -32,7 +32,7 @@ export default function Index({ shops, module_catalog }) {
     });
 
     const updateForm = useForm({
-        enabled_modules: ['pos'],
+        enabled_modules: ['inventory'],
         is_free: false,
         status: 1,
     });
@@ -61,7 +61,7 @@ export default function Index({ shops, module_catalog }) {
     };
 
     const toggleModule = (form, moduleKey) => {
-        if (moduleKey === 'pos') {
+        if (moduleKey === 'inventory') {
             return;
         }
 
@@ -77,7 +77,7 @@ export default function Index({ shops, module_catalog }) {
         setEditingShop(shop);
         updateForm.clearErrors();
         updateForm.setData({
-            enabled_modules: shop.enabled_modules?.length ? shop.enabled_modules : ['pos'],
+            enabled_modules: shop.enabled_modules?.length ? shop.enabled_modules : ['inventory'],
             is_free: Boolean(shop.is_free),
             status: shop.status,
         });
@@ -90,7 +90,7 @@ export default function Index({ shops, module_catalog }) {
             onSuccess: () => {
                 setIsCreateOpen(false);
                 createForm.reset();
-                createForm.setData('enabled_modules', ['pos']);
+                createForm.setData('enabled_modules', ['inventory']);
             },
         });
     };
@@ -270,17 +270,17 @@ export default function Index({ shops, module_catalog }) {
                     </div>
 
                     <div className="mt-5">
-                        <InputLabel value="Modules (POS Mandatory)" />
+                        <InputLabel value="Modules (Inventory Mandatory)" />
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-2">
                             {moduleOptions.map((module) => {
                                 const checked = createForm.data.enabled_modules.includes(module.key);
-                                const isPos = module.key === 'pos';
+                                const isInventory = module.key === 'inventory';
                                 return (
                                     <label key={module.key} className={`border rounded-xl px-3 py-2 ${checked ? 'border-indigo-300 bg-indigo-50' : 'border-slate-200 bg-white'}`}>
                                         <div className="flex items-center justify-between gap-2">
                                             <div className="flex items-center gap-2">
-                                                <input type="checkbox" checked={checked} disabled={isPos} onChange={() => toggleModule(createForm, module.key)} />
-                                                <span className="text-sm font-semibold">{module.name}{isPos ? ' (Mandatory)' : ''}</span>
+                                                <input type="checkbox" checked={checked} disabled={isInventory} onChange={() => toggleModule(createForm, module.key)} />
+                                                <span className="text-sm font-semibold">{module.name}{isInventory ? ' (Mandatory)' : ''}</span>
                                             </div>
                                             <span className="text-xs text-slate-600">BDT {module.monthly_price}</span>
                                         </div>
@@ -311,12 +311,12 @@ export default function Index({ shops, module_catalog }) {
                     <div className="space-y-3">
                         {moduleOptions.map((module) => {
                             const checked = updateForm.data.enabled_modules.includes(module.key);
-                            const isPos = module.key === 'pos';
+                            const isInventory = module.key === 'inventory';
                             return (
                                 <label key={module.key} className={`border rounded-xl px-3 py-2 flex items-center justify-between ${checked ? 'border-indigo-300 bg-indigo-50' : 'border-slate-200 bg-white'}`}>
                                     <div className="flex items-center gap-2">
-                                        <input type="checkbox" checked={checked} disabled={isPos} onChange={() => toggleModule(updateForm, module.key)} />
-                                        <span className="text-sm font-semibold">{module.name}{isPos ? ' (Mandatory)' : ''}</span>
+                                        <input type="checkbox" checked={checked} disabled={isInventory} onChange={() => toggleModule(updateForm, module.key)} />
+                                        <span className="text-sm font-semibold">{module.name}{isInventory ? ' (Mandatory)' : ''}</span>
                                     </div>
                                     <span className="text-xs text-slate-600">BDT {module.monthly_price}/month</span>
                                 </label>

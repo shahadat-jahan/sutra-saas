@@ -24,7 +24,7 @@ class DemoShopSeeder extends Seeder
             [
                 'name' => 'Demo Retail Shop',
                 'business_type' => BusinessType::RETAIL,
-                'enabled_modules' => ['pos'],
+                'enabled_modules' => ['inventory'],
                 'is_free' => true,
                 'status' => 1,
             ]

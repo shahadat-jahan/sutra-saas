@@ -24,8 +24,8 @@ enum Plan: int
     public function price(string $currency = 'BDT'): string
     {
         return match ($this) {
-            self::BASIC => $currency === 'BDT' ? '৳৫০০' : '$8',
-            self::PROFESSIONAL => $currency === 'BDT' ? '৳১,০০০' : '$15',
+            self::BASIC => $currency === 'BDT' ? '৳500' : '$8',
+            self::PROFESSIONAL => $currency === 'BDT' ? '৳1,500' : '$15',
             self::ENTERPRISE => 'Custom',
         };
     }
@@ -35,7 +35,7 @@ enum Plan: int
         return match ($this) {
             self::BASIC => [
                 // MVP Phase 1
-                'pos',
+                'inventory',
             ],
 
             self::PROFESSIONAL => [

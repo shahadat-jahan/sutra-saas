@@ -56,8 +56,8 @@ class TenantRegisterRequest extends FormRequest
             function (Validator $validator): void {
                 $enabledModules = $this->input('enabled_modules', []);
 
-                if (! in_array('pos', $enabledModules, true)) {
-                    $validator->errors()->add('enabled_modules', 'POS module is mandatory.');
+                if (! in_array('inventory', $enabledModules, true)) {
+                    $validator->errors()->add('enabled_modules', 'Inventory module is mandatory.');
                 }
             },
         ];

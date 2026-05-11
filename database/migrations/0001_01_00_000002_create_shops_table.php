@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('logo_path')->nullable();
             $table->string('banner_path')->nullable();
             $table->string('watermark_path')->nullable();
-            $table->jsonb('enabled_modules')->default(json_encode(['pos']));
+            $table->jsonb('enabled_modules')->default(json_encode(['inventory']));
             $table->boolean('is_free')->default(false);
             $table->jsonb('metadata')->nullable();
             $table->tinyInteger('status')->default(1);

@@ -45,7 +45,7 @@ class Shop extends Model
             $count = static::query()->where('slug', 'LIKE', "{$slug}%", 'and')->count();
             $shop->slug = $count ? "{$slug}-".($count + 1) : $slug;
             if (empty($shop->enabled_modules)) {
-                $shop->enabled_modules = ['pos'];
+                $shop->enabled_modules = ['inventory'];
             }
         });
     }

@@ -18,7 +18,7 @@ class PlanSeeder extends Seeder
                 'slug' => 'basic',
                 'price_bdt' => 1500, // Matches POS module
                 'price_usd' => 15,
-                'features' => ['pos'],
+                'features' => ['inventory'],
             ],
             [
                 'name' => 'Sutra Pro',

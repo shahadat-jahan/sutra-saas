@@ -12,7 +12,12 @@ import {
     ChevronRight,
     User,
     ChevronDown,
-    Store
+    Store,
+    Calculator,
+    Package,
+    Receipt,
+    Users as CustomersIcon,
+    BarChart3
 } from 'lucide-react';
 import Dropdown from '@/Components/Dropdown';
 import { useShopBranding } from '@/Support/BrandingProvider';
@@ -32,6 +37,36 @@ export default function AuthenticatedLayout({ children, header }) {
             href: route('dashboard', { subdomain: user.shop?.slug }), 
             icon: LayoutDashboard, 
             current: route().current('dashboard') 
+        },
+        { 
+            name: 'POS', 
+            href: route('tenant.pos.index', { subdomain: user.shop?.slug }), 
+            icon: Calculator, 
+            current: route().current('tenant.pos.*') 
+        },
+        { 
+            name: 'Inventory', 
+            href: route('tenant.inventory.index', { subdomain: user.shop?.slug }), 
+            icon: Package, 
+            current: route().current('tenant.inventory.*') 
+        },
+        { 
+            name: 'Sales', 
+            href: route('tenant.sales.index', { subdomain: user.shop?.slug }), 
+            icon: Receipt, 
+            current: route().current('tenant.sales.*') 
+        },
+        { 
+            name: 'Customers', 
+            href: route('tenant.customers.index', { subdomain: user.shop?.slug }), 
+            icon: CustomersIcon, 
+            current: route().current('tenant.customers.*') 
+        },
+        { 
+            name: 'Reports', 
+            href: route('tenant.reports.index', { subdomain: user.shop?.slug }), 
+            icon: BarChart3, 
+            current: route().current('tenant.reports.*') 
         },
         { 
             name: 'Users', 

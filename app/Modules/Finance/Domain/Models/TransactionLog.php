@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * TransactionLog Model
- * 
+ *
  * Part of the Finance Module.
  */
 final class TransactionLog extends Model

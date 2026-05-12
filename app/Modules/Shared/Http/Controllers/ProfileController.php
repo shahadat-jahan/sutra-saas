@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers;
 
+use App\Modules\Shared\Application\Services\UserService;
 use App\Modules\Shared\Http\Requests\ProfileDestroyRequest;
 use App\Modules\Shared\Http\Requests\ProfileUpdateRequest;
-use App\Modules\Shared\Application\Services\UserService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

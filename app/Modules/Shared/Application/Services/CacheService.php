@@ -16,10 +16,6 @@ final class CacheService
 {
     /**
      * Store an item in the cache for a given number of seconds.
-     *
-     * @param string $key
-     * @param mixed $value
-     * @param int|float $seconds
      */
     public function put(string $key, mixed $value, int|float $seconds): void
     {
@@ -28,10 +24,6 @@ final class CacheService
 
     /**
      * Retrieve an item from the cache.
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
      */
     public function get(string $key, mixed $default = null): mixed
     {
@@ -40,11 +32,6 @@ final class CacheService
 
     /**
      * Retrieve an item or store the default value using a callback.
-     *
-     * @param string $key
-     * @param int|float $seconds
-     * @param callable $callback
-     * @return mixed
      */
     public function remember(string $key, int|float $seconds, callable $callback): mixed
     {
@@ -53,9 +40,6 @@ final class CacheService
 
     /**
      * Remove an item from the cache.
-     *
-     * @param string $key
-     * @return bool
      */
     public function forget(string $key): bool
     {

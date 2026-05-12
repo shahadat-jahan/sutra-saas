@@ -20,13 +20,9 @@ final class SystemSetting extends Model
         ];
     }
 
-    /**
-     * @param  mixed  $default
-     * @return mixed
-     */
     public static function getValue(string $key, mixed $default = null): mixed
     {
-        return static::query()
+        return self::query()
             ->where('key', $key)
             ->value('value') ?? $default;
     }
@@ -36,7 +32,7 @@ final class SystemSetting extends Model
      */
     public static function putArray(string $key, array $value): void
     {
-        static::query()->updateOrCreate(
+        self::query()->updateOrCreate(
             ['key' => $key],
             ['value' => $value]
         );

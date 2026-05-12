@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Admin;
 
-use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Shared\Application\Services\AdminUserService;
+use App\Modules\Shared\Http\Controllers\Controller;
 use Inertia\Inertia;
 use Inertia\Response;
 

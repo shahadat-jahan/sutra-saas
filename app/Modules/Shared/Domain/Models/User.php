@@ -4,10 +4,10 @@ namespace App\Modules\Shared\Domain\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\ActiveStatus;
-use App\Traits\HasUuid;
-use App\Modules\Shared\Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Modules\Finance\Domain\Models\TransactionLog;
+use App\Modules\Shared\Database\Factories\UserFactory;
+use App\Traits\HasUuid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;

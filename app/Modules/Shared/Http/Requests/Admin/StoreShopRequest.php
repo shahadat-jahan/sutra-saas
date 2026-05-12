@@ -10,9 +10,9 @@ use App\Modules\Shared\Domain\Models\Shop;
 use App\Modules\Shared\Domain\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Validator;
 
 class StoreShopRequest extends FormRequest
 {

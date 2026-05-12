@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Sale Model
- * 
+ *
  * Part of the Sales Module.
  */
 final class Sale extends Model

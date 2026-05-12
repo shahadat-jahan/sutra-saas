@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Event fired when calculating order totals.
- * 
+ *
  * This allows other modules (like Discount) to hook into the calculation
  * process and modify the discount_amount or other properties.
  */
@@ -20,7 +20,7 @@ final class OrderTotalCalculating
     /**
      * Create a new event instance.
      *
-     * @param object $order The order object being calculated (must have items and discount_amount property)
+     * @param  object  $order  The order object being calculated (must have items and discount_amount property)
      */
     public function __construct(
         public object $order

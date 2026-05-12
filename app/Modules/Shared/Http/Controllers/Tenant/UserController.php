@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Tenant;
 
+use App\Modules\Shared\Application\Services\TenantUserService;
+use App\Modules\Shared\Domain\Models\User;
 use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Shared\Http\Requests\Tenant\StoreUserRequest;
 use App\Modules\Shared\Http\Requests\Tenant\UpdateUserRequest;
-use App\Modules\Shared\Domain\Models\User;
-use App\Modules\Shared\Application\Services\TenantUserService;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -26,14 +26,14 @@ class UserController extends Controller
      */
     public function index(): Response
     {
-        /** @var \App\Modules\Shared\Domain\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
         $shop = $user->shop;
         $shopId = (string) $shop->id;
         $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
 
         return Inertia::render('Tenant/Users/Index', [
-            'users' => $this->userService->getUsersByShop( $shopId),
+            'users' => $this->userService->getUsersByShop($shopId),
             'roles' => Role::query()
                 ->where(fn ($q) => $q->whereNull($teamsKey)->orWhere($teamsKey, $shop->id))
                 ->orderBy('name')
@@ -49,7 +49,7 @@ class UserController extends Controller
         $shop = auth()->user()->shop;
         $shopId = (string) $shop->id;
 
-        $this->userService->createUser( $shopId, $request->validated());
+        $this->userService->createUser($shopId, $request->validated());
 
         return back()->with('success', 'User created successfully.');
     }
@@ -75,7 +75,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         $shop = auth()->user()->shop;
-$shopId = (string) $shop->id;
+        $shopId = (string) $shop->id;
 
         $this->userService->updateUser($user, $shopId, $request->validated());
 

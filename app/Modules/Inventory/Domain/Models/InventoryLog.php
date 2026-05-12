@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * InventoryLog Model
- * 
+ *
  * Part of the Inventory Module.
  */
 final class InventoryLog extends Model

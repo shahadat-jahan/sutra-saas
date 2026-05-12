@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace App\Modules\Sales\Domain\Models;
 
 use App\Enums\ActiveStatus;
+use App\Modules\Finance\Domain\Models\TransactionLog;
 use App\Modules\Shared\Domain\Models\Shop;
 use App\Traits\HasDynamicAttributes;
 use App\Traits\HasUuid;
 use App\Traits\MultiTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Modules\Finance\Domain\Models\TransactionLog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Customer Model
- * 
+ *
  * Part of the Sales Module.
  */
 final class Customer extends Model

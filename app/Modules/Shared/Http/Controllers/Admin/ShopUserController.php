@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Admin;
 
+use App\Modules\Shared\Domain\Models\Shop;
+use App\Modules\Shared\Domain\Models\User;
 use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Shared\Http\Requests\Admin\StoreShopUserRequest;
 use App\Modules\Shared\Http\Requests\Admin\UpdateShopUserRequest;
-use App\Modules\Shared\Domain\Models\Shop;
-use App\Modules\Shared\Domain\Models\User;
 use App\Notifications\PlatformAccessNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;

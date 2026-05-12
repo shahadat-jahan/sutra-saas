@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Shared\Application\Services;
 
 use App\Modules\Shared\Domain\Models\User;
-use App\Notifications\PlatformAccessNotification;
 use App\Modules\Shared\Infrastructure\Repositories\Interfaces\UserRepositoryInterface;
+use App\Notifications\PlatformAccessNotification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\PermissionRegistrar;

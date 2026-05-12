@@ -2,6 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Modules\Shared\Database\Seeders\AdminSeeder;
+use App\Modules\Shared\Database\Seeders\AnnouncementSeeder;
+use App\Modules\Shared\Database\Seeders\DemoShopSeeder;
+use App\Modules\Shared\Database\Seeders\PlanSeeder;
+use App\Modules\Shared\Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +17,11 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            \App\Modules\Shared\Database\Seeders\RolesAndPermissionsSeeder::class,
-            \App\Modules\Shared\Database\Seeders\AdminSeeder::class,
-            \App\Modules\Shared\Database\Seeders\PlanSeeder::class,
-            \App\Modules\Shared\Database\Seeders\DemoShopSeeder::class,
-            \App\Modules\Shared\Database\Seeders\AnnouncementSeeder::class,
+            RolesAndPermissionsSeeder::class,
+            AdminSeeder::class,
+            PlanSeeder::class,
+            DemoShopSeeder::class,
+            AnnouncementSeeder::class,
         ]);
     }
 }

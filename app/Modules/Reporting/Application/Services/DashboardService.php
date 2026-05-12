@@ -7,12 +7,12 @@ namespace App\Modules\Reporting\Application\Services;
 use App\Enums\ActiveStatus;
 use App\Enums\BusinessType;
 use App\Enums\SaleStatus;
-use App\Modules\Shared\Domain\Models\Announcement;
-use App\Modules\Shared\Domain\Models\Shop;
-use App\Modules\Shared\Domain\Models\User;
 use App\Modules\Inventory\Domain\Models\Product;
 use App\Modules\Sales\Domain\Models\Customer;
 use App\Modules\Sales\Domain\Models\Sale;
+use App\Modules\Shared\Domain\Models\Announcement;
+use App\Modules\Shared\Domain\Models\Shop;
+use App\Modules\Shared\Domain\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * DashboardService
- * 
+ *
  * Part of the Reporting Module.
  */
 final class DashboardService
@@ -178,13 +178,13 @@ final class DashboardService
         $now = now();
         $startOfDay = $now->copy()->startOfDay();
         $startOfYesterday = $now->copy()->subDay()->startOfDay();
-        
+
         $todaySales = Sale::where('shop_id', $shopId)->where('created_at', '>=', $startOfDay)->sum('total_amount');
         $yesterdaySales = Sale::where('shop_id', $shopId)->whereBetween('created_at', [$startOfYesterday, $startOfDay])->sum('total_amount');
-        $salesChange = $this->percentChange((int)$todaySales, (int)$yesterdaySales);
+        $salesChange = $this->percentChange((int) $todaySales, (int) $yesterdaySales);
 
-        $activeOrders = Sale::where('shop_id', $shopId)->where('status', '!=', SaleStatus::PAID->value)->count(); 
-        
+        $activeOrders = Sale::where('shop_id', $shopId)->where('status', '!=', SaleStatus::PAID->value)->count();
+
         $lowStockProducts = Product::where('shop_id', $shopId)
             ->where('stock_quantity', '<=', 10)
             ->take(5)
@@ -194,7 +194,7 @@ final class DashboardService
 
         return [
             'stats' => [
-                'today_sales' => number_format((float)$todaySales, 2),
+                'today_sales' => number_format((float) $todaySales, 2),
                 'sales_change_pct' => $salesChange,
                 'active_orders' => $activeOrders,
                 'total_customers' => $totalCustomers,
@@ -208,10 +208,10 @@ final class DashboardService
                 ->latest()
                 ->take(5)
                 ->get()
-                ->map(fn(Sale $sale) => [
+                ->map(fn (Sale $sale) => [
                     'id' => $sale->uuid,
                     'customer' => $sale->customer?->name ?? 'Walk-in Customer',
-                    'amount' => number_format((float)$sale->total_amount, 2),
+                    'amount' => number_format((float) $sale->total_amount, 2),
                     'status' => $sale->status->label(),
                     'time' => $sale->created_at->diffForHumans(),
                 ]),

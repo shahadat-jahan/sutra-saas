@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Auth;
 
+use App\Modules\Shared\Application\Services\TenantRegistrationService;
 use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Shared\Http\Requests\Auth\TenantRegisterRequest;
-use App\Modules\Shared\Application\Services\TenantRegistrationService;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;

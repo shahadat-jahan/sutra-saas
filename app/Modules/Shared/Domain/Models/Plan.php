@@ -32,7 +32,7 @@ final class Plan extends Model
 
     protected static function booted(): void
     {
-        static::updated(function (Plan $plan) {
+        self::updated(function (Plan $plan) {
             if ($plan->isDirty(['price_bdt', 'price_usd'])) {
                 PlanPriceLog::create([
                     'plan_id' => $plan->id,
@@ -61,16 +61,16 @@ final class Plan extends Model
      */
     public function getFormattedPrice(?string $currency = null): string
     {
-        if (!$currency) {
+        if (! $currency) {
             // Default logic: BD gets BDT, others get USD
             // This could be enhanced with a GeoIP library
             $currency = request()->header('CF-IPCountry') === 'BD' ? 'BDT' : 'USD';
         }
 
         if ($currency === 'BDT') {
-            return '৳' . number_format((float)$this->price_bdt, 0);
+            return '৳'.number_format((float) $this->price_bdt, 0);
         }
 
-        return '$' . number_format((float)$this->price_usd, 2);
+        return '$'.number_format((float) $this->price_usd, 2);
     }
 }

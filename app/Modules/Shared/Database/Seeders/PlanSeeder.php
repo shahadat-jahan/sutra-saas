@@ -2,8 +2,9 @@
 
 namespace App\Modules\Shared\Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Modules\Shared\Domain\Models\Plan;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class PlanSeeder extends Seeder
 {
@@ -37,10 +38,10 @@ class PlanSeeder extends Seeder
         ];
 
         foreach ($plans as $planData) {
-            \App\Modules\Shared\Domain\Models\Plan::updateOrCreate(
+            Plan::updateOrCreate(
                 ['slug' => $planData['slug']],
                 [
-                    'uuid' => \Illuminate\Support\Str::uuid(),
+                    'uuid' => Str::uuid(),
                     'name' => $planData['name'],
                     'price_bdt' => $planData['price_bdt'],
                     'price_usd' => $planData['price_usd'],

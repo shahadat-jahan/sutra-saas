@@ -35,7 +35,7 @@ final class ApplyDiscountsToOrder
             } else {
                 // 2. Check if it applies to specific items in the order
                 $applicableItems = $this->getApplicableItems($discount, $order->items);
-                
+
                 foreach ($applicableItems as $item) {
                     $itemSubtotal = $item->price * $item->quantity;
                     $totalDiscount += $this->calculateDiscountValue($discount, $itemSubtotal);
@@ -71,6 +71,7 @@ final class ApplyDiscountsToOrder
         return $items->filter(function ($item) use ($discountableUuids) {
             // Assuming item has a product_id or uuid that matches discountable_id
             $itemId = $item->product_id ?? $item->uuid ?? $item->id;
+
             return in_array($itemId, $discountableUuids);
         });
     }

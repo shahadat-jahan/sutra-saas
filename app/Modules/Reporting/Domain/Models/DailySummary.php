@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * DailySummary Model
- * 
+ *
  * Part of the Reporting Module.
  */
 final class DailySummary extends Model

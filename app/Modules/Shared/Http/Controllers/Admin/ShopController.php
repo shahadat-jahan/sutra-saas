@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Admin;
 
+use App\Modules\Shared\Application\Services\ShopService;
+use App\Modules\Shared\Domain\Models\Shop;
+use App\Modules\Shared\Domain\Models\User;
 use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Shared\Http\Requests\Admin\ShopUpdateRequest;
 use App\Modules\Shared\Http\Requests\Admin\StoreShopRequest;
-use App\Modules\Shared\Domain\Models\Shop;
-use App\Modules\Shared\Domain\Models\User;
 use App\Notifications\PlatformAccessNotification;
-use App\Modules\Shared\Application\Services\ShopService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;

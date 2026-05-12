@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Product Model
- * 
+ *
  * Part of the Inventory Module.
  */
 final class Product extends Model

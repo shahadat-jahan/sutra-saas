@@ -152,10 +152,11 @@ Follow this order every time — do not skip steps:
 - **Direct Model Access from Controller**: Always go through a Service.
 - **Cross-Module Model Usage**: Use events or shared interfaces to decouple modules.
 
---- 
+---
 
-## PSR-12 Requirements 
+## PSR-12 & Code Style
 All files must follow PSR-12 strictly.
+Use `./vendor/bin/pint` to fix code style before committing any code.
 
 --- 
 

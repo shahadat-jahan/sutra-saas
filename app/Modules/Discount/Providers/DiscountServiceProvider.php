@@ -11,7 +11,7 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * Service provider for the Discount module.
- * 
+ *
  * Handles registration of listeners and loading of module-specific resources.
  */
 final class DiscountServiceProvider extends ServiceProvider
@@ -37,6 +37,6 @@ final class DiscountServiceProvider extends ServiceProvider
         );
 
         // Load module migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
     }
 }

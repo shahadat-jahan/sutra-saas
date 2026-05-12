@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Admin;
 
-use App\Modules\Shared\Http\Controllers\Controller;
-use App\Modules\Shared\Http\Requests\Admin\UpdateModulePricingRequest;
+use App\Modules\Shared\Domain\Models\ModulePriceLog;
 use App\Modules\Shared\Domain\Models\Shop;
 use App\Modules\Shared\Domain\Models\SystemSetting;
+use App\Modules\Shared\Http\Controllers\Controller;
+use App\Modules\Shared\Http\Requests\Admin\UpdateModulePricingRequest;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -33,7 +34,7 @@ class SettingsController extends Controller
 
             // Create log if price changed
             if ($newBdt !== (int) $moduleConfig['monthly_price_bdt'] || $newUsd !== (int) $moduleConfig['monthly_price_usd']) {
-                \App\Modules\Shared\Domain\Models\ModulePriceLog::create([
+                ModulePriceLog::create([
                     'module_key' => $moduleKey,
                     'user_id' => auth()->id(),
                     'old_price_bdt' => $moduleConfig['monthly_price_bdt'],
@@ -62,7 +63,7 @@ class SettingsController extends Controller
         return Inertia::render('Admin/Settings/ModuleLogs', [
             'module_key' => $moduleKey,
             'module_name' => $module['name'],
-            'logs' => \App\Modules\Shared\Domain\Models\ModulePriceLog::with('user')
+            'logs' => ModulePriceLog::with('user')
                 ->where('module_key', $moduleKey)
                 ->orderBy('created_at', 'desc')
                 ->get(),

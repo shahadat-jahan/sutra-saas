@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Shared\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tenant\StoreUserRequest;
-use App\Http\Requests\Tenant\UpdateUserRequest;
+use App\Modules\Shared\Http\Requests\Tenant\StoreUserRequest;
+use App\Modules\Shared\Http\Requests\Tenant\UpdateUserRequest;
 use App\Modules\Shared\Domain\Models\User;
 use App\Modules\Shared\Application\Services\TenantUserService;
 use Illuminate\Http\RedirectResponse;

@@ -2,8 +2,8 @@
 
 namespace App\Modules\Inventory\Application\Listeners;
 
-use App\Models\InventoryLog;
-use App\Models\Product;
+use App\Modules\Inventory\Domain\Models\InventoryLog;
+use App\Modules\Inventory\Domain\Models\Product;
 use App\Modules\Pos\Domain\Events\SaleCompleted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;

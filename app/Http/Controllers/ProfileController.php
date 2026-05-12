@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileDestroyRequest;
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Services\UserService;
+use App\Modules\Shared\Application\Services\UserService;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

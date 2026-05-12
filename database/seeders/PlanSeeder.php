@@ -37,7 +37,7 @@ class PlanSeeder extends Seeder
         ];
 
         foreach ($plans as $planData) {
-            \App\Models\Plan::updateOrCreate(
+            \App\Modules\Shared\Domain\Models\Plan::updateOrCreate(
                 ['slug' => $planData['slug']],
                 [
                     'uuid' => \Illuminate\Support\Str::uuid(),

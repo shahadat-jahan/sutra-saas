@@ -23,6 +23,20 @@ class ModuleServiceProvider extends ServiceProvider
 
         foreach (File::directories($modulesPath) as $modulePath) {
             $this->loadModuleRoutes($modulePath);
+            $this->registerModuleProvider($modulePath);
+        }
+    }
+
+    /**
+     * Register the service provider for a module if it exists.
+     */
+    protected function registerModuleProvider(string $modulePath): void
+    {
+        $moduleName = basename($modulePath);
+        $providerClass = "App\\Modules\\{$moduleName}\\Providers\\{$moduleName}ServiceProvider";
+
+        if (class_exists($providerClass)) {
+            $this->app->register($providerClass);
         }
     }
 

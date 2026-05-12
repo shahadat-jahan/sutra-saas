@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\MultiTenancy;
 
-use App\Models\Product;
-use App\Models\Shop;
-use App\Models\User;
+use App\Modules\Inventory\Domain\Models\Product;
+use App\Modules\Shared\Domain\Models\Shop;
+use App\Modules\Shared\Domain\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

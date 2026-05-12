@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Announcement;
-use App\Models\User;
+use App\Modules\Shared\Domain\Models\Announcement;
+use App\Modules\Shared\Domain\Models\User;
 use Illuminate\Database\Seeder;
 
 class AnnouncementSeeder extends Seeder

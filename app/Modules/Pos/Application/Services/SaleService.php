@@ -4,7 +4,7 @@ namespace App\Modules\Pos\Application\Services;
 
 use App\Enums\PaymentMethod;
 use App\Enums\SaleStatus;
-use App\Models\Sale;
+use App\Modules\Sales\Domain\Models\Sale;
 use App\Modules\Finance\Application\Services\BakirKhataService;
 use App\Repositories\Interfaces\CustomerRepositoryInterface;
 use App\Repositories\Interfaces\SaleRepositoryInterface;

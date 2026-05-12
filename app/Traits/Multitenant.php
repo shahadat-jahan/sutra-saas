@@ -3,7 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Scopes\ShopScope;
-use App\Models\User;
+use App\Modules\Shared\Domain\Models\User;
 use App\Support\TenantManager;
 use Illuminate\Support\Facades\Auth;
 

@@ -3,8 +3,8 @@
 namespace App\Modules\Inventory\Application\Services;
 
 use App\Enums\BusinessType;
-use App\Models\Product;
-use App\Models\Shop;
+use App\Modules\Inventory\Domain\Models\Product;
+use App\Modules\Shared\Domain\Models\Shop;
 
 /**
  * Service to handle DGDA (Pharma) synchronization.

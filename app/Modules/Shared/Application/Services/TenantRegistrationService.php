@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Shared\Application\Services;
 
 use App\Modules\Shared\Domain\Models\User;
-use App\Repositories\Interfaces\ShopRepositoryInterface;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Modules\Shared\Infrastructure\Repositories\Interfaces\ShopRepositoryInterface;
+use App\Modules\Shared\Infrastructure\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

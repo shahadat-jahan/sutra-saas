@@ -3,10 +3,10 @@
 namespace App\Modules\Pos\Http\Controllers;
 
 use App\Modules\Shared\Http\Controllers\Controller;
-use App\Http\Requests\Pos\StoreSaleRequest;
+use App\Modules\Pos\Http\Requests\StoreSaleRequest;
 use App\Modules\Pos\Application\Services\SaleService;
-use App\Repositories\Interfaces\CustomerRepositoryInterface;
-use App\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Modules\Sales\Infrastructure\Repositories\Interfaces\CustomerRepositoryInterface;
+use App\Modules\Inventory\Infrastructure\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Support\TenantManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;

@@ -130,10 +130,11 @@ Route::domain('{subdomain}.'.config('app.domain', 'localhost'))
         });
 
         Route::middleware(['auth', 'verified'])->group(function () {
-            Route::get('/dashboard', [App\Http\Controllers\Tenant\DashboardController::class, 'index'])->name('dashboard');
+            Route::get('/dashboard', [\App\Modules\Reporting\Http\Controllers\Tenant\DashboardController::class, 'index'])->name('dashboard');
 
             // Module Placeholder Routes
-            Route::get('/pos', function () { return Inertia::render('Tenant/Pos/Index'); })->name('tenant.pos.index');
+            Route::get('/pos', [\App\Modules\Pos\Http\Controllers\PosController::class, 'index'])->name('tenant.pos.index');
+            Route::post('/pos', [\App\Modules\Pos\Http\Controllers\PosController::class, 'store'])->name('tenant.pos.store');
             Route::get('/inventory', function () { return Inertia::render('Tenant/Inventory/Index'); })->name('tenant.inventory.index');
             Route::get('/sales', function () { return Inertia::render('Tenant/Sales/Index'); })->name('tenant.sales.index');
             Route::get('/customers', function () { return Inertia::render('Tenant/Customers/Index'); })->name('tenant.customers.index');

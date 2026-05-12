@@ -6,7 +6,7 @@ namespace App\Modules\Shared\Application\Services;
 
 use App\Modules\Shared\Domain\Models\User;
 use App\Notifications\PlatformAccessNotification;
-use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Modules\Shared\Infrastructure\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\PermissionRegistrar;

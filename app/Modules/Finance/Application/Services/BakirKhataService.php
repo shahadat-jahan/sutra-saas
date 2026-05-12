@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Finance\Application\Services;
 
 use App\Modules\Sales\Domain\Models\Customer;
-use App\Repositories\Interfaces\CustomerRepositoryInterface;
+use App\Modules\Sales\Infrastructure\Repositories\Interfaces\CustomerRepositoryInterface;
 use App\Support\TenantManager;
 use InvalidArgumentException;
 

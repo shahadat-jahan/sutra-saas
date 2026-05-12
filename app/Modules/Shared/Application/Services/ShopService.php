@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Shared\Application\Services;
 
 use App\Modules\Shared\Domain\Models\Shop;
-use App\Repositories\Interfaces\ShopRepositoryInterface;
+use App\Modules\Shared\Infrastructure\Repositories\Interfaces\ShopRepositoryInterface;
 
 final class ShopService
 {

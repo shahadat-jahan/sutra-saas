@@ -34,27 +34,20 @@ Model (Eloquent entity)
 app/ 
 ├── Http/ 
 │   ├── Controllers/ 
-│   │   ├── Admin/ 
-│   │   └── Tenant/ 
 │   ├── Requests/ 
-│   │   ├── Admin/ 
-│   │   ├── Auth/ 
-│   │   └── Tenant/ 
 │   └── Middleware/ 
-├── Services/ # All business logic 
-├── Repositories/ 
-│   ├── Interfaces/ 
-│   └── Eloquent/ 
-├── Models/ 
-├── Enums/ 
-├── Traits/ 
+├── Support/ # Core infrastructure logic 
+├── Enums/   # Global enums 
+├── Traits/  # Global traits 
 ├── Providers/ 
-└── Modules/ 
+└── Modules/ # Everything else lives in modules 
     ├── Finance/ 
     ├── Inventory/ 
     ├── Pos/ 
     ├── Reporting/ 
-    └── Shared/ 
+    ├── Sales/ 
+    ├── Shared/ # Core models (User, Shop, etc.) 
+    └── Discount/ 
 ``` 
 
 ### Module Internal Structure 
@@ -62,12 +55,19 @@ Each module under `app/Modules/` follows this layout:
 ``` 
 app/Modules/Inventory/ 
 ├── Application/ 
+│   └── Services/ 
 ├── Database/ 
+│   └── Migrations/ 
 ├── Domain/ 
+│   ├── Models/ 
+│   └── Enums/ 
 ├── Http/ 
 │   ├── Controllers/ 
 │   └── Requests/ 
 ├── Infrastructure/ 
+│   └── Repositories/ 
+│       ├── Eloquent/ 
+│       └── Interfaces/ 
 ├── Providers/ 
 ├── Resources/ 
 ├── Routes/ 
@@ -89,180 +89,73 @@ app/Modules/Inventory/
 
 ## Key Conventions 
 ### Models 
-```php 
-class Product extends Model 
-{ 
-    use HasFactory, HasUuid, MultiTenant; 
-    protected $fillable = ['uuid', 'shop_id', 'name', 'price', 'status']; 
-    protected $casts = [ 
-        'status' => ActiveStatus::class, 
-    ]; 
-} 
-``` 
+- Models must use `HasUuid` and `MultiTenant` (if scoped).
+- Location: `app/Modules/{Module}/Domain/Models/`
 
 ### Enums 
-- Defined in `app/Enums/` 
-- Always use enums for status fields — never raw strings or integers 
+- Global: `app/Enums/`
+- Module-specific: `app/Modules/{Module}/Domain/Enums/`
 
 ### Traits 
-- `HasUuid` — apply to every model (UUIDs enable offline-sync) 
-- `MultiTenant` — apply to every tenant-scoped model 
+- Global: `app/Traits/`
+- Module-specific: `app/Modules/{Module}/Infrastructure/Traits/`
 
 ### Validation 
-- Always use Form Request classes — never `$request->validate()` inline in controllers 
-
-### Authorization 
-- Use Spatie roles/permissions scoped to `shop_id` team 
+- Always use Form Request classes.
+- Location: `app/Modules/{Module}/Http/Requests/`
 
 ### Dependency Injection 
-- Always inject **interfaces**, never concrete classes: 
-  ```php 
-  public function __construct( 
-      private readonly UserRepositoryInterface $userRepository 
-  ) {} 
-  ``` 
-
---- 
-
-## Code Patterns 
-### Controller (thin — no logic) 
-```php 
-final class ProductController extends Controller 
-{ 
-    public function __construct( 
-        private readonly ProductService $productService 
-    ) {} 
-    public function store(StoreProductRequest $request): RedirectResponse 
-    { 
-        $this->productService->create($request->validated()); 
-        return back()->with('success', 'Product created.'); 
-    } 
-} 
-``` 
-
-### Service (all business logic) 
-```php 
-final class ProductService 
-{ 
-    public function __construct( 
-        private readonly ProductRepositoryInterface $productRepository 
-    ) {} 
-    public function create(array $data): Product 
-    { 
-        $shopId = app(TenantManager::class)->getTenant()->id; 
-        return DB::transaction(function () use ($data, $shopId) { 
-            $data['shop_id'] = $shopId; 
-            return $this->productRepository->create($data); 
-        }); 
-    } 
-} 
-``` 
-
-### Repository Interface 
-```php 
-interface ProductRepositoryInterface 
-{ 
-    public function create(array $data): Product; 
-    public function getByShop(string $shopId): Paginator; 
-} 
-``` 
-
-### Repository Implementation 
-```php 
-final class ProductRepository implements ProductRepositoryInterface 
-{ 
-    public function create(array $data): Product 
-    { 
-        return Product::create($data); 
-    } 
-    public function getByShop(string $shopId): Paginator 
-    { 
-        return Product::where('shop_id', $shopId)->paginate(15); 
-    } 
-} 
-``` 
+- Always inject **interfaces** from the module's repository layer.
 
 --- 
 
 ## Adding a New Feature (Checklist) 
 Follow this order every time — do not skip steps: 
-1. **FormRequest** → `php artisan make:request Tenant/StoreProductRequest` 
-2. **Repository Interface** → `app/Repositories/Interfaces/ProductRepositoryInterface.php` 
-3. **Repository Implementation** → `app/Repositories/Eloquent/ProductRepository.php` 
-4. **Bind in AppServiceProvider** → `$this->app->bind(ProductRepositoryInterface::class, ProductRepository::class)` 
-5. **Service** → `app/Services/ProductService.php` 
-6. **Controller** → `php artisan make:controller Tenant/ProductController` 
-7. **Routes** → Add to module's `Routes/` folder (web.php or api.php) 
-8. **Frontend Page** → `resources/js/Pages/Products/Index.jsx` 
-9. **Tests** → Unit test the Service (mock repo); Feature test the endpoint 
+1. **FormRequest** → `app/Modules/{Module}/Http/Requests/`
+2. **Repository Interface** → `app/Modules/{Module}/Infrastructure/Repositories/Interfaces/`
+3. **Repository Implementation** → `app/Modules/{Module}/Infrastructure/Repositories/Eloquent/`
+4. **Bind in ModuleServiceProvider** → `$this->app->bind(Interface::class, Implementation::class)` 
+5. **Service** → `app/Modules/{Module}/Application/Services/`
+6. **Controller** → `app/Modules/{Module}/Http/Controllers/`
+7. **Routes** → `app/Modules/{Module}/Routes/`
+8. **Frontend Page** → `resources/js/Pages/` 
+9. **Tests** → `app/Modules/{Module}/Tests/`
 
 --- 
 
 ## Database 
-- **PostgreSQL** — do not use MySQL-specific syntax (no backtick identifiers, no `GROUP_CONCAT`) 
-- Use JSONB columns for flexible/dynamic metadata (e.g., product attributes, pharmacy drug info) 
-- Always use UUIDs as primary keys (`HasUuid` trait handles this) 
-
---- 
-
-## Development Workflow 
-```bash 
-composer run setup # Install deps + migrate + build assets (first time) 
-composer run dev # Start Laravel + queue worker + Vite concurrently 
-composer run dev:logs # Start Laravel + queue worker + logs + Vite concurrently 
-composer run test # Run full test suite 
-php artisan test # Same as above 
-``` 
+- **PostgreSQL** — do not use MySQL-specific syntax.
+- Migrations are stored within modules: `app/Modules/{Module}/Database/Migrations/`
 
 --- 
 
 ## File Locations Reference 
 | Type | Location | 
 |------|----------| 
-| Admin Controllers | `app/Http/Controllers/Admin/` 
-| Tenant Controllers | `app/Http/Controllers/Tenant/` 
-| Services | `app/Services/` 
-| Repository Interfaces | `app/Repositories/Interfaces/` 
-| Repository Implementations | `app/Repositories/Eloquent/` 
-| Models | `app/Models/` 
-| FormRequests (Admin) | `app/Http/Requests/Admin/` 
-| FormRequests (Tenant) | `app/Http/Requests/Tenant/` 
-| Enums | `app/Enums/` 
-| Traits | `app/Traits/` 
+| Controllers | `app/Modules/{Module}/Http/Controllers/` 
+| Services | `app/Modules/{Module}/Application/Services/` 
+| Repository Interfaces | `app/Modules/{Module}/Infrastructure/Repositories/Interfaces/` 
+| Repository Implementations | `app/Modules/{Module}/Infrastructure/Repositories/Eloquent/` 
+| Models | `app/Modules/{Module}/Domain/Models/` 
+| FormRequests | `app/Modules/{Module}/Http/Requests/` 
+| Enums | `app/Modules/{Module}/Domain/Enums/` or `app/Enums/`
+| Traits | `app/Modules/{Module}/Infrastructure/Traits/` or `app/Traits/`
 | Frontend Pages | `resources/js/Pages/` 
 | Frontend Components | `resources/js/Components/` 
-| Feature Tests | `tests/Feature/` 
-| Unit Tests | `tests/Unit/` 
+| Feature Tests | `app/Modules/{Module}/Tests/Feature/` 
+| Unit Tests | `app/Modules/{Module}/Tests/Unit/` 
 | Module Routes | `app/Modules/{Module}/Routes/` 
 
 --- 
 
 ## Anti-Patterns — Never Do These 
-```php 
-// ❌ Business logic in controller 
-public function store(Request $request) { 
-    $product = Product::create($request->all()); 
-    $product->update(['stock' => 100]); 
-} 
-``` 
+- **Direct Model Access from Controller**: Always go through a Service.
+- **Cross-Module Model Usage**: Use events or shared interfaces to decouple modules.
+
+--- 
 
 ## PSR-12 Requirements 
-All files must follow PSR-12 strictly: 
-```php 
-<?php 
-declare(strict_types=1); 
-namespace App\Services; 
-final class ProductService 
-{ 
-    public function __construct( 
-        private readonly ProductRepositoryInterface $productRepository 
-    ) {} 
-    public function create(array $data): Product 
-    { 
-        // implementation 
-    } 
-} 
-``` 
+All files must follow PSR-12 strictly.
 
 --- 
 
@@ -282,32 +175,9 @@ final class ProductService
 
 ## Cache Strategy 
 **All caching must use Redis.** 
+**Cache Service**: `App\Modules\Shared\Application\Services\CacheService`.
 
-### Configuration 
-- **Default Cache Store**: `redis` (set in `.env` and `config/cache.php`) 
-- **Redis Connection**: Defined in `config/database.php` and `.env` 
-- **Cache Service**: Centralized `app/Services/CacheService.php` enforces Redis usage. 
-
-### Implementation 
-- **Replace all `Cache::` calls** with `CacheService` methods: 
-  ```php 
-  // Before 
-  Cache::put('key', $value, 60); 
-  // After 
-  $this->cacheService->put('key', $value, 60); 
-  ``` 
-
-### Testing 
-- **Test Redis Usage**: 
-  ```php 
-  // tests/Feature/CacheServiceTest.php 
-  public function test_redis_is_used(): void 
-  { 
-      $cacheService = new CacheService(); 
-      $cacheService->put('test_key', 'value', 60); 
-      $this->assertEquals('value', $cacheService->get('test_key')); 
-  } 
-  ``` 
+--- 
 
 ## Final Notes 
-- **IntelliSense Errors**: Resolved by ensuring proper code formatting and IDE configuration.
+- **Auto-Discovery**: Modules are automatically discovered via `App\Providers\ModuleServiceProvider`.

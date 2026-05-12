@@ -4,6 +4,10 @@ namespace App\Traits;
 
 use Illuminate\Support\Str;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Model
+ * @method static void creating(\Closure $callback)
+ */
 trait HasUuid
 {
     /**

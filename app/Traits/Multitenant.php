@@ -7,6 +7,11 @@ use App\Modules\Shared\Domain\Models\User;
 use App\Support\TenantManager;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Model
+ * @method static void creating(\Closure $callback)
+ * @method static void addGlobalScope(\Illuminate\Database\Eloquent\Scope|\Closure|string $scope, \Illuminate\Database\Eloquent\Scope|\Closure|null $implementation = null)
+ */
 trait MultiTenant
 {
     /** @var User */

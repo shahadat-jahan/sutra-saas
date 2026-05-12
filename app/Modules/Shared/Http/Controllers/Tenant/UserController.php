@@ -30,7 +30,7 @@ class UserController extends Controller
         $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
 
         return Inertia::render('Tenant/Users/Index', [
-            'users' => $this->userService->getUsersByShop($shop->id),
+            'users' => $this->userService->getUsersByShop((string) $shop->id),
             'roles' => Role::query()
                 ->where(fn ($q) => $q->whereNull($teamsKey)->orWhere($teamsKey, $shop->id))
                 ->orderBy('name')
@@ -45,7 +45,7 @@ class UserController extends Controller
     {
         $shop = auth()->user()->shop;
 
-        $this->userService->createUser($shop->id, $request->validated());
+        $this->userService->createUser((string) $shop->id, $request->validated());
 
         return back()->with('success', 'User created successfully.');
     }
@@ -56,7 +56,7 @@ class UserController extends Controller
     public function destroy(User $user): RedirectResponse
     {
         $shop = auth()->user()->shop;
-        $shopId = $shop->id;
+        $shopId = (string) $shop->id;
 
         if (! $this->userService->deleteUser($user, $shopId)) {
             return back()->with('error', 'You cannot delete yourself.');

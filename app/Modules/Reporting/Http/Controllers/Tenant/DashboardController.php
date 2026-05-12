@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Reporting\Http\Controllers\Tenant;
 
-use App\Http\Controllers\Controller;
+use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Reporting\Application\Services\DashboardService;
 use App\Support\TenantManager;
 use Inertia\Inertia;

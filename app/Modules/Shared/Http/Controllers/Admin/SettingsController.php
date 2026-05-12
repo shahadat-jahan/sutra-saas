@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Shared\Http\Requests\Admin\UpdateModulePricingRequest;
 use App\Modules\Shared\Domain\Models\Shop;
 use App\Modules\Shared\Domain\Models\SystemSetting;

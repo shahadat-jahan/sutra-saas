@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Reporting\Application\Services\DashboardService;
 use Inertia\Inertia;
 use Inertia\Response;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Modules\Shared\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use App\Modules\Shared\Http\Controllers\Controller;
 use App\Support\Dashboard;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;

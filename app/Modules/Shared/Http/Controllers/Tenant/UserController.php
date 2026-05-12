@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Tenant;
 
-use App\Http\Controllers\Controller;
+use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Shared\Http\Requests\Tenant\StoreUserRequest;
 use App\Modules\Shared\Http\Requests\Tenant\UpdateUserRequest;
 use App\Modules\Shared\Domain\Models\User;

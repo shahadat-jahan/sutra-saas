@@ -2,7 +2,7 @@
 
 namespace App\Modules\Pos\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Modules\Shared\Http\Controllers\Controller;
 use App\Http\Requests\Pos\StoreSaleRequest;
 use App\Modules\Pos\Application\Services\SaleService;
 use App\Repositories\Interfaces\CustomerRepositoryInterface;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Auth;
+namespace App\Modules\Shared\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\TenantRegisterRequest;
+use App\Modules\Shared\Http\Controllers\Controller;
+use App\Modules\Shared\Http\Requests\Auth\TenantRegisterRequest;
 use App\Modules\Shared\Application\Services\TenantRegistrationService;
 use Inertia\Inertia;
 use Inertia\Response;

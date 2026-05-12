@@ -17,7 +17,9 @@ class RoleController extends Controller
 {
     public function index(): Response
     {
-        $shop = auth()->user()->shop;
+        /** @var \App\Modules\Shared\Domain\Models\User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
         $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
 
         return Inertia::render('Tenant/Roles/Index', [
@@ -38,7 +40,9 @@ class RoleController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $shop = auth()->user()->shop;
+        /** @var \App\Modules\Shared\Domain\Models\User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
@@ -46,7 +50,7 @@ class RoleController extends Controller
             'permissions.*' => ['string'],
         ]);
 
-        app(PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
+        app(PermissionRegistrar::class)->setPermissionsTeamId((string) $shop->id);
 
         $role = Role::create(['name' => $data['name']]);
         $role->syncPermissions($data['permissions'] ?? []);
@@ -56,14 +60,16 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role): RedirectResponse
     {
-        $shop = auth()->user()->shop;
+        /** @var \App\Modules\Shared\Domain\Models\User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
         $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
 
         if (is_null($role->{$teamsKey})) {
             return back()->with('error', 'Global roles cannot be edited.');
         }
 
-        if ((int) $role->{$teamsKey} !== (int) $shop->id) {
+        if ((string) $role->{$teamsKey} !== (string) $shop->id) {
             abort(404);
         }
 
@@ -81,14 +87,16 @@ class RoleController extends Controller
 
     public function destroy(Role $role): RedirectResponse
     {
-        $shop = auth()->user()->shop;
+        /** @var \App\Modules\Shared\Domain\Models\User $user */
+        $user = auth()->user();
+        $shop = $user->shop;
         $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
 
         if (is_null($role->{$teamsKey})) {
             return back()->with('error', 'Global roles cannot be deleted.');
         }
 
-        if ((int) $role->{$teamsKey} !== (int) $shop->id) {
+        if ((string) $role->{$teamsKey} !== (string) $shop->id) {
             abort(404);
         }
 

@@ -82,8 +82,10 @@ app/Modules/Inventory/
 - **Never access `shop_id` directly** — always resolve current tenant via: 
   ```php 
   $tenant = app(TenantManager::class)->getTenant(); 
-  $shopId = $tenant->id; 
+  $shopId = (string) $tenant->id; 
   ``` 
+  
+- **Type Safety**: Always cast `$shop->id` or `$tenant->id` to `(string)` when passing it to services or repositories. Laravel might return the ID as an integer, but the application's service layer expects strings for consistent UUID/ID handling.
 
 --- 
 
@@ -156,7 +158,7 @@ Follow this order every time — do not skip steps:
 
 ## PSR-12 & Code Style
 All files must follow PSR-12 strictly.
-Use `./vendor/bin/pint` to fix code style before committing any code.
+Use `./vendor/bin/pint` to fix code style after any code changes.
 
 --- 
 

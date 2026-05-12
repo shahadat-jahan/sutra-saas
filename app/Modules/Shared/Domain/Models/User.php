@@ -5,8 +5,9 @@ namespace App\Modules\Shared\Domain\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\ActiveStatus;
 use App\Traits\HasUuid;
-use Database\Factories\UserFactory;
+use App\Modules\Shared\Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Modules\Finance\Domain\Models\TransactionLog;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,6 +18,14 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, HasUuid, Notifiable;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory()
+    {
+        return UserFactory::new();
+    }
 
     /**
      * The attributes that are mass assignable.

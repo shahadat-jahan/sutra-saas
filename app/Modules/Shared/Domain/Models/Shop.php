@@ -63,7 +63,7 @@ class Shop extends Model
             return $catalog;
         }
 
-        /** @var array<string, array{name?: string, monthly_price?: int|string>> $override */
+        /** @var array<string, array{name?: string, monthly_price?: int|string}> $override */
         $override = SystemSetting::getValue('module_catalog', []);
 
         if (! is_array($override)) {

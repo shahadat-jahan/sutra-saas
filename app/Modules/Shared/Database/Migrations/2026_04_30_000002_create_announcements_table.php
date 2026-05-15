@@ -21,6 +21,7 @@ return new class extends Migration
             $table->text('body');
             $table->jsonb('metadata')->nullable();
             $table->timestamp('published_at')->nullable()->index();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }

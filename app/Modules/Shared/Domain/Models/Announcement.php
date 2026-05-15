@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Domain\Models;
 
+use App\Enums\ActiveStatus;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +24,7 @@ class Announcement extends Model
         'body',
         'metadata',
         'published_at',
+        'status',
     ];
 
     protected function casts(): array
@@ -30,6 +32,7 @@ class Announcement extends Model
         return [
             'metadata' => 'array',
             'published_at' => 'datetime',
+            'status' => ActiveStatus::class,
         ];
     }
 

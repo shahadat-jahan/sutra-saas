@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Inventory\Domain\Models;
 
+use App\Enums\ActiveStatus;
 use App\Modules\Shared\Domain\Models\Shop;
 use App\Traits\HasDynamicAttributes;
 use App\Traits\HasUuid;
@@ -31,6 +32,7 @@ final class Product extends Model
         'stock_quantity',
         'metadata',
         'attributes',
+        'status'
     ];
 
     protected function casts(): array
@@ -41,6 +43,7 @@ final class Product extends Model
             'stock_quantity' => 'decimal:3',
             'metadata' => 'array',
             'attributes' => 'array',
+            'status' => ActiveStatus::class
         ];
     }
 

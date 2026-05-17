@@ -80,7 +80,14 @@ class ShopController extends Controller
             ]);
 
             app(PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
-            $owner->assignRole('shop-owner');
+
+            $role = Role::firstOrCreate([
+                'name' => 'shop-owner',
+                'team_id' => $shop->id,
+                'guard_name' => 'web'
+            ]);
+
+            $owner->assignRole($role);
 
             $scheme = parse_url((string) config('app.url', 'http://localhost'), PHP_URL_SCHEME) ?: 'http';
             $tenantUrl = sprintf('%s://%s.%s/dashboard', $scheme, $shop->slug, (string) config('app.domain', 'localhost'));

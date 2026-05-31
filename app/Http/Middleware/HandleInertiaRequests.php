@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Enums\BusinessType;
-use App\Models\Announcement;
-use App\Models\Shop;
+use App\Modules\Shared\Domain\Models\Announcement;
+use App\Modules\Shared\Domain\Models\Shop;
 use App\Support\Theme;
 use Illuminate\Http\Request;
 use Inertia\Middleware;

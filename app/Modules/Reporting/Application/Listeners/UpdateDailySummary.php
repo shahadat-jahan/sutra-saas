@@ -2,8 +2,8 @@
 
 namespace App\Modules\Reporting\Application\Listeners;
 
-use App\Models\DailySummary;
 use App\Modules\Pos\Domain\Events\SaleCompleted;
+use App\Modules\Reporting\Domain\Models\DailySummary;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\DB;

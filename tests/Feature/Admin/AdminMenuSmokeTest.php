@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Admin;
 
-use App\Models\User;
+use App\Modules\Shared\Domain\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Spatie\Permission\Models\Role;

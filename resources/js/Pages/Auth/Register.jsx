@@ -13,7 +13,7 @@ export default function Register() {
     const moduleOptions = Object.entries(module_catalog || {}).map(([key, value]) => ({
         key,
         name: value.name,
-        monthly_price: Number(value.monthly_price || 0),
+        monthly_price: Number(value.monthly_price_bdt || 0),
     }));
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -23,7 +23,7 @@ export default function Register() {
         password_confirmation: '',
         shop_name: '',
         business_type: 1,
-        enabled_modules: ['pos'],
+        enabled_modules: ['inventory'],
     });
 
     const monthlyPrice = data.enabled_modules.reduce((sum, moduleKey) => {
@@ -32,7 +32,7 @@ export default function Register() {
     }, 0);
 
     const toggleModule = (moduleKey) => {
-        if (moduleKey === 'pos') {
+        if (moduleKey === 'inventory') {
             return;
         }
 
@@ -58,7 +58,7 @@ export default function Register() {
             <div className="mb-8 text-center">
                 <h1 className={`text-3xl font-black mb-2 transition-colors ${isDark ? 'text-white' : 'text-slate-900'}`}>Create Your Shop</h1>
                 <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} transition-colors`}>
-                    Pick only the modules you need. POS is always included.
+                    Pick only the modules you need. Inventory is always included.
                 </p>
             </div>
 
@@ -113,7 +113,7 @@ export default function Register() {
                     <div className="space-y-2">
                         {moduleOptions.map((module) => {
                             const checked = data.enabled_modules.includes(module.key);
-                            const isPos = module.key === 'pos';
+                            const isInventory = module.key === 'inventory';
 
                             return (
                                 <label
@@ -128,12 +128,12 @@ export default function Register() {
                                         <input
                                             type="checkbox"
                                             checked={checked}
-                                            disabled={isPos}
+                                            disabled={isInventory}
                                             onChange={() => toggleModule(module.key)}
                                         />
                                         <span className={isDark ? 'text-slate-200' : 'text-slate-800'}>
                                             {module.name}
-                                            {isPos ? ' (Mandatory)' : ''}
+                                            {isInventory ? ' (Mandatory)' : ''}
                                         </span>
                                     </div>
                                     <span className={`text-xs font-semibold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>

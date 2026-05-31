@@ -1,0 +1,53 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Shared\Database\Seeders;
+
+use App\Enums\BusinessType;
+use App\Modules\Shared\Domain\Models\Shop;
+use App\Modules\Shared\Domain\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\PermissionRegistrar;
+
+class DemoShopSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        // 1. Create a Demo Shop
+        $shop = Shop::updateOrCreate(
+            ['slug' => 'demo-shop'],
+            [
+                'name' => 'Demo Retail Shop',
+                'business_type' => BusinessType::RETAIL,
+                'enabled_modules' => ['inventory'],
+                'is_free' => true,
+                'status' => 1,
+            ]
+        );
+
+        // 2. Create Shop Owner
+        $owner = User::updateOrCreate(
+            ['email' => 'owner@demo.com'],
+            [
+                'name' => 'Demo Owner',
+                'password' => Hash::make('password'),
+                'shop_id' => $shop->id,
+                'email_verified_at' => now(),
+                'status' => 1,
+            ]
+        );
+
+        // Set Team Context for Spatie Permissions
+        app(PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
+
+        // Assign Shop Owner Role for this specific shop
+        if (! $owner->hasRole('shop-owner')) {
+            $owner->assignRole('shop-owner');
+        }
+    }
+}

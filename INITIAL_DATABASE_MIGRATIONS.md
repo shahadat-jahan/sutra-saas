@@ -2,58 +2,36 @@
 
 This file contains the core database structure for our project. Every table uses **UUID** for an offline-ready foundation and follows a **Multi-tenant** logic where every record is tied to a specific shop.
 
----
-
-### 1. Shops Table
-Basic shop information, subdomain configuration, and module toggles.
-- **Table Name:** `shops`
-- **Primary:** `id` (Auto-increment) + `uuid` (Unique)
-- **Key Fields:** `slug` (for subdomains), `enabled_modules` (JSONB for toggling Pharma/Bakir Khata).
-
-### 2. Customers Table (Bakir Khata / CRM)
-Used for tracking individual customer credit, payment history, and NID info.
-- **Table Name:** `customers`
-- **Key Fields:** `credit_limit`, `current_balance` (Negative for debt/baki).
-
-### 3. Products Table (Inventory & Pharma)
-Core product information and inventory balance. Supports both general retail and pharmacy items.
-- **Table Name:** `products`
-- **Key Fields:** `generic_name`, `dgda_code`, `sku`, `purchase_price`, `sale_price`, `stock_quantity`.
-- **Flexible Data:** `metadata` (JSONB) is used for industry-specific data.
-
-### 4. Inventory Logs Table (Stock Time Machine)
-For tracking every product movement (In/Out/Adjustment).
-- **Table Name:** `inventory_logs`
-- **Fields:** `quantity`, `type` (in/out/adj/return).
-
-### 5. Transaction Logs Table (Finance Time Machine)
-For tracking every financial transaction (Cash flow and Ledger entries).
-- **Table Name:** `transaction_logs`
-- **Fields:** `amount`, `type` (income/expense), `reference_id` (Link to Sale/Purchase).
-
-### 6. Reminders Table (Automation)
-Schedules and logs automated notifications (WhatsApp/SMS) for credit recovery.
-- **Table Name:** `reminders`
-- **Fields:** `sale_id`, `type` (whatsapp/sms), `status` (pending/sent), `scheduled_at`.
-
-### 7. Daily Report Summaries
-Speed up report generation by pre-calculating daily stats.
-- **Table Name:** `daily_summaries`
-- **Logic:** `shop_id` + `report_date` form a unique index.
+Migrations are now decentralized and live within their respective modules.
 
 ---
 
-## 💻 Laravel Migration Code Snippets
+## 1. Shared Module (`app/Modules/Shared/Database/Migrations`)
+Core tables required for system operation.
+*   **Shops**: `shops` (Tenancy root)
+*   **Users**: `users` (Authentication)
+*   **Plans**: `plans` (SaaS tiers)
+*   **Price Logs**: `plan_price_logs`, `module_price_logs` (Audit trails)
+*   **Announcements**: `announcements` (System broadcasts)
 
-#### ✅ Shops Schema
-```php
-Schema::create('shops', function (Blueprint $table) {
-    $table->id();
-    $table->uuid('uuid')->unique();
-    $table->string('name');
-    $table->string('slug')->unique(); // For subdomain routing
-    $table->string('business_type')->default('retail'); 
-    $table->jsonb('enabled_modules')->nullable(); // e.g., {"pharma": true, "bakir_khata": true}
-    $table->string('status')->default('active');
-    $table->timestamps();
-});
+## 2. Inventory Module (`app/Modules/Inventory/Database/Migrations`)
+*   **Products**: `products` (Medicine & Retail items)
+*   **Inventory Logs**: `inventory_logs` (Stock movement history)
+
+## 3. Sales Module (`app/Modules/Sales/Database/Migrations`)
+*   **Customers**: `customers` (Bakir Khata / CRM)
+*   **Sales**: `sales` (POS orders)
+
+## 4. Finance Module (`app/Modules/Finance/Database/Migrations`)
+*   **Transaction Logs**: `transaction_logs` (Cash flow ledger)
+
+## 5. Reporting Module (`app/Modules/Reporting/Database/Migrations`)
+*   **Daily Summaries**: `daily_summaries` (Pre-calculated analytics)
+
+---
+
+## 💻 Migration Standards
+*   **UUID**: Always include `$table->uuid('uuid')->unique();`.
+*   **Tenancy**: Always include `$table->foreignId('shop_id')->constrained()->onDelete('cascade');` for tenant-scoped data.
+*   **Soft Deletes**: Use when data persistence is critical for auditing.
+*   **JSONB**: Use for industry-specific dynamic data (e.g., pharmacy drug specs in products).

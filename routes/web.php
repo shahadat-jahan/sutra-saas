@@ -2,18 +2,20 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\AnnouncementController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\PlanController;
-use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Admin\ShopController;
-use App\Http\Controllers\Admin\ShopRoleController;
-use App\Http\Controllers\Admin\ShopUserController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Tenant\RoleController as TenantRoleController;
-use App\Http\Controllers\Tenant\UserController as TenantUserController;
-use App\Http\Controllers\ThemeController;
+use App\Modules\Pos\Http\Controllers\PosController;
+use App\Modules\Shared\Domain\Models\Plan;
+use App\Modules\Shared\Http\Controllers\Admin\AnnouncementController;
+use App\Modules\Shared\Http\Controllers\Admin\DashboardController;
+use App\Modules\Shared\Http\Controllers\Admin\PlanController;
+use App\Modules\Shared\Http\Controllers\Admin\SettingsController;
+use App\Modules\Shared\Http\Controllers\Admin\ShopController;
+use App\Modules\Shared\Http\Controllers\Admin\ShopRoleController;
+use App\Modules\Shared\Http\Controllers\Admin\ShopUserController;
+use App\Modules\Shared\Http\Controllers\Admin\UserController;
+use App\Modules\Shared\Http\Controllers\ProfileController;
+use App\Modules\Shared\Http\Controllers\Tenant\RoleController as TenantRoleController;
+use App\Modules\Shared\Http\Controllers\Tenant\UserController as TenantUserController;
+use App\Modules\Shared\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -44,7 +46,7 @@ Route::post('/theme/set', [ThemeController::class, 'set'])->name('theme.set');
 Route::domain(config('app.domain', 'localhost'))->group(function () {
     Route::get('/', function () {
         return Inertia::render('Welcome', [
-            'plans' => \App\Models\Plan::where('is_active', true)->get(),
+            'plans' => Plan::where('is_active', true)->get(),
         ]);
     })->name('welcome');
 
@@ -129,9 +131,23 @@ Route::domain('{subdomain}.'.config('app.domain', 'localhost'))
         });
 
         Route::middleware(['auth', 'verified'])->group(function () {
-            Route::get('/dashboard', function () {
-                return Inertia::render('Dashboard');
-            })->name('dashboard');
+            Route::get('/dashboard', [App\Modules\Reporting\Http\Controllers\Tenant\DashboardController::class, 'index'])->name('dashboard');
+
+            // Module Placeholder Routes
+            Route::get('/pos', [PosController::class, 'index'])->name('tenant.pos.index');
+            Route::post('/pos', [PosController::class, 'store'])->name('tenant.pos.store');
+            Route::get('/inventory', function () {
+                return Inertia::render('Tenant/Inventory/Index');
+            })->name('tenant.inventory.index');
+            Route::get('/sales', function () {
+                return Inertia::render('Tenant/Sales/Index');
+            })->name('tenant.sales.index');
+            Route::get('/customers', function () {
+                return Inertia::render('Tenant/Customers/Index');
+            })->name('tenant.customers.index');
+            Route::get('/reports', function () {
+                return Inertia::render('Tenant/Reports/Index');
+            })->name('tenant.reports.index');
 
             // User Management for Shop Owners
             Route::prefix('settings')

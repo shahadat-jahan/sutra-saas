@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use App\Models\Shop;
-use App\Models\User;
+use App\Modules\Shared\Domain\Models\Shop;
+use App\Modules\Shared\Domain\Models\User;
 use App\Support\Dashboard;
 use Tests\TestCase;
 

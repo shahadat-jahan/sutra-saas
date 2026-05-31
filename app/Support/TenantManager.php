@@ -2,7 +2,7 @@
 
 namespace App\Support;
 
-use App\Models\Shop;
+use App\Modules\Shared\Domain\Models\Shop;
 
 class TenantManager
 {

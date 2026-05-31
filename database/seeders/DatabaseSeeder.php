@@ -2,6 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Modules\Shared\Database\Seeders\AdminSeeder;
+use App\Modules\Shared\Database\Seeders\AnnouncementSeeder;
+use App\Modules\Shared\Database\Seeders\DemoShopSeeder;
+use App\Modules\Shared\Database\Seeders\PlanSeeder;
+use App\Modules\Shared\Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

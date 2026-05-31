@@ -2,7 +2,7 @@
 
 namespace App\Modules\Finance\Application\Listeners;
 
-use App\Models\TransactionLog;
+use App\Modules\Finance\Domain\Models\TransactionLog;
 use App\Modules\Pos\Domain\Events\SaleCompleted;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;

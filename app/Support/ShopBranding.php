@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support;
 
-use App\Models\Shop;
+use App\Modules\Shared\Domain\Models\Shop;
 
 /**
  * Shop Branding Helper

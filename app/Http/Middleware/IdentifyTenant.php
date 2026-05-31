@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Shop;
+use App\Modules\Shared\Domain\Models\Shop;
 use App\Support\TenantManager;
 use Closure;
 use Illuminate\Http\Request;

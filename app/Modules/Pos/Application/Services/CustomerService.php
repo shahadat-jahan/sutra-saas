@@ -3,8 +3,8 @@
 namespace App\Modules\Pos\Application\Services;
 
 use App\Enums\ActiveStatus;
-use App\Models\Customer;
-use App\Repositories\Interfaces\CustomerRepositoryInterface;
+use App\Modules\Sales\Domain\Models\Customer;
+use App\Modules\Sales\Infrastructure\Repositories\Interfaces\CustomerRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 
 class CustomerService

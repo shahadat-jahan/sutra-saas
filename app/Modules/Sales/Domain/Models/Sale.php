@@ -7,6 +7,7 @@ namespace App\Modules\Sales\Domain\Models;
 use App\Enums\PaymentMethod;
 use App\Enums\SaleStatus;
 use App\Events\SaleProcessed;
+use App\Modules\Sales\Domain\Events\SaleCreated;
 use App\Modules\Shared\Domain\Models\Shop;
 use App\Modules\Shared\Domain\Models\User;
 use App\Traits\HasUuid;
@@ -42,6 +43,7 @@ final class Sale extends Model
      * @var array<string, string>
      */
     protected $dispatchesEvents = [
+        'created' => SaleCreated::class,
         'saved' => SaleProcessed::class,
     ];
 

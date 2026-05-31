@@ -1,29 +1,47 @@
-# Sutra - Modular Multi-tenant SaaS (Work on going)
+# Sutra - Advanced B2B Distribution & Dealer Management SaaS
 
-Sutra is a modern, scalable, and modular SaaS platform designed for Bangladeshi retail and pharmacy businesses. Built with a **Modular Monolith** architecture, it supports multi-tenancy via subdomains and provides a seamless POS experience.
+Sutra is an enterprise-grade, scalable, and modular SaaS platform engineered specifically for large-scale wholesale distributors, manufacturers, and multi-tier dealer networks. Built on a robust **Modular Monolith** architecture, Sutra provides complete visibility and control over complex distribution lifecycles—from high-volume order processing to automated financial settlements.
+
+## 🚀 Key Features
+
+- **Multi-tenant Distribution:** True subdomain-based isolation ensures data security while allowing distributors to manage isolated regions, warehouses, or subsidiary networks efficiently.
+- **Slab-Based Discount Engine:** Advanced algorithmic pricing tiers driven by order volume. Configurable across product categories, global territories, and specific dealer classifications (e.g., Bronze, Silver, Gold).
+- **Automated Dealer Commissions:** A comprehensive backend settlement engine automatically tracks, calculates, and generates payable commission statements based on completed order ledgers and configurable period rules.
+- **Ledger-First Financial Tracking:** A highly auditable double-entry accounting foundation. Every transaction—from credit extension to commission payouts—is logged immutably, ensuring perfect financial reconciliation.
+- **Event-Driven Fulfillment Architecture:** Stock allocation, discount application, and ledger adjustments are processed asynchronously via our high-throughput Redis-backed Event Engine.
+- **Offline-Ready Foundations:** Built using universally unique identifiers (UUIDs) to facilitate seamless data synchronization for field agents operating in low-connectivity areas.
 
 ## 🛠 Tech Stack
 
 - **Backend:** PHP 8.5 (Target) / Laravel 13
 - **Frontend:** React via Inertia.js
-- **Database:** PostgreSQL (with JSONB support)
+- **Database:** PostgreSQL (with JSONB support for dynamic attributes)
 - **UI:** Tailwind CSS + Shadcn UI
-- **Architecture:** Modular Multi-tenant (Subdomain-based)
+- **Queue & Cache:** Redis for async background jobs and ledger rate-limiting
+- **Architecture:** Modular Monolith with Event-Driven Communication
 
-## 🚀 Core Features
+## 🐳 Docker Setup (Laravel Sail)
 
-- **Event-Driven Inventory:** Real-time stock tracking via background jobs.
-- **Dynamic Module Control:** Enable/disable features (POS, Pharmacy, E-commerce) per shop.
-- **Financial Tracking:** Full transaction logging for credit/debit management.
-- **Subdomain Routing:** Each tenant gets a unique URL (e.g., `shop-name.sutra.com`).
-- **Automated "Bakir Khata" (WhatsApp/SMS):** Built-in credit management with automated payment reminders via WhatsApp and SMS for local customers.
-- **DGDA-Integrated Pharma Sync:** Pre-loaded medicine database from DGDA for pharmacy tenants, including generic names and drug interaction warnings.
-- **Offline-Ready Foundations:** Built using UUIDs for seamless data synchronization even when the internet is unstable.
-- **Offline-Ready Foundations:** Built using UUIDs for seamless data synchronization.
+To run the application locally using Docker and Laravel Sail:
+
+```bash
+# Install PHP dependencies
+composer install
+
+# Start the Docker containers
+./vendor/bin/sail up -d
+
+# Run database migrations
+./vendor/bin/sail artisan migrate
+
+# Install and build frontend assets
+./vendor/bin/sail npm install
+./vendor/bin/sail npm run dev
+```
 
 ## 📁 Architecture Overview
 
-The project follows a modular structure where each domain (Inventory, Sales, Finance) is isolated to ensure long-term maintainability.
+The project follows a highly decoupled modular structure where each business domain (Dealer, Sales, Finance, Inventory, Discount) is isolated to ensure long-term maintainability, strictly enforcing the Service-Repository pattern.
 
 ## 📚 Technical Documentation
 
@@ -31,7 +49,7 @@ Detailed architectural diagrams and workflows can be found here:
 
 - [System Architecture Overview](./docs/architecture.md)
 - [Multi-tenancy & Request Flow](./docs/tenancy_flow.md)
-- [Event-driven POS Engine](./docs/event_engine.md)
+- [Event-driven Distribution Engine](./docs/event_engine.md)
 - [Database Entity Relationships](./docs/database_erd.md)
 - [Super Admin Workflow](./docs/admin_control.md)
 

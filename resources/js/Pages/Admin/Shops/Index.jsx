@@ -5,7 +5,7 @@ import InputLabel from '@/Components/InputLabel';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
-import { Search, ExternalLink, CheckCircle2, XCircle, Store, Plus, Settings2 } from 'lucide-react';
+import { Search, ExternalLink, CheckCircle2, XCircle, Store, Plus, Settings2, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 export default function Index({ shops, module_catalog }) {
@@ -13,12 +13,13 @@ export default function Index({ shops, module_catalog }) {
     const [query, setQuery] = useState('');
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [editingShop, setEditingShop] = useState(null);
+    const [confirmingShopDeletion, setConfirmingShopDeletion] = useState(null); // New state for deletion
 
-    const moduleOptions = Object.entries(module_catalog || {}).map(([key, value]) => ({
+    const moduleOptions = useMemo(() => Object.entries(module_catalog || {}).map(([key, value]) => ({
         key,
         name: value.name,
         monthly_price: Number(value.monthly_price_bdt || 0),
-    }));
+    })), [module_catalog]);
 
     const createForm = useForm({
         shop_name: '',
@@ -104,6 +105,27 @@ export default function Index({ shops, module_catalog }) {
         });
     };
 
+    // New functions for deletion
+    const confirmDeleteShop = (shop) => {
+        setConfirmingShopDeletion(shop);
+    };
+
+    const deleteShop = () => {
+        if (confirmingShopDeletion) {
+            router.delete(route('admin.shops.destroy', confirmingShopDeletion.uuid), {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setConfirmingShopDeletion(null);
+                },
+                onError: (errors) => {
+                    console.error("Error deleting shop:", errors);
+                    setConfirmingShopDeletion(null); // Close modal even on error
+                    // Optionally, display a toast or alert for the error
+                }
+            });
+        }
+    };
+
     return (
         <AdminLayout header={<h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">Shops Management</h2>}>
             <Head title="Manage Shops" />
@@ -141,101 +163,109 @@ export default function Index({ shops, module_catalog }) {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-white/5 transition-colors">
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Shop Name</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Modules</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Monthly Bill</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
-                            </tr>
+                        <tr className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-white/5 transition-colors">
+                            <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Shop Name</th>
+                            <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Modules</th>
+                            <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Monthly Bill</th>
+                            <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Actions</th>
+                        </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-white/5 transition-colors">
-                            {filteredShops.length > 0 ? filteredShops.map((shop) => (
-                                <tr key={shop.id} className="hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors group">
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 transition-colors">
-                                                <Store className="w-5 h-5" />
-                                            </div>
-                                            <div>
-                                                <span className="font-bold text-slate-900 dark:text-slate-200 block transition-colors">{shop.name}</span>
-                                                <a
-                                                    href={getTenantUrl(shop)}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="inline-flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
-                                                >
-                                                    {shop.slug}.{appDomain || window.location.hostname}
-                                                    <ExternalLink className="w-3 h-3" />
-                                                </a>
-                                            </div>
+                        {filteredShops.length > 0 ? filteredShops.map((shop) => (
+                            <tr key={shop.id} className="hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors group">
+                                <td className="px-6 py-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 transition-colors">
+                                            <Store className="w-5 h-5" />
                                         </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex flex-wrap gap-2">
-                                            {(shop.enabled_modules || []).map((moduleKey) => (
-                                                <span key={moduleKey} className="px-2.5 py-1 text-xs rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300">
+                                        <div>
+                                            <span className="font-bold text-slate-900 dark:text-slate-200 block transition-colors">{shop.name}</span>
+                                            <a
+                                                href={getTenantUrl(shop)}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="inline-flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+                                            >
+                                                {shop.slug}.{appDomain || window.location.hostname}
+                                                <ExternalLink className="w-3 h-3" />
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4">
+                                    <div className="flex flex-wrap gap-2">
+                                        {(shop.enabled_modules || []).map((moduleKey) => (
+                                            <span key={moduleKey} className="px-2.5 py-1 text-xs rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300">
                                                     {(module_catalog?.[moduleKey]?.name || moduleKey)}
                                                 </span>
-                                            ))}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {shop.is_free ? (
-                                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800">
+                                        ))}
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4">
+                                    {shop.is_free ? (
+                                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800">
                                                 Free Access
                                             </span>
-                                        ) : (
-                                            <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                                    ) : (
+                                        <span className="text-sm font-bold text-slate-700 dark:text-slate-300">
                                                 BDT {Number(shop.monthly_price || 0).toLocaleString()}/month
                                             </span>
+                                    )}
+                                </td>
+                                <td className="px-6 py-4">
+                                    <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-colors ${
+                                        shop.status === 1
+                                            ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800'
+                                            : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800'
+                                    }`}>
+                                        {shop.status === 1 ? (
+                                            <><CheckCircle2 className="w-3.5 h-3.5" /> Active</>
+                                        ) : (
+                                            <><XCircle className="w-3.5 h-3.5" /> Suspended</>
                                         )}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-colors ${
-                                            shop.status === 1
-                                                ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800'
-                                                : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-100 dark:border-red-800'
-                                        }`}>
-                                            {shop.status === 1 ? (
-                                                <><CheckCircle2 className="w-3.5 h-3.5" /> Active</>
-                                            ) : (
-                                                <><XCircle className="w-3.5 h-3.5" /> Suspended</>
-                                            )}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex items-center justify-end gap-2">
-                                            <button
-                                                onClick={() => openEditModules(shop)}
-                                                className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-900/40 dark:text-indigo-300"
-                                            >
-                                                <Settings2 className="w-3.5 h-3.5" />
-                                                Modules
-                                            </button>
-                                            <button
-                                                onClick={() => handleStatusToggle(shop)}
-                                                className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${
-                                                    shop.status === 1
-                                                        ? 'bg-red-50 dark:bg-red-900/40 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/60'
-                                                        : 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/60'
-                                                }`}
-                                            >
-                                                {shop.status === 1 ? 'Suspend' : 'Activate'}
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )) : (
-                                <tr>
-                                    <td colSpan="5" className="px-6 py-12 text-center">
-                                        <div className="flex flex-col items-center">
-                                            <Store className="w-12 h-12 text-slate-200 dark:text-slate-800 mb-2 transition-colors" />
-                                            <p className="text-slate-500 dark:text-slate-400 font-medium transition-colors">No shops found</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4 text-right">
+                                    <div className="flex items-center justify-end gap-2">
+                                        <button
+                                            onClick={() => openEditModules(shop)}
+                                            className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-900/40 dark:text-indigo-300"
+                                        >
+                                            <Settings2 className="w-3.5 h-3.5" />
+                                            Modules
+                                        </button>
+                                        <button
+                                            onClick={() => handleStatusToggle(shop)}
+                                            className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors ${
+                                                shop.status === 1
+                                                    ? 'bg-red-50 dark:bg-red-900/40 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/60'
+                                                    : 'bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/60'
+                                            }`}
+                                        >
+                                            {shop.status === 1 ? 'Suspend' : 'Activate'}
+                                        </button>
+                                        {/* New Delete Button */}
+                                        <button
+                                            onClick={() => confirmDeleteShop(shop)}
+                                            className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/40 dark:text-red-300"
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        )) : (
+                            <tr>
+                                <td colSpan="5" className="px-6 py-12 text-center">
+                                    <div className="flex flex-col items-center">
+                                        <Store className="w-12 h-12 text-slate-200 dark:text-slate-800 mb-2 transition-colors" />
+                                        <p className="text-slate-500 dark:text-slate-400 font-medium transition-colors">No shops found</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
                         </tbody>
                     </table>
                 </div>
@@ -335,6 +365,28 @@ export default function Index({ shops, module_catalog }) {
                         <PrimaryButton disabled={updateForm.processing}>Save Changes</PrimaryButton>
                     </div>
                 </form>
+            </Modal>
+
+            {/* Delete Confirmation Modal */}
+            <Modal show={Boolean(confirmingShopDeletion)} onClose={() => setConfirmingShopDeletion(null)} maxWidth="md">
+                <div className="p-6">
+                    <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        Are you sure you want to delete this shop?
+                    </h2>
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                        This action cannot be undone. All data associated with "{confirmingShopDeletion?.name}" will be permanently deleted.
+                    </p>
+                    <div className="mt-6 flex justify-between">
+                        <SecondaryButton onClick={() => setConfirmingShopDeletion(null)}>Cancel</SecondaryButton>
+                        <PrimaryButton
+                            onClick={deleteShop}
+                            className="ms-3 bg-red-600 hover:bg-red-700 active:bg-red-800 focus:ring-red-500"
+                            disabled={router.processing}
+                        >
+                            Delete Shop
+                        </PrimaryButton>
+                    </div>
+                </div>
             </Modal>
         </AdminLayout>
     );

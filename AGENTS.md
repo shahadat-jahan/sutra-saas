@@ -87,6 +87,20 @@ app/Modules/Inventory/
   
 - **Type Safety**: Always cast `$shop->id` or `$tenant->id` to `(string)` when passing it to services or repositories. Laravel might return the ID as an integer, but the application's service layer expects strings for consistent UUID/ID handling.
 
+Note (current codebase): `TenantManager` exposes both `getTenant()` and `getTenantId()` helpers but returns a nullable numeric ID in places. Repository interfaces in the modules (for example `app/Modules/Inventory/Infrastructure/Repositories/Interfaces/ProductRepositoryInterface.php`) expect the shop identifier as a `string` (e.g. `getByShop(string $shopId)`). To avoid type mismatches always cast the resolved tenant id to string before calling services/repositories. Example safe pattern:
+
+```php
+$tenantManager = app(App\Support\TenantManager::class);
+$shopId = (string) ($tenantManager->getTenant()?->id ?? $tenantManager->getTenantId());
+// pass $shopId to services/repositories that type-hint string
+```
+
+Key tenant-related files to reference when working across layers:
+- `app/Support/TenantManager.php` (tenant resolution singleton)
+- `app/Traits/MultiTenant.php` (model trait that applies the `ShopScope` and auto-fills `shop_id`)
+- `app/Support/Scopes/ShopScope.php` (global scope used for tenant scoping)
+- `app/Http/Middleware/IdentifyTenant.php` (middleware that resolves the tenant at request time)
+
 --- 
 
 ## Key Conventions 
@@ -134,19 +148,19 @@ Follow this order every time — do not skip steps:
 ## File Locations Reference 
 | Type | Location | 
 |------|----------| 
-| Controllers | `app/Modules/{Module}/Http/Controllers/` 
-| Services | `app/Modules/{Module}/Application/Services/` 
-| Repository Interfaces | `app/Modules/{Module}/Infrastructure/Repositories/Interfaces/` 
-| Repository Implementations | `app/Modules/{Module}/Infrastructure/Repositories/Eloquent/` 
-| Models | `app/Modules/{Module}/Domain/Models/` 
-| FormRequests | `app/Modules/{Module}/Http/Requests/` 
-| Enums | `app/Modules/{Module}/Domain/Enums/` or `app/Enums/`
-| Traits | `app/Modules/{Module}/Infrastructure/Traits/` or `app/Traits/`
-| Frontend Pages | `resources/js/Pages/` 
-| Frontend Components | `resources/js/Components/` 
-| Feature Tests | `app/Modules/{Module}/Tests/Feature/` 
-| Unit Tests | `app/Modules/{Module}/Tests/Unit/` 
-| Module Routes | `app/Modules/{Module}/Routes/` 
+| Controllers | `app/Modules/{Module}/Http/Controllers/` | 
+| Services | `app/Modules/{Module}/Application/Services/` | 
+| Repository Interfaces | `app/Modules/{Module}/Infrastructure/Repositories/Interfaces/` | 
+| Repository Implementations | `app/Modules/{Module}/Infrastructure/Repositories/Eloquent/` | 
+| Models | `app/Modules/{Module}/Domain/Models/` | 
+| FormRequests | `app/Modules/{Module}/Http/Requests/` | 
+| Enums | `app/Modules/{Module}/Domain/Enums/` or `app/Enums/` | 
+| Traits | `app/Modules/{Module}/Infrastructure/Traits/` or `app/Traits/` | 
+| Frontend Pages | `resources/js/Pages/` | 
+| Frontend Components | `resources/js/Components/` | 
+| Feature Tests | `app/Modules/{Module}/Tests/Feature/` | 
+| Unit Tests | `app/Modules/{Module}/Tests/Unit/` | 
+| Module Routes | `app/Modules/{Module}/Routes/` | 
 
 --- 
 
@@ -162,17 +176,43 @@ Use `./vendor/bin/pint` to fix code style after any code changes.
 
 --- 
 
+## Local development & scripts (quick reference)
+When working locally prefer the provided composer/npm scripts or Sail (Docker). Examples taken from `composer.json` and `README.md`:
+
+- Install + bootstrap (recommended for CI/local bootstrap):
+
+```bash
+composer run setup
+```
+
+- Run the full dev setup (server, queue listener, vite) locally (concurrently):
+
+```bash
+composer run dev
+# or with Sail (Docker): ./vendor/bin/sail up -d && ./vendor/bin/sail npm run dev
+```
+
+- Run frontend only (Vite + React/Inertia):
+
+```bash
+npm run dev
+```
+
+Notes:
+- Frontend uses Vite + React via `@inertiajs/react`. Ziggy helpers are available in React pages (`route()` via Ziggy).
+- Use `./vendor/bin/sail` when using the project's Docker setup (see `README.md`).
+
 ## Reference Documents 
 | Document | Purpose | 
 |----------|---------| 
-| `ARCHITECTURE.md` | Full layer architecture with examples 
-| `MASTER_CONTEXT.md` | Project-wide business context 
-| `QUICK_REFERENCE.md` | Common commands and patterns 
-| `RELATIONSHIPS.md` | Model relationships and ERD 
-| `THEME_BRANDING_GUIDE.md` | UI colors, fonts, Tailwind tokens 
-| `INITIAL_DATABASE_MIGRATIONS.md` | DB schema baseline 
-| `docs/tenancy_flow.md` | Multi-tenancy request flow detail 
-| `docs/event_engine.md` | Event-driven POS engine 
+| `ARCHITECTURE.md` | Full layer architecture with examples | 
+| `MASTER_CONTEXT.md` | Project-wide business context | 
+| `QUICK_REFERENCE.md` | Common commands and patterns | 
+| `RELATIONSHIPS.md` | Model relationships and ERD | 
+| `THEME_BRANDING_GUIDE.md` | UI colors, fonts, Tailwind tokens | 
+| `INITIAL_DATABASE_MIGRATIONS.md` | DB schema baseline | 
+| `docs/tenancy_flow.md` | Multi-tenancy request flow detail | 
+| `docs/event_engine.md` | Event-driven POS engine | 
 
 --- 
 

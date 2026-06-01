@@ -291,7 +291,7 @@ export default function Index({ shops, module_catalog }) {
                         <InputError message={createForm.errors.enabled_modules} className="mt-2" />
                     </div>
 
-                    <label className="mt-4 inline-flex items-center gap-2 text-sm">
+                    <label className="mt-4 inline-flex items-center gap-2 text-sm dark:text-slate-100">
                         <input type="checkbox" checked={createForm.data.is_free} onChange={(e) => createForm.setData('is_free', e.target.checked)} />
                         Allow Free Access (no monthly billing)
                     </label>
@@ -325,7 +325,7 @@ export default function Index({ shops, module_catalog }) {
                     </div>
                     <InputError message={updateForm.errors.enabled_modules} className="mt-2" />
 
-                    <label className="mt-4 inline-flex items-center gap-2 text-sm">
+                    <label className="mt-4 inline-flex items-center gap-2 text-sm dark:text-slate-100">
                         <input type="checkbox" checked={updateForm.data.is_free} onChange={(e) => updateForm.setData('is_free', e.target.checked)} />
                         Allow Free Access
                     </label>

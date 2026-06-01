@@ -10,4 +10,23 @@ export default defineConfig({
         }),
         react(),
     ],
+    build: {
+        chunkSizeWarningLimit: 1024,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor': [
+                        'react',
+                        'react-dom',
+                        '@inertiajs/react',
+                    ],
+                    'ui-components': [
+                        '@headlessui/react',
+                        'lucide-react',
+                    ],
+                    'recharts': ['recharts'],
+                },
+            },
+        },
+    },
 });

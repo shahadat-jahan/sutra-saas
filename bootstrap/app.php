@@ -36,6 +36,16 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
         ]);
+
+        $middleware->redirectUsersTo(function (\Illuminate\Http\Request $request) {
+            $user = \Illuminate\Support\Facades\Auth::user();
+            
+            if ($user && $user->shop) {
+                return route('dashboard', ['subdomain' => $user->shop->slug]);
+            }
+            
+            return '/admin/dashboard';
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

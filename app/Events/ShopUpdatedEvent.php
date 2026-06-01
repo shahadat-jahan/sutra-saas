@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Shop;
+use App\Modules\Shared\Domain\Models\Shop;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

@@ -60,7 +60,7 @@ class ShopUserController extends Controller
             'shop_id' => $shop->id,
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make((string) $password),
+            'password' => $password,
             'status' => 1,
         ]);
 
@@ -96,7 +96,7 @@ class ShopUserController extends Controller
         ];
 
         if (! empty($data['password'])) {
-            $payload['password'] = Hash::make((string) $data['password']);
+            $payload['password'] = $data['password'];
         }
 
         $user->update($payload);

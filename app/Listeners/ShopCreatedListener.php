@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Listeners;
 
 use App\Events\ShopCreatedEvent;
-use App\Models\User;
-use App\Models\Role;
+use App\Modules\Shared\Domain\Models\User;
+use Spatie\Permission\Models\Role;
 use App\Notifications\PlatformAccessNotification;
-use Illuminate\Support\ServiceProvider;
+use Spatie\Permission\PermissionRegistrar;
 
 class ShopCreatedListener
 {
@@ -16,18 +18,14 @@ class ShopCreatedListener
         $data = $event->data;
         $ownerPassword = $event->ownerPassword;
 
-        // Create shop owner user
-        $owner = User::create([
-            'shop_id' => $shop->id,
-            'name' => $data['owner_name'],
-            'email' => $data['owner_email'],
-            'password' =>
-                Hash::make((string) $ownerPassword),
-            'status' => 1,
-        ]);
+        // Fetch the shop owner user created in the controller
+        /** @var \App\Modules\Shared\Domain\Models\User $owner */
+        $owner = User::where('shop_id', $shop->id)
+            ->where('email', $data['owner_email'])
+            ->firstOrFail();
 
-        // Set permissions for shop
-        app(ServiceProvider::class)->setPermissionsTeamId($shop->id);
+        // Set Team Context for Spatie Permissions
+        app(PermissionRegistrar::class)->setPermissionsTeamId($shop->id);
 
         // Create shop-owner role
         $role = Role::firstOrCreate([
@@ -37,7 +35,9 @@ class ShopCreatedListener
         ]);
 
         // Assign role to owner
-        $owner->assignRole($role);
+        if (!$owner->hasRole($role)) {
+            $owner->assignRole($role);
+        }
 
         // Send platform access notification
         $scheme = parse_url((string) config('app.url', 'http://localhost'), PHP_URL_SCHEME) ?: 'http';

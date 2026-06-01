@@ -74,7 +74,7 @@ class ShopController extends Controller
                 'shop_id' => $shop->id,
                 'name' => $data['owner_name'],
                 'email' => $data['owner_email'],
-                'password' => Hash::make((string) $ownerPassword),
+                'password' => $ownerPassword,
                 'status' => 1,
             ]);
 

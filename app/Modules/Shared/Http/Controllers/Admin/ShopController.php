@@ -3,23 +3,17 @@
 namespace App\Modules\Shared\Http\Controllers\Admin;
 
 use App\Events\ShopCreatedEvent;
-use App\Events\ShopUpdatedEvent;
-use App\Events\ShopDeletedEvent;
 use App\Modules\Shared\Application\Services\ShopService;
 use App\Modules\Shared\Domain\Models\Shop;
 use App\Modules\Shared\Domain\Models\User;
 use App\Modules\Shared\Http\Controllers\Controller;
 use App\Modules\Shared\Http\Requests\Admin\ShopUpdateRequest;
 use App\Modules\Shared\Http\Requests\Admin\StoreShopRequest;
-use App\Notifications\PlatformAccessNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
 
 class ShopController extends Controller
 {
@@ -90,7 +84,7 @@ class ShopController extends Controller
     public function update(ShopUpdateRequest $request, Shop $shop): RedirectResponse
     {
         $this->shopService->update($shop, $request->validated());
-        event(new ShopUpdatedEvent($shop, $request->validated()));
+
         return back()->with('success', 'Shop updated successfully.');
     }
 
@@ -100,7 +94,7 @@ class ShopController extends Controller
     public function destroy(Shop $shop): RedirectResponse
     {
         DB::transaction(function () use ($shop): void {
-            event(new ShopDeletedEvent($shop));
+            $this->shopService->delete($shop);
         });
 
         return back()->with('success', 'Shop deleted successfully.');

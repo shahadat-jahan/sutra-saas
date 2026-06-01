@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Application\Services;
 
+use App\Events\ShopDeletedEvent;
+use App\Events\ShopUpdatedEvent;
 use App\Modules\Shared\Domain\Models\Shop;
 use App\Modules\Shared\Infrastructure\Repositories\Interfaces\ShopRepositoryInterface;
 
@@ -20,7 +22,27 @@ final class ShopService
      */
     public function update(Shop $shop, array $data): bool
     {
-        return $this->shopRepository->update($shop, $data);
+        $result = $this->shopRepository->update($shop, $data);
+
+        // Fire the event only once at the service layer
+        if ($result) {
+            event(new ShopUpdatedEvent($shop, $data));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Delete a shop and trigger cleanup event.
+     */
+    public function delete(Shop $shop): bool
+    {
+        // Fire the event before deletion so listener can notify owner
+        event(new ShopDeletedEvent($shop));
+
+        // The event listener handles user/role deletion
+        // Only delete the shop record itself
+        return (bool) $shop->delete();
     }
 
     /**

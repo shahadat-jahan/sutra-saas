@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Providers;
 
 use App\Modules\Discount\Domain\Listeners\ApplyDiscountsToOrder;
-use App\Modules\Discount\Domain\Listeners\ApplySlabDiscount;
-use App\Modules\Discount\Infrastructure\Repositories\Eloquent\DiscountRuleRepository;
-use App\Modules\Discount\Infrastructure\Repositories\Interfaces\DiscountRuleRepositoryInterface;
 use App\Modules\Sales\Domain\Events\OrderTotalCalculating;
-use App\Modules\Sales\Domain\Events\SaleCreated;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,7 +21,7 @@ final class DiscountServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(DiscountRuleRepositoryInterface::class, DiscountRuleRepository::class);
+        //
     }
 
     /**
@@ -38,11 +34,6 @@ final class DiscountServiceProvider extends ServiceProvider
         Event::listen(
             OrderTotalCalculating::class,
             ApplyDiscountsToOrder::class
-        );
-
-        Event::listen(
-            SaleCreated::class,
-            ApplySlabDiscount::class
         );
 
         // Load module migrations

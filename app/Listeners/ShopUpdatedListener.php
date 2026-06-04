@@ -19,11 +19,11 @@ class ShopUpdatedListener
 
         Log::info('Shop updated', [
             'shop_id' => $shop->id,
-            'changes' => $data
+            'changes' => $data,
         ]);
 
         // Find the primary shop owner (the first user created for this shop)
-        /** @var \App\Modules\Shared\Domain\Models\User|null $owner */
+        /** @var User|null $owner */
         $owner = User::where('shop_id', $shop->id)->orderBy('id', 'asc')->first();
 
         if ($owner) {

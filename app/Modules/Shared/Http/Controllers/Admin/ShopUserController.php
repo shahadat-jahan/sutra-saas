@@ -11,7 +11,6 @@ use App\Modules\Shared\Http\Requests\Admin\StoreShopUserRequest;
 use App\Modules\Shared\Http\Requests\Admin\UpdateShopUserRequest;
 use App\Notifications\PlatformAccessNotification;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;

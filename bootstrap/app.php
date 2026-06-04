@@ -8,6 +8,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Middleware\PermissionMiddleware;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
@@ -37,13 +39,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => RoleOrPermissionMiddleware::class,
         ]);
 
-        $middleware->redirectUsersTo(function (\Illuminate\Http\Request $request) {
-            $user = \Illuminate\Support\Facades\Auth::user();
-            
+        $middleware->redirectUsersTo(function (Request $request) {
+            $user = Auth::user();
+
             if ($user && $user->shop) {
                 return route('dashboard', ['subdomain' => $user->shop->slug]);
             }
-            
+
             return '/admin/dashboard';
         });
     })

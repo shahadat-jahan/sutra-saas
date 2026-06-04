@@ -17,6 +17,7 @@ use App\Modules\Shared\Http\Controllers\Tenant\RoleController as TenantRoleContr
 use App\Modules\Shared\Http\Controllers\Tenant\UserController as TenantUserController;
 use App\Modules\Shared\Http\Controllers\ThemeController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 
 /*
@@ -46,7 +47,7 @@ Route::post('/theme/set', [ThemeController::class, 'set'])->name('theme.set');
 Route::domain(config('app.domain', 'localhost'))->group(function () {
     Route::get('/', function () {
         return Inertia::render('Welcome', [
-            'plans' => Plan::where('is_active', true)->get(),
+            'plans' => Schema::hasTable('plans') ? Plan::where('is_active', true)->get() : [],
         ]);
     })->name('welcome');
 

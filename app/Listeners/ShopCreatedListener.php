@@ -6,8 +6,8 @@ namespace App\Listeners;
 
 use App\Events\ShopCreatedEvent;
 use App\Modules\Shared\Domain\Models\User;
-use Spatie\Permission\Models\Role;
 use App\Notifications\PlatformAccessNotification;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 class ShopCreatedListener
@@ -19,7 +19,7 @@ class ShopCreatedListener
         $ownerPassword = $event->ownerPassword;
 
         // Fetch the shop owner user created in the controller
-        /** @var \App\Modules\Shared\Domain\Models\User $owner */
+        /** @var User $owner */
         $owner = User::where('shop_id', $shop->id)
             ->where('email', $data['owner_email'])
             ->firstOrFail();
@@ -31,11 +31,11 @@ class ShopCreatedListener
         $role = Role::firstOrCreate([
             'name' => 'shop-owner',
             'team_id' => $shop->id,
-            'guard_name' => 'web'
+            'guard_name' => 'web',
         ]);
 
         // Assign role to owner
-        if (!$owner->hasRole($role)) {
+        if (! $owner->hasRole($role)) {
             $owner->assignRole($role);
         }
 

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\MultiTenancy;
 
+use App\Enums\ActiveStatus;
+use App\Enums\BusinessType;
 use App\Modules\Inventory\Domain\Models\Product;
 use App\Modules\Shared\Domain\Models\Shop;
 use App\Modules\Shared\Domain\Models\User;
@@ -16,14 +18,14 @@ class MultiTenantScopeTest extends TestCase
     {
         $shopA = Shop::query()->create([
             'name' => 'Shop A',
-            'business_type' => 'retail',
-            'status' => 'active',
+            'business_type' => BusinessType::RETAIL,
+            'status' => ActiveStatus::ACTIVE,
         ]);
 
         $shopB = Shop::query()->create([
             'name' => 'Shop B',
-            'business_type' => 'retail',
-            'status' => 'active',
+            'business_type' => BusinessType::RETAIL,
+            'status' => ActiveStatus::ACTIVE,
         ]);
 
         /** @var User $user */
@@ -60,8 +62,8 @@ class MultiTenantScopeTest extends TestCase
     {
         $shop = Shop::query()->create([
             'name' => 'Main Shop',
-            'business_type' => 'retail',
-            'status' => 'active',
+            'business_type' => BusinessType::RETAIL,
+            'status' => ActiveStatus::ACTIVE,
         ]);
 
         /** @var User $user */

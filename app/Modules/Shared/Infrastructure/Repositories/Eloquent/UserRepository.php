@@ -23,7 +23,6 @@ final class UserRepository implements UserRepositoryInterface
         ]);
     }
 
-
     /**
      * {@inheritdoc}
      */

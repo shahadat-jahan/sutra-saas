@@ -23,9 +23,17 @@ class RegistrationTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'shop_name' => 'Test Shop',
+            'business_type' => 1,
+            'enabled_modules' => ['inventory'],
         ]);
 
+        if ($response->status() !== 409) {
+            $response->dump();
+        }
+
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertStatus(409);
+        $this->assertStringContainsString('test-shop.localhost/dashboard', $response->headers->get('X-Inertia-Location'));
     }
 }

@@ -21,27 +21,17 @@ Core tables required for system operation.
 ## 3. Sales Module (`app/Modules/Sales/Database/Migrations`)
 *   **Customers**: `customers` (Bakir Khata / CRM)
 *   **Sales**: `sales` (POS orders)
-*   **Dealers**: `dealers` (B2B dealer profiles — credit, tier, territory)
 
 ## 4. Finance Module (`app/Modules/Finance/Database/Migrations`)
 *   **Transaction Logs**: `transaction_logs` (Cash flow ledger)
-*   **Dealer Ledgers**: `dealer_ledgers` (Per-dealer credit/debit audit trail)
 
 ## 5. Reporting Module (`app/Modules/Reporting/Database/Migrations`)
 *   **Daily Summaries**: `daily_summaries` (Pre-calculated analytics)
 
 ---
 
-## 6. Discount Module (`app/Modules/Discount/Database/Migrations`)
-*   **Discounts**: `discounts` (Legacy flat/percentage promotions)
-*   **Discountables**: `discountables` (Polymorphic discount assignments)
-*   **Discount Rules**: `discount_rules` (Slab-based discount tiers)
-
----
-
 ## 💻 Migration Standards
 *   **UUID**: Always include `$table->uuid('uuid')->unique();`.
-*   **Tenancy**: Always include `$table->foreignId('shop_id')->constrained()->cascadeOnDelete();` for tenant-scoped data.
+*   **Tenancy**: Always include `$table->foreignId('shop_id')->constrained()->onDelete('cascade');` for tenant-scoped data.
 *   **Soft Deletes**: Use when data persistence is critical for auditing.
-*   **Idempotency**: Ledger/financial tables should include `idempotency_key` (unique) to prevent duplicate entries on queue retries.
 *   **JSONB**: Use for industry-specific dynamic data (e.g., pharmacy drug specs in products).

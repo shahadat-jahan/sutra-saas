@@ -7,6 +7,7 @@ use App\Modules\Shared\Domain\Models\Announcement;
 use App\Modules\Shared\Domain\Models\Shop;
 use App\Support\Theme;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -35,18 +36,21 @@ class HandleInertiaRequests extends Middleware
     {
         $themeMode = (string) $request->session()->get('theme_mode', 'dark');
 
-        $query = Announcement::query();
-        $query->whereNotNull('published_at');
-        $query->orderBy('published_at', 'desc');
-        $query->limit(3);
-        $announcements = $query->get()->map(function ($a) {
-            return [
-                'uuid' => $a->uuid,
-                'title' => $a->title,
-                'body' => $a->body,
-                'published_at' => $a->published_at ? $a->published_at->diffForHumans() : null,
-            ];
-        });
+        $announcements = [];
+        if (Schema::hasTable('announcements')) {
+            $query = Announcement::query();
+            $query->whereNotNull('published_at');
+            $query->orderBy('published_at', 'desc');
+            $query->limit(3);
+            $announcements = $query->get()->map(function ($a) {
+                return [
+                    'uuid' => $a->uuid,
+                    'title' => $a->title,
+                    'body' => $a->body,
+                    'published_at' => $a->published_at ? $a->published_at->diffForHumans() : null,
+                ];
+            });
+        }
 
         return [
             ...parent::share($request),

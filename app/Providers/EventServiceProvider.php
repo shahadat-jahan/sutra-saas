@@ -2,16 +2,16 @@
 
 namespace App\Providers;
 
+use App\Events\ShopCreatedEvent;
+use App\Events\ShopDeletedEvent;
+use App\Events\ShopUpdatedEvent;
+use App\Listeners\ShopCreatedListener;
+use App\Listeners\ShopDeletedListener;
+use App\Listeners\ShopUpdatedListener;
 use App\Modules\Finance\Application\Listeners\RecordTransaction;
 use App\Modules\Inventory\Application\Listeners\UpdateInventory;
 use App\Modules\Pos\Domain\Events\SaleCompleted;
 use App\Modules\Reporting\Application\Listeners\UpdateDailySummary;
-use App\Events\ShopCreatedEvent;
-use App\Events\ShopUpdatedEvent;
-use App\Events\ShopDeletedEvent;
-use App\Listeners\ShopCreatedListener;
-use App\Listeners\ShopUpdatedListener;
-use App\Listeners\ShopDeletedListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider

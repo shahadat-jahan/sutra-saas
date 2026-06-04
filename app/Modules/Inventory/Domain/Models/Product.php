@@ -32,7 +32,7 @@ final class Product extends Model
         'stock_quantity',
         'metadata',
         'attributes',
-        'status'
+        'status',
     ];
 
     protected function casts(): array
@@ -43,7 +43,7 @@ final class Product extends Model
             'stock_quantity' => 'decimal:3',
             'metadata' => 'array',
             'attributes' => 'array',
-            'status' => ActiveStatus::class
+            'status' => ActiveStatus::class,
         ];
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Http\Controllers\Tenant;
 
+use App\Modules\Shared\Domain\Models\User;
 use App\Modules\Shared\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class RoleController extends Controller
 {
     public function index(): Response
     {
-        /** @var \App\Modules\Shared\Domain\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
         $shop = $user->shop;
         $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
@@ -40,7 +41,7 @@ class RoleController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        /** @var \App\Modules\Shared\Domain\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
         $shop = $user->shop;
 
@@ -60,7 +61,7 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role): RedirectResponse
     {
-        /** @var \App\Modules\Shared\Domain\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
         $shop = $user->shop;
         $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';
@@ -87,7 +88,7 @@ class RoleController extends Controller
 
     public function destroy(Role $role): RedirectResponse
     {
-        /** @var \App\Modules\Shared\Domain\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
         $shop = $user->shop;
         $teamsKey = app(PermissionRegistrar::class)->teamsKey ?? 'team_id';

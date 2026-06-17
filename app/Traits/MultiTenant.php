@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
  * @mixin Model
  *
  * @method static void creating(\Closure $callback)
+ * @method static void updating(\Closure $callback)
  * @method static void addGlobalScope(\Illuminate\Database\Eloquent\Scope|\Closure|string $scope, \Illuminate\Database\Eloquent\Scope|\Closure|null $implementation = null)
  */
 trait MultiTenant
@@ -28,6 +29,12 @@ trait MultiTenant
                 if ($tenantId) {
                     $model->shop_id = $tenantId;
                 }
+            }
+        });
+
+        static::updating(function ($model): void {
+            if ($model->isDirty('shop_id')) {
+                $model->shop_id = $model->getOriginal('shop_id');
             }
         });
     }

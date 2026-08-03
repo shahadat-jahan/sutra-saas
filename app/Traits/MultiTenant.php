@@ -22,7 +22,7 @@ trait MultiTenant
     {
         static::addGlobalScope(new ShopScope);
 
-        static::creating(function ($model): void {
+        static::creating(static function ($model): void {
             if (blank($model->shop_id)) {
                 $tenantId = app(TenantManager::class)->getTenantId() ?? Auth::user()?->shop_id;
 
@@ -32,7 +32,7 @@ trait MultiTenant
             }
         });
 
-        static::updating(function ($model): void {
+        static::updating(static function ($model): void {
             if ($model->isDirty('shop_id')) {
                 $model->shop_id = $model->getOriginal('shop_id');
             }
